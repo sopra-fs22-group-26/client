@@ -3,7 +3,7 @@ name: Deploy Project
 on: 
   push:
     branches: 
-      - master
+      - main
 
 jobs:
   build:
@@ -22,7 +22,7 @@ jobs:
    
     # uncomment for assignment 2-4
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+      uses: sonarsource/sonarcloud-github-action@main
     
     # create .netrc file for heroku authentication
     # https://devcenter.heroku.com/articles/authentication
@@ -41,6 +41,6 @@ jobs:
       
     # deploy code
     - run: heroku git:remote -a $HEROKU_APP_NAME 
-    - run: git push heroku HEAD:refs/heads/master
+    - run: git push heroku HEAD:refs/heads/main
 
 
