@@ -1,5 +1,7 @@
 import React from "react";
 import {ReactLogo} from "components/ui/ReactLogo";
+import mainLogo from "images/scrumblebee_logo_508x95.png"
+import {ReactComponent as UserIconSelected} from "images/user_icon_selected.svg";
 import PropTypes from "prop-types";
 import "styles/views/Header.scss";
 
@@ -12,10 +14,18 @@ import "styles/views/Header.scss";
  * @FunctionalComponent
  */
 const Header = props => (
-  <div className="header container" style={{height: props.height}}>
-    <h1 className="header title">SoPra FS22 rocks with React!</h1>
-    <ReactLogo width="60px" height="60px"/>
-  </div>
+    <div className="header container">
+      <div className="header mainlogo">
+        <img src={mainLogo} alt="Logo"/>
+      </div>
+      <div className="header mainmenu">
+        <div className="header mainmenu menuitem selected">Task Overview</div>
+        <div className="header mainmenu menuitem active">Reports</div>
+        <div className="header mainmenu menuitem">Scoreboard</div>
+      </div>
+      <div className="header userIcon online">MH</div>
+
+    </div>
 );
 
 Header.propTypes = {

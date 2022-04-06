@@ -10,8 +10,19 @@
 
 $accent: #97ABFF;
 $accentDark: #123597;
-$textColor: white;
-$background: #262632;
+$textColor: black;
+$background: #FFEFCB; //#262632;
+$borderColor: #C97D00;
+
+/* ScrumbleBee Colors */
+$gray_light: #E5E5E5;
+$gray_medium: #CECECE;
+$gray_dark: #929191;
+
+$brown_dark: #C97D00;
+
+$yellow_dark: #FFB30E;
+$yellow_light: #FFEFCB;
 
 /* some constants */
 
@@ -25,10 +36,22 @@ $SMALL_WIDTH: 768px;
 $fontDefault: "M PLUS Rounded 1c", sans-serif;
 $fontMono: "Roboto Mono", monospace;
 
+$fontMenu: "Oleo Script", cursive;
+$fontText: "Nunito", sans-serif;
+
+$fontWeightBold: 700;
+$fontWeightSemibold: 600;
+$fontWeightRegular: 400;
+$fontWeightLight: 300;
+
+
 /* a standard drop shadow */
 $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
 
-$borderRadius: 0.75em;
+$borderRadius: 8px;
+$borderInnerRadius: 6px;
+$buttonBorderRadius: 6px;
+$formButtonRadius: 4px;
 
 /* mixins
 
