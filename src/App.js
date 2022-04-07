@@ -1,5 +1,5 @@
-import Header from "components/views/Header";
 import AppRouter from "components/routing/routers/AppRouter";
+import HeaderRouter from "components/routing/routers/HeaderRouter";
 
 /**
  * Happy coding!
@@ -9,7 +9,7 @@ import AppRouter from "components/routing/routers/AppRouter";
 const App = () => {
   return (
     <div>
-      <Header/>
+      <HeaderRouter/>
       <AppRouter/>
     </div>
   );
