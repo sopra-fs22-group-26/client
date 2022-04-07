@@ -59,16 +59,17 @@ const Login = props => {
   };
 
   return (
-    <BaseContainer>
+    <BaseContainer className="centered">
       <div className="login container">
+        <div className="login header">Login</div>
         <div className="login form">
           <FormField
-            label="Username"
+            label="Username:"
             value={username}
             onChange={un => setUsername(un)}
           />
           <FormField
-            label="Name"
+            label="Name:"
             value={name}
             onChange={n => setName(n)}
           />

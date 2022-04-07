@@ -2,7 +2,61 @@
 
 .header {
   &.container {
-    @include center;
+    margin: 0;
+    padding: 20px 27px 0px 37px;
+    min-width: fit-content;
+    display: flex;
+  }
+  &.mainlogo {
+    cursor: pointer;
+    & img {
+      object-fit: none;
+    }
+  }
+  &.mainmenu {
+    margin: 54px 24px 0 80px;
+    display: flex;
+    min-width: fit-content;
+    &.menuitem {
+      margin: 0 48px 0 0;
+      font-family: $fontMenu;
+      font-weight: $fontWeightRegular;
+      font-size: 28pt;
+      white-space: nowrap;
+      color: $gray_medium;
+      &.active {
+        color: $gray_dark;
+        &:hover {
+          color: $yellow_dark;
+          cursor: pointer;
+        }
+      }
+      &.selected {
+        color: $brown_dark;
+      }
+    }
+  }
+
+  &.userIcon {
+    width: 70px;
+    min-width: 70px;
+    height: 61px;
+    font-size: 20pt;
+    font-weight: $fontWeightBold;
+    color: $brown_dark;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0 8px auto;
+    background-image: url("/images/user_icon_offline.svg");
+    background-position: 0px 0px;
+    &.online {
+      background-image: url("/images/user_icon_online.svg");
+      cursor: pointer;
+      &:hover {
+        background-image: url("/images/user_icon_selected.svg");
+      }
+    }
   }
 
   &.title {
