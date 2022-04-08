@@ -15,7 +15,7 @@ import Login from "components/views/Login";
  */
 const AppRouter = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter forceRefresh={true}>
       <Switch>
         <Route path="/game">
           <GameGuard>
