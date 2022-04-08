@@ -23,6 +23,7 @@ const FormField = props => {
         className="login input"
         placeholder="enter here.."
         value={props.value}
+        type={props.type}
         onChange={e => props.onChange(e.target.value)}
       />
     </div>
@@ -32,26 +33,34 @@ const FormField = props => {
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
+  type: PropTypes.string,
   onChange: PropTypes.func
 };
 
+/**
+ * Handles the login process
+ * Upon successful login, the user's id, name and token are stored to localStorage.
+ * @param props
+ * @returns {JSX.Element}
+ */
 const Login = props => {
   const history = useHistory();
-  const [name, setName] = useState(null);
   const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const doLogin = async () => {
     try {
-      const requestBody = JSON.stringify({username, name});
-      const response = await api.post('/users', requestBody);
+      const requestBody = JSON.stringify({username, password});
+      const response = await api.post('/login', requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
+      localStorage.setItem('id', user.id);
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
+      // Login successfully worked --> navigate to the dashboard
       history.push(`/game`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
@@ -69,18 +78,22 @@ const Login = props => {
             onChange={un => setUsername(un)}
           />
           <FormField
-            label="Name:"
-            value={name}
-            onChange={n => setName(n)}
+            label="Password:"
+            value={password}
+            type="password"
+            onChange={pw => setPassword(pw)}
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !name}
-              width="100%"
+              disabled={!username || !password}
+              width="316px"
               onClick={() => doLogin()}
             >
-              Login
+              Submit
             </Button>
+            <div className="login link-container">
+              <p>Are you a new user? <a href="/register">Sign up here</a></p>
+            </div>
           </div>
         </div>
       </div>

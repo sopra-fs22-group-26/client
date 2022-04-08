@@ -1,4 +1,5 @@
 import React from "react";
+import {api, handleError} from 'helpers/api';
 import {useHistory, useState} from 'react-router-dom';
 import mainLogo from "images/scrumblebee_logo_508x95.png"
 import PropTypes from "prop-types";
@@ -27,10 +28,22 @@ const HeaderContent = ({props}) => {
 
   // Handle the logout process
   const logout = () => {
-    if (userOnline) {
-      localStorage.removeItem('token');
-      history.push('/login');
+    const token = localStorage.getItem("token");
+    async function logoutUser() {
+      try {
+        const requestBody = JSON.stringify({token});
+        const response = await api.post('/logout', requestBody);
+      }
+      catch (error) {
+        console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
+        console.error("Details:", error);
+      }
     }
+    logoutUser();
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
+    history.push('/login');
   }
 
   let userIconClass, userIconInitials;

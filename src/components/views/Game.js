@@ -31,8 +31,26 @@ const Game = () => {
   const [users, setUsers] = useState(null);
 
   const logout = () => {
+    const token = localStorage.getItem("token");
+    async function logoutUser() {
+      try {
+        const requestBody = JSON.stringify({token});
+        const response = await api.post('/logout', requestBody);
+      }
+      catch (error) {
+        console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
+        console.error("Details:", error);
+      }
+    }
+    logoutUser();
     localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
     history.push('/login');
+    /*
+       localStorage.removeItem('token');
+       history.push('/login');
+        */
   }
 
   // the effect hook can be used to react to change in your component.
