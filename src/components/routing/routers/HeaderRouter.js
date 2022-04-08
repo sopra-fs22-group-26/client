@@ -1,6 +1,7 @@
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Header from "components/views/Header";
 
+// Display selected menu accordingly
 const HeaderRouter = () => {
   return (
       <BrowserRouter forceRefresh={true}>
