@@ -1,8 +1,10 @@
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
-import {GameGuard} from "components/routing/routeProtectors/GameGuard";
-import GameRouter from "components/routing/routers/GameRouter";
+// import {GameGuard} from "components/routing/routeProtectors/GameGuard";
+//import GameRouter from "components/routing/routers/GameRouter";
 import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
 import Login from "components/views/Login";
+import CreationForm from "components/views/CreationForm";
+import Dashboard from "components/views/Dashboard";
 
 /**
  * Main router of your application.
@@ -17,10 +19,11 @@ const AppRouter = () => {
   return (
     <BrowserRouter forceRefresh={true}>
       <Switch>
-        <Route path="/game">
-          <GameGuard>
-            <GameRouter base="/game"/>
-          </GameGuard>
+        <Route exact path="/dashboard">
+            <Dashboard/> {/* DashboardGuard has to be added. */} 
+        </Route>
+        <Route exact path="/creationform">
+            <CreationForm/> {/* CreationFormGuard has to be added. */} 
         </Route>
         <Route exact path="/login">
           <LoginGuard>
@@ -28,7 +31,7 @@ const AppRouter = () => {
           </LoginGuard>
         </Route>
         <Route exact path="/">
-          <Redirect to="/game"/>
+          <Redirect to="/dashboard"/>
         </Route>
       </Switch>
     </BrowserRouter>

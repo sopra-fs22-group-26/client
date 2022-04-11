@@ -6,9 +6,6 @@ const HeaderRouter = () => {
   return (
       <BrowserRouter forceRefresh={true}>
         <Switch>
-          <Route path="/game/dashboard">
-              <Header selectedMenu="task_overview" active="1"/>
-          </Route>
           <Route path="/dashboard">
             <Header selectedMenu="task_overview" active="1"/>
           </Route>
@@ -17,6 +14,9 @@ const HeaderRouter = () => {
           </Route>
           <Route path="/scoreboard">
             <Header selectedMenu="scoreboard" active="1"/>
+          </Route>
+          <Route path="/creationform">
+            <Header selectedMenu="none" active="0"/>
           </Route>
           <Route>
             <Header selectedMenu="none" active="0"/>
