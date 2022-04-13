@@ -61,11 +61,6 @@
         background-image: url("/images/user_icon_selected.svg");
       }
     }
-  }
-
-  &.title {
-    font-weight: bold;
-    color: $background;
-    text-align: center;
+    z-index: 10;
   }
 }

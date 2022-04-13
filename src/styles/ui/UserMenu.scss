@@ -1,0 +1,19 @@
+@import 'styles/theme';
+
+.userMenu {
+  font-size: 18px;
+  font-family: $fontText;
+  &.title {
+    font-weight: $fontWeightSemibold;
+    color: $brown_dark;
+    margin: 0;
+    padding: 0 12px 7px 12px;
+    text-align: left;
+  }
+  li {
+    font-family: $fontText;
+  }
+  &.userAvatar {
+    background-color: $yellow_dark;
+  }
+}
