@@ -8,7 +8,6 @@ import "styles/ui/UserMenu.scss";
 
 import {Menu, MenuItem, ListItemIcon, Divider, Tooltip, Avatar} from "@mui/material";
 import {Logout} from "@mui/icons-material";
-import {blue} from "@mui/material/colors";
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -25,10 +24,9 @@ const HeaderContent = ({props}) => {
   if (localStorage.getItem("token")) {
     userOnline = true;
   }
-  let name = "ScrumbleBee User"
-  if (localStorage.getItem("name")) {
-    name = localStorage.getItem("name");
-  }
+  //let name = "ScrumbleBee User"
+  let name = localStorage.getItem("name") ? localStorage.getItem("name") : localStorage.getItem("username");
+
   // Navigate to different page
   function navigate(button, location) {
     if (userOnline && !button.target.className.includes("selected")) history.push(location);
@@ -51,30 +49,46 @@ const HeaderContent = ({props}) => {
 
   // Handle the logout process
   const logout = () => {
-    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
     async function logoutUser() {
       try {
-        const requestBody = JSON.stringify({token});
-        const response = await api.post('/logout', requestBody);
+        const requestBody = JSON.stringify({username});
+        const response = await api.post('/auth/logout', requestBody);
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('id');
+        localStorage.removeItem('name');
+        localStorage.removeItem('username');
+        history.push('/login');
       }
       catch (error) {
         console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
         console.error("Details:", error);
+        alert(`Something went wrong during logout: \n${handleError(error)}`);
       }
     }
-    logoutUser().then(r => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('id');
-          localStorage.removeItem('name');
-          history.push('/login');
-        }
-    );
+    logoutUser();
   }
 
   let userIconClass, userIconInitials;
   if (userOnline) {
     userIconClass = "header userIcon online";
-    userIconInitials = "SB";
+
+    // Create user name initials
+    let name_parts = name.split(" ");
+    if(name_parts.length > 1){
+      userIconInitials = (name_parts[0][0] + name_parts[1][0]);
+    }
+    else {
+      if (name_parts[0].length > 1){
+        userIconInitials = name_parts[0].substring(0,2);
+      }
+      else {
+        userIconInitials = name_parts[0][0];
+      }
+    }
+    userIconInitials = userIconInitials.toUpperCase();
+    //userIconInitials = "SB";
   }
   else {
     userIconClass = "header userIcon offline";

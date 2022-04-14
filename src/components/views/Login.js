@@ -46,7 +46,7 @@ const Login = props => {
   const doLogin = async () => {
     try {
       const requestBody = JSON.stringify({username, password});
-      const response = await api.post('/login', requestBody);
+      const response = await api.post('/auth/login', requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -54,9 +54,13 @@ const Login = props => {
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
       localStorage.setItem('id', user.id);
+      localStorage.setItem('username', user.username);
+      /*
+      // login does not return name of user yet
       if (user.name) {
         localStorage.setItem('name', user.name);
       }
+      */
 
       // Login successfully worked --> navigate to the dashboard
       history.push(`/game`);
