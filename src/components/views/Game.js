@@ -30,6 +30,7 @@ const Game = () => {
   // more information can be found under https://reactjs.org/docs/hooks-state.html
   const [users, setUsers] = useState(null);
 
+  /*
   const logout = () => {
     const token = localStorage.getItem("token");
     async function logoutUser() {
@@ -47,11 +48,8 @@ const Game = () => {
     localStorage.removeItem('id');
     localStorage.removeItem('name');
     history.push('/login');
-    /*
-       localStorage.removeItem('token');
-       history.push('/login');
-        */
   }
+  */
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
@@ -100,12 +98,6 @@ const Game = () => {
             <Player user={user} key={user.id}/>
           ))}
         </ul>
-        <Button
-          width="100%"
-          onClick={() => logout()}
-        >
-          Logout
-        </Button>
       </div>
     );
   }

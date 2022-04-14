@@ -62,11 +62,13 @@ const HeaderContent = ({props}) => {
         console.error("Details:", error);
       }
     }
-    logoutUser();
-    localStorage.removeItem('token');
-    localStorage.removeItem('id');
-    localStorage.removeItem('name');
-    history.push('/login');
+    logoutUser().then(r => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('id');
+          localStorage.removeItem('name');
+          history.push('/login');
+        }
+    );
   }
 
   let userIconClass, userIconInitials;
@@ -93,7 +95,7 @@ const HeaderContent = ({props}) => {
 
         <Tooltip title={""}>
           <div className={userIconClass} onClick={handleClick}>
-            <div>SB</div>
+            <div>{userIconInitials}</div>
           </div>
         </Tooltip>
         <Menu
