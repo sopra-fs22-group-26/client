@@ -1,6 +1,22 @@
 @import 'styles/theme';
 
 .login {
+  p {
+    font-family: $fontText;
+    font-weight: $fontWeightRegular;
+    padding: 0;
+    margin: 0;
+  }
+  a {
+    color: $brown_dark;
+    text-decoration-line: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.1em;
+    &:hover {
+      color: $yellow_dark;
+    }
+
+  }
   &.container {
     //margin-top: 2em;
     display: flex;
@@ -12,6 +28,8 @@
     border-radius: $borderRadius;
     border: 2px solid $borderColor;
     background-color: $background;
+
+    //font-weight: $fontWeightRegular;
 
     transition: opacity 0.5s ease, transform 0.5s ease;
 
@@ -66,11 +84,23 @@
   &.label {
     color: $textColor;
     margin-right: 10px;
-    font-weight: 700;
+    font-weight: $fontWeightBold;
   }
   &.button-container {
     display: flex;
-    justify-content: center;
+    align-items: flex-end;
     margin-top: 16px;
+    flex-direction: column;
+  }
+  &.link-container {
+    width: 316px;
+    margin: 36px 0 0 0;
+    padding: 0;
+  }
+  &.remark {
+    margin-right: 330px;
+    font-size: 14px;
+    font-weight: $fontWeightLight;
+    text-align: right;
   }
 }
