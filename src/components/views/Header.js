@@ -91,6 +91,7 @@ const HeaderContent = ({props}) => {
         console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
         console.error("Details:", error);
         alert(`Something went wrong during logout: \n${handleError(error)}`);
+        localStorage.removeItem('token');
       }
     }
     logoutUser();

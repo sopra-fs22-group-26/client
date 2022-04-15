@@ -1,123 +1,66 @@
 import {useEffect, useState, useMemo} from 'react';
-import TextField from '@material-ui/core/TextField';
 import {api, handleError} from 'helpers/api';
-import {Spinner} from 'components/ui/Spinner';
 import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Task from 'models/Task';
 import 'styles/views/CreationForm.scss';
+import React from "react";
 
 
-
-const TitleField = props => {
-  return (
-    <div className="creation-form title">
-      <input
-      className = "creation-form title-input"
-      placeholder = "Task title"
-      value={props.value}
-      onChange={e => props.onChange(e.target.value)} 
-      />
-    </div>
-  );  
-};
-
-const DescriptionField = props => {
-  return (
-    <div className="creation-form description">
-      <input
-      className = " creation-form description-input"
-      placeholder = "Task description"
-      value={props.value}
-      onChange={e => props.onChange(e.target.value)} 
-      />
-    </div>
-  );  
-};
-
-const DateField = props => {
-  return (
-    <div className="creation-form field">
-      <label className= 'creation-form label'>
-        {props.label}
-      </label>
-      <TextField
-      className = "creation-form input"
-      placeholder = "Select due date.."
-      value = {props.value}
-      id = "date"
-      type = "date"
-      onChange={e => props.onChange(e.target.value)} 
-      />
-    </div>
-  );  
-};
-
-const PriorityField = props => {
-  return (
-    <div className="creation-form field">
-      <label className= 'creation-form label'>
-        {props.label}
-      </label>
-      <select value={props.value} onChange={e => props.onChange(e.target.value)}>
-        <option value="NONE">NONE</option>
-        <option value="LOW">LOW</option>
-        <option value="MEDIUM">MEDIUM</option>
-        <option value="HIGH">HIGH</option>
-      </select>
-    </div>
-  );
-};
-
+// Define input text field component
 const FormField = props => {
   return (
-    <div className="creation-form field">
-      <label className= 'creation-form label'>
-        {props.label}
-      </label>
-      <input
-      className = "creation-form input"
-      placeholder = "Select.."
-      value={props.value}
-      onChange={e => props.onChange(e.target.value)} 
-      />
-    </div>
-  );  
+      <div className="creation-form field">
+        <label className= 'creation-form label'>
+          {props.label}
+        </label>
+        <input
+            type = {props.type}
+            className = "creation-form input"
+            placeholder = {props.placeholder}
+            value = {props.value}
+            onChange = {e => props.onChange(e.target.value)}
+            style={{width: props.width, textAlign: props.align}}
+        />
+      </div>
+  );
 };
-
-
-TitleField.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func
-};
-
-DescriptionField.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func
-};
-
-DateField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func
-};
-
 FormField.propTypes = {
   label: PropTypes.string,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
   value: PropTypes.string,
+  width: PropTypes.string,
+  align: PropTypes.string,
   onChange: PropTypes.func
 };
 
-PriorityField.propTypes = {
+// Define input selection component
+const Selection = props => {
+  return (
+      <div className="creation-form field">
+        <label className= 'creation-form label'>
+          {props.label}
+        </label>
+        <select value={props.value} onChange={e => props.onChange(e.target.value)}>
+          <option value="NONE">none</option>
+          <option value="LOW">low</option>
+          <option value="MEDIUM">medium</option>
+          <option value="HIGH">high</option>
+        </select>
+      </div>
+  );
+};
+Selection.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func
 };
 
 
-
+// Output form
 const CreationForm = () => {
   const history = useHistory();
   const [title, setTitle] = useState(null);
@@ -149,62 +92,73 @@ const CreationForm = () => {
   };
 
   return (
-    <BaseContainer>
-      <div className = "creation-form container">
-      
-        <TitleField 
-          value = {title}
-          onChange = {t => setTitle(t)}
-        />
-      
-      
-        <DescriptionField
-            value = {description}
-            onChange = {d => setDescription(d)}
-        />
-      
-      
-        <DateField
-          label = "Due date:"
-          value = {dueDate}
-          onChange = {dd => setDueDate(dd)}
-        />
-        <PriorityField
-          label="Priority:"
-          value={priority}
-          onChange={p => setPriority(p)}
-        />
-
-        <FormField
-          label="Location:"
-          value={location}
-          onChange={l => setLocation(l)}
-        />
-
-        <FormField
-          label="Estimate:"
-          value={estimate}
-          onChange={e => setEstimate(e)}
-        />
-
-
-      
-      <div className = "creation-form buttons" >
-        <button 
-          className = "creation-form cancel-button"
-          onClick = {() => history.push(`/dashboard`)}
-        >
-          Cancel
-        </button>
-        <button 
-          className = "creation-form save-button"
-          onClick = {() => saveTask()}
-        >
-          Save
-        </button>
-      </div>  
-    </div>
-    </BaseContainer>
+      <BaseContainer>
+        <div className = "creation-form container">
+          <div className="creation-form header">
+            <input
+                className="creation-form input"
+                placeholder="Task title"
+                value = {title}
+                onChange = {t => setTitle(t.target.value)}
+            />
+          </div>
+          <div className="creation-form description-container">
+          <textarea
+              rows="4"
+              placeholder="Task description"
+              onChange = {d => setDescription(d.target.value)}
+          />
+          </div>
+          <div className="creation-form attributes-container">
+            <div className="creation-form attributes-container attributes-column">
+              <FormField
+                  label = "Due date:"
+                  type = "date"
+                  placeholder = "Select date"
+                  value = {dueDate}
+                  onChange = {dd => setDueDate(dd)}
+              />
+              <Selection
+                  label="Priority:"
+                  value={priority}
+                  onChange={p => setPriority(p)}
+              />
+              <FormField
+                  label = "Location:"
+                  placeholder = "Set location..."
+                  value={location}
+                  onChange={l => setLocation(l)}
+              />
+            </div>
+            <div className="creation-form attributes-container attributes-column rightalign">
+              <FormField
+                  label = "Estimate:"
+                  type = "number"
+                  width = "80px"
+                  align = "right"
+                  placeholder = "h"
+                  value={estimate}
+                  onChange={e => setEstimate(e)}
+              />
+            </div>
+          </div>
+          <div className="creation-form footer">
+            <Button
+                className="menu-button"
+                onClick={() => history.push(`/dashboard`)}
+            >
+              Cancel
+            </Button>
+            <Button
+                className="menu-button default"
+                disabled={!title}
+                onClick={() => saveTask()}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+      </BaseContainer>
   );
 }
 

@@ -80,7 +80,7 @@ const Signup = props => {
       }
 
       // Login successfully worked --> navigate to the dashboard
-      history.push(`/game`);
+      history.push(`/dashboard`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
@@ -93,13 +93,13 @@ const Signup = props => {
         <div className="login header">Sign up</div>
         <div className="login form">
           <FormField
-              label="Name:"
+              label="Name*:"
               placeholder="your full name..."
               value={name}
               onChange={n => setName(n)}
           />
           <FormField
-            label="Username*:"
+            label="Username:"
             placeholder="choose username..."
             value={username}
             onChange={un => setUsername(un)}
@@ -110,18 +110,18 @@ const Signup = props => {
               onChange={e => setEmailAddress(e)}
           />
           <FormField
-            label="Password*:"
+            label="Password:"
             value={password}
             type="password"
             onChange={pw => setPassword(pw)}
           />
           <FormField
-              label="Retype password*:"
+              label="Retype password:"
               value={password2}
               type="password"
               onChange={pw => setPassword2(pw)}
           />
-          <div className="login remark">(*required)</div>
+          <div className="login remark">(*optional)</div>
           <div className="login button-container">
             <Button
               disabled={!username || !emailAddress || !password || password != password2}

@@ -2,66 +2,104 @@
 
 .creation-form {
     &.container {
-    margin-top: 5em;
-    margin-left: 9em;
-    display: flex;
-    flex-direction: column;
-    width: 49%;
-    justify-content: center;
-
-    padding: 0;
-    border-radius: $borderRadius;
-    border: 2px solid $borderColor;
-    background-color: $background;
-
-    transition: opacity 0.5s ease, transform 0.5s ease;
-
-    //min-height: 300px;
-    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-    // @include center;
-    //flex-direction: column;
+        display: flex;
+        flex-direction: column;
+        min-width: 687px;
+        width: fit-content;
+        justify-content: space-between;
+        padding: 0;
+        margin-bottom: 50px;
+        border-radius: $borderRadius;
+        border: 2px solid $borderColor;
+        background-color: $background;
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
-    &.title-input {
-        width: 90%;
-        margin-top: 1em;
-        margin-left: 1em;
-        margin-right: 1em;
-
-
-        font-size: larger;
-        border: 1px solid $borderColor;
-        background-color: white;
+    &.header {
+        padding: 5px 15px;
+        border-top-left-radius: $borderInnerRadius;
+        background-color: $yellow_dark;
+        border-top-right-radius: $borderInnerRadius;
+        & input {
+            width: 100%;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
     }
 
-    &.description-input {
-        width: 95%;
-        height: 5em;
-        margin-top: 1em;
-        margin-left: 1em;
-        margin-right: 1em;
-
-        align-content: flex-start;
-        border: 1px solid $borderColor;
-        background-color: white;
+    &.footer {
+        padding: 7px 15px;
+        display: flex;
+        justify-content: right;
+        gap: 14px;
+        background-color: $yellow_dark;
+        border-bottom-left-radius: $borderInnerRadius;
+        border-bottom-right-radius: $borderInnerRadius;
+        text-align: right;
+        & input {
+            width: 100%;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
     }
 
+    &.description-container {
+        border-bottom: 2px solid $brown_dark;
+        width: 100%;
+        & textarea {
+            background-color: white;
+            border-color: $brown_dark;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 0;
+            margin: 14px;
+            padding: 4px 8px;
+            font-weight: $fontWeightRegular;
+            width: 655px;
+        }
+    }
+    &.attributes-container {
+        display: flex;
+        flex-direction: row;
+        margin: 7px;
+        &.attributes-column {
+            width: fit-content;
+            flex-direction: column;
+            &.rightalign {
+                margin: 0 0 0 auto;
+            }
+        }
+    }
+    &.field {
+        display: flex;
+    }
+    &.label {
+        color: $textColor;
+        margin-right: 10px;
+        font-weight: $fontWeightBold;
+        text-align: left;
+        padding-top: 4px;
+    }
     &.input {
         font-weight: $fontWeightRegular;
         height: 34px;
         width: 316px;
-        padding-left: 8px;
-        margin: 0;
+        padding: 0 8px;
+        margin: 0 7px 20px auto;
         border: 1px solid $borderColor;
         border-radius: 0;
-        margin-bottom: 20px;
         background: transparentize(white, 0);
         color: $textColor;
-      }
-
-      &.buttons {
-          justify-content: flex-end;
-      }
-
-      
+    }
+    & select {
+        height: 34px;
+        width: 100px;
+        margin: 0 223px 20px auto;
+        padding: 0 8px;
+        font-family: $fontText;
+        font-size: 14px;
+        font-weight: $fontWeightRegular;
+        background-color: white;
+        border: 1px solid $brown_dark;
+    }
 }
