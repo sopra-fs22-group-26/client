@@ -60,7 +60,7 @@ const Login = props => {
       }
 
       // Login successfully worked --> navigate to the dashboard
-      history.push(`/game`);
+      history.push(`/dashboard`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }

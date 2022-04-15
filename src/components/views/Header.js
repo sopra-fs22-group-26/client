@@ -128,7 +128,7 @@ const HeaderContent = ({props}) => {
           <img src={mainLogo} alt="Logo"/>
         </div>
         <div className="header mainmenu">
-          <div className={classBaseName + (props.selectedMenu === "task_overview" ? " selected" : "")} onClick={(b) => navigate(b,'/game/dashboard')}>Task Overview</div>
+          <div className={classBaseName + (props.selectedMenu === "task_overview" ? " selected" : "")} onClick={(b) => navigate(b,'/dashboard')}>Task Overview</div>
           <div className={classBaseName + (props.selectedMenu === "reports" ? " selected" : "")} onClick={(b) => navigate(b,'/reports')}>Reports</div>
           <div className={classBaseName + (props.selectedMenu === "scoreboard" ? " selected" : "")} onClick={(b) => navigate(b,'/scoreboard')}>Scoreboard</div>
         </div>
