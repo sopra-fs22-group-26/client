@@ -55,12 +55,9 @@ const Login = props => {
       localStorage.setItem('token', user.token);
       localStorage.setItem('id', user.id);
       localStorage.setItem('username', user.username);
-      /*
-      // login does not return name of user yet
-      if (user.name) {
+      if(user.name){
         localStorage.setItem('name', user.name);
       }
-      */
 
       // Login successfully worked --> navigate to the dashboard
       history.push(`/game`);
@@ -94,7 +91,7 @@ const Login = props => {
               Submit
             </Button>
             <div className="login link-container">
-              <p>Are you a new user? <a href="/register">Sign up here</a></p>
+              <p>Are you a new user? <a href="/signup">Sign up here</a></p>
             </div>
           </div>
         </div>

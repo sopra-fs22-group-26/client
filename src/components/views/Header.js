@@ -8,6 +8,7 @@ import "styles/ui/UserMenu.scss";
 
 import {Menu, MenuItem, ListItemIcon, Divider, Tooltip, Avatar} from "@mui/material";
 import {Logout} from "@mui/icons-material";
+import User from "../../models/User";
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -21,11 +22,36 @@ const HeaderContent = ({props}) => {
   // use react-router-dom's hook to access the history
   const history = useHistory();
   let userOnline = false;
-  if (localStorage.getItem("token")) {
-    userOnline = true;
-  }
+  let userId = null;
+
   //let name = "ScrumbleBee User"
   let name = localStorage.getItem("name") ? localStorage.getItem("name") : localStorage.getItem("username");
+
+  if (localStorage.getItem("token")) {
+    userOnline = true;
+    /*
+    if (localStorage.getItem("id")) {
+      userId = localStorage.getItem("id");
+      const getUserInfo = async () => {
+        try {
+          const response = await api.get(`/users/${userId}`);
+
+          // Get the returned user and update a new object.
+          const user = new User(response.data);
+
+          // Store the data into the local storage.
+          if(user.name != ""){
+            name = user.name;
+            localStorage.setItem('name', user.name);
+          }
+        } catch (error) {
+          alert(`Information for current user not found: \n${handleError(error)}`);
+        }
+      };
+      getUserInfo();
+    }
+     */
+  }
 
   // Navigate to different page
   function navigate(button, location) {

@@ -97,4 +97,10 @@
     margin: 36px 0 0 0;
     padding: 0;
   }
+  &.remark {
+    margin-right: 330px;
+    font-size: 14px;
+    font-weight: $fontWeightLight;
+    text-align: right;
+  }
 }
