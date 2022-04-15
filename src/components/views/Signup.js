@@ -55,25 +55,8 @@ const Signup = props => {
     try {
       const requestBody = JSON.stringify({name, username, emailAddress, password});
       const response = await api.post('/register', requestBody);
-
       // Registration successfully worked --> do auto-login
-
       doAutoLogin();
-
-      /*
-
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
-
-      // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
-      localStorage.setItem('id', user.id);
-      localStorage.setItem('username', user.username);
-
-      // Registration successfully worked --> navigate to the dashboard
-      history.push(`/login`);
-
-       */
     } catch (error) {
       alert(`Something went wrong during signup: \n${handleError(error)}`);
     }
@@ -88,16 +71,13 @@ const Signup = props => {
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
-      // Store the token into the local storage.
+      // Store user info the local storage.
       localStorage.setItem('token', user.token);
       localStorage.setItem('id', user.id);
       localStorage.setItem('username', user.username);
-      /*
-      // login does not return name of user yet
-      if (user.name) {
+      if(user.name){
         localStorage.setItem('name', user.name);
       }
-      */
 
       // Login successfully worked --> navigate to the dashboard
       history.push(`/game`);
