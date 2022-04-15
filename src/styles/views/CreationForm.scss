@@ -1,0 +1,67 @@
+@import 'styles/theme';
+
+.creation-form {
+    &.container {
+    margin-top: 5em;
+    margin-left: 9em;
+    display: flex;
+    flex-direction: column;
+    width: 49%;
+    justify-content: center;
+
+    padding: 0;
+    border-radius: $borderRadius;
+    border: 2px solid $borderColor;
+    background-color: $background;
+
+    transition: opacity 0.5s ease, transform 0.5s ease;
+
+    //min-height: 300px;
+    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+    // @include center;
+    //flex-direction: column;
+    }
+
+    &.title-input {
+        width: 90%;
+        margin-top: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+
+
+        font-size: larger;
+        border: 1px solid $borderColor;
+        background-color: white;
+    }
+
+    &.description-input {
+        width: 95%;
+        height: 5em;
+        margin-top: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+
+        align-content: flex-start;
+        border: 1px solid $borderColor;
+        background-color: white;
+    }
+
+    &.input {
+        font-weight: $fontWeightRegular;
+        height: 34px;
+        width: 316px;
+        padding-left: 8px;
+        margin: 0;
+        border: 1px solid $borderColor;
+        border-radius: 0;
+        margin-bottom: 20px;
+        background: transparentize(white, 0);
+        color: $textColor;
+      }
+
+      &.buttons {
+          justify-content: flex-end;
+      }
+
+      
+}
