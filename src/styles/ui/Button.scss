@@ -31,10 +31,11 @@
 }
 
 .menu-button {
-  padding: 3px;
+  min-width: 100px;
+  padding: 3px 14px;
   font-family: $fontText;
   font-weight: $fontWeightRegular;
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
   border-style: solid;
   border-width: 2px;
@@ -43,10 +44,16 @@
   cursor: pointer;
   opacity: 1;
   background-color: white;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
+
+  &.default {
+    font-weight: $fontWeightBold;
+    border-color: $gray_dark;
+    border-width: 3px;
+  }
 
   &:hover {
-    border-color: $yellow_dark;
+    border-color: $brown_dark;
     background-color: $yellow_light;
   }
   &:disabled {
