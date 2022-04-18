@@ -1,6 +1,18 @@
 @import 'styles/theme';
 
 .dashboard {
+  &.task-area {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 36px;
+    //max-width: 860px;
+    margin: 0 0 50px 0;
+    .nothing {
+      color: $gray_dark;
+      font-style: oblique;
+    }
+  }
   &.poll-session-frame {
     width: 250px;
     height: 200px;
@@ -9,44 +21,4 @@
     padding: 7px;
   }
 
-  &.task-area {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 36px;
-    max-width: 860px;
-    margin: 0 0 50px 0;
-  }
-
-  &.task-container {
-    width: 260px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: $borderRadius;
-    border: 1px solid $borderColor;
-    background-color: $background;
-    font-family: $fontText;
-    font-weight: $fontWeightLight;
-    font-size: 14px;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-  &.task-header {
-    padding: 3px 7px;
-    font-weight: $fontWeightBold;
-    border-top-left-radius: $borderInnerRadius;
-    background-color: $yellow_dark;
-    border-top-right-radius: $borderInnerRadius;
-  }
-  &.task-footer {
-    padding: 3px 7px;
-    display: flex;
-    justify-content: space-between;
-    background-color: $yellow_dark;
-    border-bottom-left-radius: $borderInnerRadius;
-    border-bottom-right-radius: $borderInnerRadius;
-  }
-  &.task-content {
-    padding: 3px 7px;
-  }
 }

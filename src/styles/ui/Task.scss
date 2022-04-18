@@ -1,0 +1,115 @@
+@import 'styles/theme';
+
+.task-container {
+  width: 278px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: $borderRadius;
+  border: 1px solid $borderColor;
+  font-family: $fontText;
+  font-weight: $fontWeightLight;
+  font-size: 14px;
+  background-color: $task_priority_none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.private {
+    border-style: dashed;
+  }
+
+  // Background colors according to priority
+  &.task_priority_none {
+    background-color: $task_priority_none;
+  }
+  &.task_priority_low {
+    background-color: $task_priority_low;
+  }
+  &.task_priority_medium {
+    background-color: $task_priority_medium;
+  }
+  &.task_priority_high {
+    background-color: $task_priority_high;
+  }
+
+
+  /**
+  / Building blocks of the task
+   **/
+
+  // Header
+  .task-header {
+    padding: 4px 7px;
+    font-weight: $fontWeightBold;
+    border-top-left-radius: $taskHeaderRadius;
+    background-color: $yellow_dark;
+    border-top-right-radius: $taskHeaderRadius;
+  }
+
+  // Main content
+  .task-content {
+    &.top-container {
+      padding: 4px 7px;
+      border-bottom: 1px solid $borderColor;
+      font-size: 12px;
+      line-height: 1.2em;
+    }
+    &.task-description {
+      height: 3.6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-clamp: 3; // crop after 3 lines of text
+      display: -webkit-box;
+      -webkit-line-clamp: 3; // number of lines to show
+      -webkit-box-orient: vertical;
+    }
+    &.comments {
+      margin-top: 7px;
+      color: $brown_dark;
+    }
+    &.bottom-container {
+      padding: 4px 7px;
+      font-size: 13px;
+      line-height: 1.4em;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      .label {
+        font-weight: $fontWeightBold;
+      }
+      .not-specified {
+        color: $gray_dark;
+        font-style: oblique;
+      }
+      &.task-attributes, &.elements-right {
+        padding: unset;
+        flex-direction: column;
+        justify-content: flex-start;
+        .editButton {
+          margin: 7px 7px 0 0;
+          padding: 0;
+          text-align: right;
+          &:hover {
+            cursor: pointer;
+          }
+          & img {
+            width: 40px;
+          }
+        }
+      }
+    }
+  }
+
+  // Footer
+  .task-footer {
+    padding: 5px 7px;
+    display: flex;
+    justify-content: space-between;
+    background-color: $yellow_dark;
+    color: $brown_darker;
+    border-bottom-left-radius: $taskHeaderRadius;
+    border-bottom-right-radius: $taskHeaderRadius;
+    & *:hover {
+      color: $brown_dark;
+    }
+  }
+}

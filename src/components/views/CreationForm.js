@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo} from 'react';
+import {useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
@@ -65,7 +65,7 @@ const CreationForm = () => {
   const history = useHistory();
   const [title, setTitle] = useState(null);
   const [description, setDescription] = useState(null);
-  const [priority, setPriority] = useState(null);
+  const [priority, setPriority] = useState("NONE");
   //const [assignee, setAssignee] = useState(null);
   //const [reporter, setReporter] = useState(null);
   const [dueDate, setDueDate] = useState(null);
@@ -81,9 +81,6 @@ const CreationForm = () => {
       // Get the returned task  and update a new object.
       const task = new Task(response.data);
 
-      // Store the token into the local storage.
-      //localStorage.setItem('token', user.token);
-
       // After succesful creation of a new task navigate to /dashboard
       history.push(`/dashboard`);
     } catch (error) {
@@ -93,70 +90,76 @@ const CreationForm = () => {
 
   return (
       <BaseContainer>
-        <div className = "creation-form container">
-          <div className="creation-form header">
-            <input
-                className="creation-form input"
-                placeholder="Task title"
-                value = {title}
-                onChange = {t => setTitle(t.target.value)}
-            />
-          </div>
-          <div className="creation-form description-container">
+        <div className="base-container left-frame">
+        </div>
+        <div className="base-container main-frame">
+          <div className = "creation-form container">
+            <div className="creation-form header">
+              <input
+                  className="creation-form input"
+                  placeholder="Task title"
+                  value = {title}
+                  onChange = {t => setTitle(t.target.value)}
+              />
+            </div>
+            <div className="creation-form description-container">
           <textarea
               rows="4"
               placeholder="Task description"
               onChange = {d => setDescription(d.target.value)}
           />
-          </div>
-          <div className="creation-form attributes-container">
-            <div className="creation-form attributes-container attributes-column">
-              <FormField
-                  label = "Due date:"
-                  type = "date"
-                  placeholder = "Select date"
-                  value = {dueDate}
-                  onChange = {dd => setDueDate(dd)}
-              />
-              <Selection
-                  label="Priority:"
-                  value={priority}
-                  onChange={p => setPriority(p)}
-              />
-              <FormField
-                  label = "Location:"
-                  placeholder = "Set location..."
-                  value={location}
-                  onChange={l => setLocation(l)}
-              />
             </div>
-            <div className="creation-form attributes-container attributes-column rightalign">
-              <FormField
-                  label = "Estimate:"
-                  type = "number"
-                  width = "80px"
-                  align = "right"
-                  placeholder = "h"
-                  value={estimate}
-                  onChange={e => setEstimate(e)}
-              />
+            <div className="creation-form attributes-container">
+              <div className="creation-form attributes-container attributes-column">
+                <FormField
+                    label = "Due date:"
+                    type = "date"
+                    placeholder = "Select date"
+                    value = {dueDate}
+                    onChange = {dd => setDueDate(dd)}
+                />
+                <Selection
+                    label="Priority:"
+                    value={priority}
+                    onChange={p => setPriority(p)}
+                />
+                <FormField
+                    label = "Location:"
+                    placeholder = "Set location..."
+                    value={location}
+                    onChange={l => setLocation(l)}
+                />
+              </div>
+              <div className="creation-form attributes-container attributes-column rightalign">
+                <FormField
+                    label = "Estimate:"
+                    type = "number"
+                    width = "80px"
+                    align = "right"
+                    placeholder = "h"
+                    value={estimate}
+                    onChange={e => setEstimate(e)}
+                />
+              </div>
+            </div>
+            <div className="creation-form footer">
+              <Button
+                  className="menu-button"
+                  onClick={() => history.push(`/dashboard`)}
+              >
+                Cancel
+              </Button>
+              <Button
+                  className="menu-button default"
+                  disabled={!title}
+                  onClick={() => saveTask()}
+              >
+                Save
+              </Button>
             </div>
           </div>
-          <div className="creation-form footer">
-            <Button
-                className="menu-button"
-                onClick={() => history.push(`/dashboard`)}
-            >
-              Cancel
-            </Button>
-            <Button
-                className="menu-button default"
-                disabled={!title}
-                onClick={() => saveTask()}
-            >
-              Save
-            </Button>
-          </div>
+        </div>
+        <div className="base-container main-frame right-frame">
         </div>
       </BaseContainer>
   );

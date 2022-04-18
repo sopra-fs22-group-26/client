@@ -18,25 +18,16 @@
 
   }
   &.container {
-    //margin-top: 2em;
     display: flex;
     flex-direction: column;
     width: fit-content;
     justify-content: center;
-
     padding: 0;
     border-radius: $borderRadius;
     border: 2px solid $borderColor;
     background-color: $background;
 
-    //font-weight: $fontWeightRegular;
-
     transition: opacity 0.5s ease, transform 0.5s ease;
-
-    //min-height: 300px;
-    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-    // @include center;
-    //flex-direction: column;
   }
   &.header {
     padding: 5px 15px;
@@ -52,18 +43,10 @@
     flex-direction: column;
     justify-content: center;
     margin: 45px 36px;
-    //width: 60%;
-    //max-width: 30em;
-    //height: 20em;
     font-size: 18px;
     font-weight: $fontWeightBold;
     padding-left: 37px;
     padding-right: 37px;
-    //border-radius: $borderRadius;
-    //border: 2px solid $borderColor;
-    //background-color: $background;
-    //transition: opacity 0.5s ease, transform 0.5s ease;
-    //box-shadow: none;
   }
   &.field {
     display: table;

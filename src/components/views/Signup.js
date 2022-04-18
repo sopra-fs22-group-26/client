@@ -88,7 +88,7 @@ const Signup = props => {
 
 
   return (
-    <BaseContainer className="centered">
+    <BaseContainer className="single-frame centered">
       <div className="login container">
         <div className="login header">Sign up</div>
         <div className="login form">
@@ -107,6 +107,7 @@ const Signup = props => {
           <FormField
               label="E-mail address:"
               value={emailAddress}
+              type = "email"
               onChange={e => setEmailAddress(e)}
           />
           <FormField

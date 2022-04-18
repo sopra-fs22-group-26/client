@@ -20,12 +20,19 @@ $gray_medium: #CECECE;
 $gray_dark: #929191;
 
 $brown_dark: #C97D00;
+$brown_darker: #a26300;
 
 $yellow_dark: #FFB30E;
 $yellow_light: #FFEFCB;
 
-/* some constants */
+/* Element Colors */
+$task_priority_none: white;
+$task_priority_low: #F2FFDD;
+$task_priority_medium: #FFEFCB;
+$task_priority_high: #FFE2E0;
 
+
+/* some constants */
 $DESKTOP_WIDTH: 1160px;
 $SMALL_LAPTOPS_WIDTH: 970px;
 $TABLETS_WIDTH: 750px;
@@ -49,6 +56,7 @@ $fontWeightLight: 300;
 $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
 
 $borderRadius: 8px;
+$taskHeaderRadius: 7px;
 $borderInnerRadius: 6px;
 $buttonBorderRadius: 6px;
 $formButtonRadius: 4px;
