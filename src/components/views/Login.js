@@ -67,36 +67,36 @@ const Login = props => {
   };
 
   return (
-    <BaseContainer className="centered">
-      <div className="login container">
-        <div className="login header">Login</div>
-        <div className="login form">
-          <FormField
-            label="Username:"
-            value={username}
-            onChange={un => setUsername(un)}
-          />
-          <FormField
-            label="Password:"
-            value={password}
-            type="password"
-            onChange={pw => setPassword(pw)}
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !password}
-              width="316px"
-              onClick={() => doLogin()}
-            >
-              Submit
-            </Button>
-            <div className="login link-container">
-              <p>Are you a new user? <a href="/signup">Sign up here</a></p>
+      <BaseContainer className="single-frame centered">
+        <div className="login container">
+          <div className="login header">Login</div>
+          <div className="login form">
+            <FormField
+                label="Username:"
+                value={username}
+                onChange={un => setUsername(un)}
+            />
+            <FormField
+                label="Password:"
+                value={password}
+                type="password"
+                onChange={pw => setPassword(pw)}
+            />
+            <div className="login button-container">
+              <Button
+                  disabled={!username || !password}
+                  width="316px"
+                  onClick={() => doLogin()}
+              >
+                Submit
+              </Button>
+              <div className="login link-container">
+                <p>Are you a new user? <a href="/signup">Sign up here</a></p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
   );
 };
 

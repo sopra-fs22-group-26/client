@@ -1,44 +1,40 @@
 import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import editIcon from "../../images/task_edit_icon.svg"
-import {CreationButton} from 'components/ui/CreationButton';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
+import {Button} from "components/ui/Button";
+import {Task} from "components/ui/Task"
 import 'styles/views/Dashboard.scss';
-import {Button} from "../ui/Button";
-import {Spinner} from "../ui/Spinner";
-
-
-const Task = ({task}) => (
-    <div className="dashboard task-container">
-      <div className="dashboard task-header">{task.title}</div>
-      <div className="dashboard task-content">
-        <div>Description: {task.description}</div>
-        <div>Priority: {task.priority}</div>
-        <div>Estimate {task.estimate}h</div>
-        <div>Location {task.location}</div>
-      </div>
-      <div className="dashboard task-footer">&nbsp;</div>
-    </div>
-);
 
 const Dashboard = () => {
 
-const CreationButton = props => (
-  <button
-    {...props}
-    style={{width: props.width, ...props.style}}
-    className = "dashboard create-button">
-    {props.children}
-  </button>
-  );
+  // Temporary functions to manipulate tasks
+  // => need to be implemented!
+  function doTaskDelete(task_id) {
+    alert("Delete task with id " + task_id + "\n(Not implemented yet...)");
+  }
+  function doTaskCalendarExport(task_id) {
+    alert("Export calendar event for task with id " + task_id + "\n(Not implemented yet...)");
+  }
+  function doTaskComplete(task_id) {
+    alert("Complete task with id " + task_id + "\n(Not implemented yet...)");
+  }
+  function doTaskEdit(task_id) {
+    alert("Edit task with id " + task_id + "\n(Not implemented yet...)");
+  }
+
+  // Functions will be passed to task child component (for reference)
+  const myTaskFunctions = {
+    "completeTask": doTaskComplete,
+    "editTask": doTaskEdit,
+    "deleteTask": doTaskDelete,
+    "exportCalendar": doTaskCalendarExport
+  }
 
   const history = useHistory();
   const [tasks, setTasks] = useState(null);
 
   useEffect(() => {
-    // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
         const response = await api.get('/tasks');
@@ -54,29 +50,28 @@ const CreationButton = props => (
         alert("Something went wrong while fetching the tasks! See the console for details.");
       }
     }
-
     fetchData();
   }, []);
 
-  let content = ("<p>No Tasks.</p>");
+  // Create content
+  let content = <div className="nothing">--- no tasks for current view ---</div>;
 
   if (tasks) {
-    content = (
-        <div className="dashboard task-area">
-          {tasks.map(task => (
-              <Task task={task} key={task.id}/>
-          ))}
-        </div>
-    );
+    content = tasks.map(task => (
+        <Task props={task} key={task.id} taskFunctions={myTaskFunctions}/>
+    ));
   }
 
-
+  // Combine contents and display dashboard
   return (
-      <BaseContainer className="base-container two-frames">
-        <div className="base-container main-area">
-          {content}
-          <button><img src={editIcon} onClick= { () => history.push('/editform')} /></button>
-
+      <BaseContainer>
+        <div className="base-container left-frame">
+          [left menu]
+        </div>
+        <div className="base-container main-frame">
+          <div className="dashboard task-area">
+            {content}
+          </div>
         </div>
         <div className="base-container right-frame">
           <div className="dashboard poll-session-frame">
@@ -84,12 +79,10 @@ const CreationButton = props => (
             <p>(Placeholder)</p>
           </div>
           <Button
-              width = "100%"
               onClick = { () => history.push('/creationform')}
           >
             Create new task
           </Button>
-
         </div>
       </BaseContainer>
   );

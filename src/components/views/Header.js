@@ -29,28 +29,6 @@ const HeaderContent = ({props}) => {
 
   if (localStorage.getItem("token")) {
     userOnline = true;
-    /*
-    if (localStorage.getItem("id")) {
-      userId = localStorage.getItem("id");
-      const getUserInfo = async () => {
-        try {
-          const response = await api.get(`/users/${userId}`);
-
-          // Get the returned user and update a new object.
-          const user = new User(response.data);
-
-          // Store the data into the local storage.
-          if(user.name != ""){
-            name = user.name;
-            localStorage.setItem('name', user.name);
-          }
-        } catch (error) {
-          alert(`Information for current user not found: \n${handleError(error)}`);
-        }
-      };
-      getUserInfo();
-    }
-     */
   }
 
   // Navigate to different page

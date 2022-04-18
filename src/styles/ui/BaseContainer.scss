@@ -1,6 +1,7 @@
 @import 'styles/theme';
 
-.base-container {
+/*
+.base-container-old {
   margin: 32px 0 0 146px;
   padding: 0;
   //min-width: 1195px;
@@ -26,5 +27,59 @@
   }
   &.right-frame {
     margin: 0 26px 50px auto;
+  }
+}
+
+ */
+
+.base-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  min-width: 1365px;
+  margin: 32px 0 50px 0;
+  padding: 0 24px 0 0;
+
+  // 3-frame layout
+  &.left-frame {
+    margin: 0;
+    min-width: unset;
+    width: 146px;
+    padding: 0 24px;
+    justify-content: right;
+  }
+  &.main-frame {
+    margin: 0;
+    min-width: unset;
+    width: calc(100% - 146px - 250px);
+    flex-direction: column;
+    &.centered {
+      display: flex;
+      width: unset;
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+      background-color: #123597;
+    }
+  }
+  &.right-frame {
+    margin: 0;
+    min-width: unset;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0;
+    width: 250px;
+  }
+
+  // single-frame layout
+  &.single-frame {
+    margin: 32px 146px 0 146px;
+    padding: 0;
+    min-width: max-content;
+    display: flex;
+    justify-content: left;
+    &.centered {
+      justify-content: center;
+    }
   }
 }
