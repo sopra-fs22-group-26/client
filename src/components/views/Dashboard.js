@@ -20,7 +20,7 @@ const Dashboard = () => {
     alert("Complete task with id " + task_id + "\n(Not implemented yet...)");
   }
   function doTaskEdit(task_id) {
-    alert("Edit task with id " + task_id + "\n(Not implemented yet...)");
+    history.push('/editform/'+task_id)
   }
 
   // Functions will be passed to task child component (for reference)
