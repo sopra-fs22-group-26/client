@@ -109,15 +109,15 @@ const EditForm = () => {
         fetchData();
     }, []);
 
-    let content = <div className="creation-form container"/>;
+    let content = <div className="nothing"> loading task info</div>;
 
     if(task) {
-        content = task => (
+        content =
             <div className="creation-form container">
                 <div className="creation-form header">
                     <input
                         className="creation-form input"
-                        placeholder="{task.title}"
+                        placeholder={task.title}
                         value={title}
                         onChange={t => setTitle(t.target.value)}
                     />
@@ -125,7 +125,7 @@ const EditForm = () => {
                 <div className="creation-form description-container">
           <textarea
               rows="4"
-              placeholder="{task.description}"
+              placeholder={task.description}
               onChange={d => setDescription(d.target.value)}
           />
                 </div>
@@ -134,7 +134,7 @@ const EditForm = () => {
                         <FormField
                             label="Due date:"
                             type="date"
-                            placeholder="{task.dueDate}"
+                            placeholder={task.dueDate}
                             value={dueDate}
                             onChange={dd => setDueDate(dd)}
                         />
@@ -145,7 +145,7 @@ const EditForm = () => {
                         />
                         <FormField
                             label="Location:"
-                            placeholder="Set location..."
+                            placeholder={task.location}
                             value={location}
                             onChange={l => setLocation(l)}
                         />
@@ -156,7 +156,7 @@ const EditForm = () => {
                             type="number"
                             width="80px"
                             align="right"
-                            placeholder="h"
+                            placeholder={task.estimate+"h"}
                             value={estimate}
                             onChange={e => setEstimate(e)}
                         />
@@ -177,7 +177,7 @@ const EditForm = () => {
                         Save
                     </Button>
                 </div>
-            </div>);
+            </div>;
     }
 
     return (
