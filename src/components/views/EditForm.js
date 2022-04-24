@@ -80,13 +80,10 @@ const EditForm = () => {
             const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate});
             const editResponse = await api.put(`/tasks/${params["task_id"]}`, requestBody);
 
-            // Get the returned task  and update a new object.
-            const task = new Task(editResponse.data);
-
-            // After succesful creation of a new task navigate to /dashboard
-            history.push(`/dashboard`);
+            // After succesful edit of a task navigate to /dashboard
+            history.push(`/editform/${params["task_id"]}`);
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            alert(`Something went wrong during edit: \n${handleError(error)}`);
         }
     };
 
@@ -171,7 +168,6 @@ const EditForm = () => {
                     </Button>
                     <Button
                         className="menu-button default"
-                        disabled={!title}
                         onClick={() => saveEdit()}
                     >
                         Save
