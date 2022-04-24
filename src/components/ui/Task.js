@@ -35,7 +35,7 @@ export const Task = ({props, taskFunctions}) => (
         </div>
       </div>
       <div className="task-footer">
-        <DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props.taskId)} />
+        <DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)} />
         <CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props.taskId)} />
         <AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props.taskId)} />
       </div>

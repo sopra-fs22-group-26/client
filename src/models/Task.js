@@ -11,6 +11,8 @@
       this.priority = null;
       this.location = null;
       this.status = null;
+      this.assignee = null;
+      this.reporter = null;
       Object.assign(this, data);
     }
   }
