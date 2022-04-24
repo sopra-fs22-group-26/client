@@ -31,8 +31,8 @@ const MenuSection = props => {
 
 const Dashboard = () => {
   const params = useParams();
-  // Temporary functions to manipulate tasks
-  // => need to be implemented!
+
+  // Functions to manipulate tasks
   function doTaskDelete(task) {
     if (window.confirm(`Do you really want to delete the task \"${task.title}\"?`)) {
       async function deleteTask() {
@@ -48,14 +48,16 @@ const Dashboard = () => {
       deleteTask();
     }
   }
-  function doTaskCalendarExport(task_id) {
-    alert("Export calendar event for task with id " + task_id + "\n(Not implemented yet...)");
+
+  // => need to be implemented!
+  function doTaskCalendarExport(task) {
+    alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
   }
-  function doTaskComplete(task_id) {
-    alert("Complete task with id " + task_id + "\n(Not implemented yet...)");
+  function doTaskComplete(task) {
+    alert("Complete task with id " + task.taskId + "\n(Not implemented yet...)");
   }
-  function doTaskEdit(task_id) {
-    history.push('/editform/'+task_id);
+  function doTaskEdit(task) {
+    history.push('/editform/' + task.taskId);
   }
 
   // Functions will be passed to task child component (for reference)
@@ -78,8 +80,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     async function fetchData() {
+
+      // Apply show filter to fetch active or completed tasks
+      let url = '/tasks';
+      if (show === LeftMenuItems.TaskShow.Active) {
+        url += '?show=active';
+      }
+      else if (show === LeftMenuItems.TaskShow.Completed) {
+        url += '?show=completed';
+      }
+
       try {
-        const response = await api.get('/tasks');
+        const response = await api.get(url);
 
         // Get the returned tasks and store them temporarily
         // Apply filter and sorts
@@ -88,7 +100,7 @@ const Dashboard = () => {
         // Filter tasks according to the current filter state
         if (filter === LeftMenuItems.TaskFilter.MyTasks) {
           //alert(localStorage.getItem("id"));
-          tasks = tasks.filter(a => a.assignee == localStorage.getItem("id"));
+          tasks = tasks.filter(a => a.assignee === parseInt(localStorage.getItem("id")));
         }
 
 
@@ -96,7 +108,7 @@ const Dashboard = () => {
         switch (sort) {
           case LeftMenuItems.TaskSort.DueDate:
             tasks = tasks.sort((a, b) => {
-              if (a.dueDate == b.dueDate) {
+              if (a.dueDate === b.dueDate) {
                 return prioritySortOrder.indexOf(a.priority) - prioritySortOrder.indexOf(b.priority);
               }
               else {
@@ -107,7 +119,7 @@ const Dashboard = () => {
           case LeftMenuItems.TaskSort.Priority:
             //
               tasks = tasks.sort((a, b) => {
-                if (a.priority == b.priority) {
+                if (a.priority === b.priority) {
                   return a.dueDate > b.dueDate;
                 }
                 else {
@@ -143,7 +155,7 @@ const Dashboard = () => {
   // Create content
   let content = <div className="nothing">--- no tasks for current view ---</div>;
 
-  if (tasks) {
+  if (tasks && tasks.length > 0) {
     content = tasks.map(task => (
         <Task props={task} key={task.id} taskFunctions={myTaskFunctions}/>
     ));

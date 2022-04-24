@@ -7,6 +7,22 @@ import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurned
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
+const TaskFooter = ({props, taskFunctions}) => {
+  // Generate task footer according to task.status
+  let footer = [];
+  footer.push(<DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)}/>);
+  if (props.status === "ACTIVE") {
+    footer.push(<CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props)} />);
+    footer.push(<AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props)} />);
+  }
+  return (
+      <div className="task-footer">
+        {footer}
+      </div>
+  );
+}
+
+
 export const Task = ({props, taskFunctions}) => (
     <div className={"task-container task_priority_" + props.priority.toLowerCase()}>
       <div className="task-header">{props.title}</div>
@@ -28,16 +44,12 @@ export const Task = ({props, taskFunctions}) => (
           </div>
           <div className="task-content bottom-container elements-right">
             <div><span className="label">Estimate:</span> {props.estimate}h</div>
-            <div className="editButton" onClick={() => taskFunctions.editTask(props.taskId)} >
+            <div className="editButton" onClick={() => taskFunctions.editTask(props)} >
               <img src={editIcon} />
             </div>
           </div>
         </div>
       </div>
-      <div className="task-footer">
-        <DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)} />
-        <CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props.taskId)} />
-        <AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props.taskId)} />
-      </div>
+      <TaskFooter props={props} taskFunctions={taskFunctions} />
     </div>
 );
