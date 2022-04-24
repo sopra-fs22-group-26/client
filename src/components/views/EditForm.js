@@ -4,7 +4,6 @@ import {Button} from 'components/ui/Button';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import Task from 'models/Task';
 import 'styles/views/CreationForm.scss';
 import React from "react";
 
@@ -81,7 +80,7 @@ const EditForm = () => {
             const editResponse = await api.put(`/tasks/${params["task_id"]}`, requestBody);
 
             // After succesful edit of a task navigate to /dashboard
-            history.push(`/editform/${params["task_id"]}`);
+            history.push(`/dashboard`);
         } catch (error) {
             alert(`Something went wrong during edit: \n${handleError(error)}`);
         }
@@ -92,8 +91,16 @@ const EditForm = () => {
             try {
                 const response = await api.get(`/tasks/${params["task_id"]}`);
 
-                // Get the returned tasks and update the state.
+                // Get the returned tasks and update the states.
                 setTask(response.data);
+
+                setTitle(response.data.title);
+                setDescription(response.data.description);
+                setPriority(response.data.priority ? response.data.priority : "NONE");
+                setDueDate(new Date(response.data.dueDate).toISOString().split('T')[0]);
+                setLocation(response.data.location);
+                setEstimate(response.data.estimate);
+
                 // See here to get more data.
                 console.log(response.data);
                 console.log(task);
@@ -110,7 +117,7 @@ const EditForm = () => {
 
     if(task) {
         content =
-            <div className="creation-form container">
+            <div id="form-container" className={"creation-form container task_priority_" + task.priority.toLowerCase()}>
                 <div className="creation-form header">
                     <input
                         className="creation-form input"
@@ -122,7 +129,8 @@ const EditForm = () => {
                 <div className="creation-form description-container">
           <textarea
               rows="4"
-              placeholder={task.description}
+              placeholder="Task description"
+              defaultValue={description}
               onChange={d => setDescription(d.target.value)}
           />
                 </div>
@@ -131,18 +139,19 @@ const EditForm = () => {
                         <FormField
                             label="Due date:"
                             type="date"
-                            placeholder={task.dueDate}
+                            placeholder="Select date"
                             value={dueDate}
                             onChange={dd => setDueDate(dd)}
                         />
                         <Selection
                             label="Priority:"
                             value={priority}
-                            onChange={p => setPriority(p)}
+                            onChange={p => {setPriority(p);
+                              document.getElementById("form-container").className = "creation-form container task_priority_" + p.toLowerCase()}}
                         />
                         <FormField
                             label="Location:"
-                            placeholder={task.location}
+                            placeholder="Set location..."
                             value={location}
                             onChange={l => setLocation(l)}
                         />
@@ -153,7 +162,7 @@ const EditForm = () => {
                             type="number"
                             width="80px"
                             align="right"
-                            placeholder={task.estimate+"h"}
+                            placeholder="h"
                             value={estimate}
                             onChange={e => setEstimate(e)}
                         />
@@ -168,6 +177,7 @@ const EditForm = () => {
                     </Button>
                     <Button
                         className="menu-button default"
+                        disabled={!(title && description && dueDate && estimate)}
                         onClick={() => saveEdit()}
                     >
                         Save
