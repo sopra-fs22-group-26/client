@@ -1,17 +1,18 @@
 import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import {Button} from "components/ui/Button";
 import {Task} from "components/ui/Task"
 import 'styles/views/Dashboard.scss';
 
 const Dashboard = () => {
-
+  const params = useParams();
   // Temporary functions to manipulate tasks
   // => need to be implemented!
   function doTaskDelete(task_id) {
-    alert("Delete task with id " + task_id + "\n(Not implemented yet...)");
+   const response = api.delete(`/tasks/`+task_id);
+   history.push('/dashboard');
   }
   function doTaskCalendarExport(task_id) {
     alert("Export calendar event for task with id " + task_id + "\n(Not implemented yet...)");
@@ -20,7 +21,7 @@ const Dashboard = () => {
     alert("Complete task with id " + task_id + "\n(Not implemented yet...)");
   }
   function doTaskEdit(task_id) {
-    history.push('/editform/'+task_id)
+    history.push('/editform/'+task_id);
   }
 
   // Functions will be passed to task child component (for reference)
