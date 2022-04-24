@@ -32,7 +32,14 @@ const MenuSection = props => {
 const Dashboard = () => {
   const params = useParams();
 
-  // Functions to manipulate tasks
+  /**
+   * Functions to manipulate tasks:
+   * - delete and complete (directly)
+   * - edit (redirect to edit page)
+   * - calendar export
+   */
+
+  // Delete task
   function doTaskDelete(task) {
     if (window.confirm(`Do you really want to delete the task \"${task.title}\"?`)) {
       async function deleteTask() {
@@ -49,15 +56,32 @@ const Dashboard = () => {
     }
   }
 
-  // => need to be implemented!
-  function doTaskCalendarExport(task) {
-    alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
-  }
   function doTaskComplete(task) {
-    alert("Complete task with id " + task.taskId + "\n(Not implemented yet...)");
+    if (window.confirm(`Do you really want to complete the task \"${task.title}\"?`)) {
+      async function completeTask() {
+        try {
+          const requestBody = JSON.stringify({});
+          const response = await api.put(`/tasks/${task.taskId}?updateStatus=completed`, requestBody);
+          console.log(response);
+        } catch (error) {
+          console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
+          console.error("Details:", error);
+          alert("Something went wrong while updating the task! See the console for details.");
+        }
+      }
+      completeTask();
+    }
   }
+
+  // Edit task
   function doTaskEdit(task) {
     history.push('/editform/' + task.taskId);
+  }
+
+  // Export calendar file for a task
+  // => needs to be implemented!
+  function doTaskCalendarExport(task) {
+    alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
   }
 
   // Functions will be passed to task child component (for reference)
@@ -71,7 +95,9 @@ const Dashboard = () => {
   const history = useHistory();
   const [tasks, setTasks] = useState(null);
 
-  // filters and sorts
+  /**
+   * Filters and sorts
+   */
   const [show, setShow] = useState(LeftMenuItems.TaskShow.Active);
   const [filter, setFilter] = useState(LeftMenuItems.TaskFilter.AllTasks);
   const [sort, setSort] = useState(LeftMenuItems.TaskSort.DueDate);
@@ -102,7 +128,6 @@ const Dashboard = () => {
           //alert(localStorage.getItem("id"));
           tasks = tasks.filter(a => a.assignee === parseInt(localStorage.getItem("id")));
         }
-
 
         // Sort tasks according to the current sort state
         switch (sort) {
@@ -161,7 +186,9 @@ const Dashboard = () => {
     ));
   }
 
-  // Combine contents and display dashboard
+  /**
+   * Combine contents and display dashboard
+   */
   return (
       <BaseContainer>
         <div className="base-container left-frame">

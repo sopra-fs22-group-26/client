@@ -7,6 +7,23 @@ import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurned
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
+// Task only has edit button if task is still active.
+// Rated tasks show rating.
+const EditOrRating = ({props, taskFunctions, editIcon}) => {
+  // Generate right side according to task.status
+  let editOrRating = [];
+  if (props.status === "ACTIVE") {
+    editOrRating.push(
+        <div className="editButton" onClick={() => taskFunctions.editTask(props)} >
+          <img src={editIcon} alt="Edit task" />
+        </div>
+    );
+  }
+  return editOrRating;
+}
+
+
+// Task footer only has buttons for completion and calendar export if task is still active
 const TaskFooter = ({props, taskFunctions}) => {
   // Generate task footer according to task.status
   let footer = [];
@@ -44,9 +61,7 @@ export const Task = ({props, taskFunctions}) => (
           </div>
           <div className="task-content bottom-container elements-right">
             <div><span className="label">Estimate:</span> {props.estimate}h</div>
-            <div className="editButton" onClick={() => taskFunctions.editTask(props)} >
-              <img src={editIcon} />
-            </div>
+            <EditOrRating props={props} taskFunctions={taskFunctions} editIcon={editIcon} />
           </div>
         </div>
       </div>
