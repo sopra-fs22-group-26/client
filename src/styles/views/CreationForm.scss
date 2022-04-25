@@ -95,6 +95,9 @@
         font-weight: $fontWeightBold;
         text-align: left;
         padding-top: 4px;
+        &.react-select {
+            padding-top: 6px;
+        }
     }
     &.input {
         font-weight: $fontWeightRegular;
@@ -118,4 +121,17 @@
         background-color: white;
         border: 1px solid $brown_dark;
     }
+}
+
+.react-select-container {
+    width: 316px;
+    margin: 0 7px 20px auto;
+    text-align: left;
+    justify-content: left;
+    font-family: $fontText;
+    font-size: 14px;
+    border-radius: 0;
+}
+.react-select__menu {
+    border: 1px solid $brown_dark;
 }

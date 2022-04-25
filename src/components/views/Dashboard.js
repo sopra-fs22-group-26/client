@@ -94,6 +94,7 @@ const Dashboard = () => {
 
   const history = useHistory();
   const [tasks, setTasks] = useState(null);
+  const [users, setUsers] = useState(null);
 
   /**
    * Filters and sorts
@@ -117,11 +118,20 @@ const Dashboard = () => {
       }
 
       try {
+        // Get all tasks and store them temporarily
         const response = await api.get(url);
-
-        // Get the returned tasks and store them temporarily
-        // Apply filter and sorts
         let tasks = response.data;
+
+        // Get all users and replace assigne and reporter ids with user names
+        const response2 = await api.get(`/users`);
+        let userArray = response2.data.map(user => [user.id, user.name]);
+        const userDictionary = Object.fromEntries(userArray);
+        setUsers(userDictionary);
+
+        tasks.forEach(task => task.assignee_name = task.assignee ? userDictionary[task.assignee] : null);
+        tasks.forEach(task => task.reporter_name = task.reporter ? userDictionary[task.reporter] : null);
+
+        // Apply filter and sorts
 
         // Filter tasks according to the current filter state
         if (filter === LeftMenuItems.TaskFilter.MyTasks) {
@@ -129,8 +139,11 @@ const Dashboard = () => {
           tasks = tasks.filter(a => a.assignee === parseInt(localStorage.getItem("id")));
         }
 
-        // Sort tasks according to the current sort state
+        /**
+         * Sort tasks according to the current sort state
+         */
         switch (sort) {
+          // Sort by DueDate
           case LeftMenuItems.TaskSort.DueDate:
             tasks = tasks.sort((a, b) => {
               if (a.dueDate === b.dueDate) {
@@ -141,8 +154,9 @@ const Dashboard = () => {
               }
             });
             break;
+
+          // Sort by Priority
           case LeftMenuItems.TaskSort.Priority:
-            //
               tasks = tasks.sort((a, b) => {
                 if (a.priority === b.priority) {
                   return a.dueDate > b.dueDate;
@@ -152,14 +166,34 @@ const Dashboard = () => {
                 }
               });
             break;
+
+          // Sort by Title
           case LeftMenuItems.TaskSort.Title:
             tasks = tasks.sort((a, b) => a.title > b.title);
             break;
+
+          // Sort by Assignee
           case LeftMenuItems.TaskSort.Assignee:
-            tasks = tasks.sort((a, b) => a.assignee < b.assignee);
+            tasks = tasks.sort((a, b) => {
+              if (a.assignee_name) {
+                return a.assignee_name > b.assignee_name;
+              }
+              else {
+                return 1;
+              }
+            });
             break;
+
+          // Sort by Reporter
           case LeftMenuItems.TaskSort.Reporter:
-            tasks = tasks.sort((a, b) => a.reporter < b.reporter);
+            tasks = tasks.sort((a, b) => {
+              if (a.reporter_name) {
+                return a.reporter_name > b.reporter_name;
+              }
+              else {
+                return 1;
+              }
+            });
             break;
         }
 

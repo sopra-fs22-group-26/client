@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import Task from 'models/Task';
 import 'styles/views/CreationForm.scss';
 import React from "react";
-
+import Select from "react-select";
 
 // Define input text field component
 const FormField = props => {
@@ -37,7 +37,7 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
-// Define input selection component
+// Define native html selection component
 const Selection = props => {
   return (
       <div className="creation-form field">
@@ -59,6 +59,34 @@ Selection.propTypes = {
   onChange: PropTypes.func
 };
 
+// Define REACT selection component
+const ReactSelection = props => {
+  return (
+      <div className="creation-form field">
+        <label className='creation-form label react-select'>
+          {props.label}
+        </label>
+        <Select
+            isClearable
+            className="react-select-container"
+            classNamePrefix="react-select"
+            options={props.options}
+            onChange={e => props.onChange(e ? e.value : null)}
+            getOptionValue={(option) => option.value}
+            theme={(theme) => ({
+              ...theme,
+              borderRadius: 0,
+            })}
+        />
+      </div>
+  );
+};
+ReactSelection.propTypes = {
+  label: PropTypes.string,
+  options: PropTypes.array,
+  onChange: PropTypes.func
+};
+
 
 // Output form
 const CreationForm = () => {
@@ -66,16 +94,47 @@ const CreationForm = () => {
   const [title, setTitle] = useState(null);
   const [description, setDescription] = useState(null);
   const [priority, setPriority] = useState("NONE");
-  //const [assignee, setAssignee] = useState(null);
-  //const [reporter, setReporter] = useState(null);
+  const [assignee, setAssignee] = useState(null);
+  const [reporter, setReporter] = useState(null);
   const [dueDate, setDueDate] = useState(null);
   const [location, setLocation] = useState(null);
   const [estimate, setEstimate] = useState(null);
+  const [users, setUsers] = useState(null);
 
 
+  // Get all users to define options for assignee and reporter
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get(`/users`);
+
+        const tempUsers = response.data.map(user => {
+          let userOption = {};
+          userOption["label"] = user.name;
+          userOption["value"] = user.id;
+          return userOption;
+        });
+        setUsers(tempUsers);
+        console.log('User list:', tempUsers);
+      }
+      catch (error) {
+        console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+        console.error("Details:", error);
+        alert("Something went wrong while fetching the users! See the console for details.");
+      }
+    }
+    fetchData();
+  }, []);
+
+
+  /**
+   * Save task
+   * @returns {Promise<void>}
+   */
   const saveTask = async () => {
     try {
-      const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate});
+      const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
+
       const response = await api.post('/tasks', requestBody);
 
       // Get the returned task  and update a new object.
@@ -83,6 +142,7 @@ const CreationForm = () => {
 
       // After succesful creation of a new task navigate to /dashboard
       history.push(`/dashboard`);
+
     } catch (error) {
       alert(`Something went wrong during the creation: \n${handleError(error)}`);
     }
@@ -117,6 +177,16 @@ const CreationForm = () => {
                     placeholder = "Select date"
                     value = {dueDate}
                     onChange = {dd => setDueDate(dd)}
+                />
+                <ReactSelection
+                    label="Assignee:"
+                    options={users}
+                    onChange={a => setAssignee(a)}
+                />
+                <ReactSelection
+                    label="Reporter:"
+                    options={users}
+                    onChange={r => setReporter(r)}
                 />
                 <Selection
                     label="Priority:"
