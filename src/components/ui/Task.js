@@ -55,8 +55,8 @@ export const Task = ({props, taskFunctions}) => (
         <div className="task-content bottom-container">
           <div className="task-content bottom-container task-attributes">
             <div><span className="label">Priority:</span> {props.priority.toLowerCase()}</div>
-            <div><span className="label">Assignee:</span> {props.assignee ? props.assignee : notDefined}</div>
-            <div><span className="label">Reporter:</span> {props.reporter ? props.reporter : notDefined}</div>
+            <div><span className="label">Assignee:</span> {props.assignee_name ? props.assignee_name : notDefined}</div>
+            <div><span className="label">Reporter:</span> {props.reporter_name ? props.reporter_name : notDefined}</div>
             <div><span className="label">Due date:</span> {new Date(props.dueDate).toLocaleString('ch-DE', {dateStyle: 'medium'})}</div>
           </div>
           <div className="task-content bottom-container elements-right">

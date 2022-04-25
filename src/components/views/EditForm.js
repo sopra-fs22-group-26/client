@@ -6,6 +6,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/CreationForm.scss';
 import React from "react";
+import Select from "react-select";
 
 
 // Define input text field component
@@ -36,7 +37,7 @@ FormField.propTypes = {
     onChange: PropTypes.func
 };
 
-// Define input selection component
+// Define native html input selection component
 const Selection = props => {
     return (
         <div className="creation-form field">
@@ -58,6 +59,35 @@ Selection.propTypes = {
     onChange: PropTypes.func
 };
 
+// Define REACT selection component
+const ReactSelection = (props) => {
+  return (
+      <div className="creation-form field">
+        <label className='creation-form label react-select'>
+          {props.label}
+        </label>
+        <Select
+            isClearable
+            className="react-select-container"
+            classNamePrefix="react-select"
+            options={props.options}
+            defaultValue={props.defaultValue}
+            onChange={e => props.onChange(e ? e.value : null)}
+            getOptionValue={(option) => option.value}
+            theme={(theme) => ({
+              ...theme,
+              borderRadius: 0,
+            })}
+        />
+      </div>
+  );
+};
+ReactSelection.propTypes = {
+  label: PropTypes.string,
+  options: PropTypes.array,
+  onChange: PropTypes.func,
+  defaultValue: PropTypes.object
+};
 
 // Output form
 const EditForm = () => {
@@ -65,18 +95,22 @@ const EditForm = () => {
     const [title, setTitle] = useState(null);
     const [description, setDescription] = useState(null);
     const [priority, setPriority] = useState("NONE");
-    //const [assignee, setAssignee] = useState(null);
-    //const [reporter, setReporter] = useState(null);
+    const [assignee, setAssignee] = useState(null);
+    const [reporter, setReporter] = useState(null);
     const [dueDate, setDueDate] = useState(null);
     const [location, setLocation] = useState(null);
     const [estimate, setEstimate] = useState(null);
     const [task, setTask] = useState(null);
 
+    const [users, setUsers] = useState(null);
+    const [firstAssignee, setFirstAssignee] = useState("");
+    const [firstReporter, setFirstReporter] = useState(null);
+
     const params = useParams();
 
     const saveEdit = async () => {
         try {
-            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate});
+            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
             const editResponse = await api.put(`/tasks/${params["task_id"]}`, requestBody);
 
             // After succesful edit of a task navigate to /dashboard
@@ -88,9 +122,9 @@ const EditForm = () => {
 
     useEffect(() => {
         async function fetchData() {
+          let fa, fr;
             try {
                 const response = await api.get(`/tasks/${params["task_id"]}`);
-
                 // Get the returned tasks and update the states.
                 setTask(response.data);
 
@@ -101,6 +135,10 @@ const EditForm = () => {
                 setLocation(response.data.location);
                 setEstimate(response.data.estimate);
 
+                // Temporarily save assignee and reporter id
+                fa = response.data.assignee;
+                fr = response.data.reporter;
+
                 // See here to get more data.
                 console.log(response.data);
                 console.log(task);
@@ -109,13 +147,43 @@ const EditForm = () => {
                 console.error("Details:", error);
                 alert("Something went wrong while fetching the tasks! See the console for details.");
             }
+
+          // Get all users to define options for assignee and reporter
+          try {
+            const response = await api.get(`/users`);
+
+            const tempUsers = response.data.map(user => {
+              let userOption = {};
+              userOption["label"] = user.name;
+              userOption["value"] = user.id;
+
+              // Assign assignee and reporter if they match
+              if (user.id === fa) {
+                setFirstAssignee(userOption);
+                setAssignee(user.id);
+              }
+              if (user.id === fr) {
+                setFirstReporter(userOption)
+                setReporter(user.id);
+              }
+              return userOption;
+            });
+            setUsers(tempUsers);
+
+            console.log('User list:', tempUsers);
+          }
+          catch (error) {
+            console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while fetching the users! See the console for details.");
+          }
         }
         fetchData();
     }, []);
 
     let content = <div className="nothing"> loading task info</div>;
 
-    if(task) {
+    if(task && users) {
         content =
             <div id="form-container" className={"creation-form container task_priority_" + task.priority.toLowerCase()}>
                 <div className="creation-form header">
@@ -143,7 +211,19 @@ const EditForm = () => {
                             value={dueDate}
                             onChange={dd => setDueDate(dd)}
                         />
-                        <Selection
+                      <ReactSelection
+                          label="Assignee:"
+                          defaultValue={firstAssignee}
+                          options={users}
+                          onChange={a => setAssignee(a)}
+                      />
+                      <ReactSelection
+                          label="Reporter:"
+                          defaultValue={firstReporter}
+                          options={users}
+                          onChange={r => setReporter(r)}
+                      />
+                      <Selection
                             label="Priority:"
                             value={priority}
                             onChange={p => {setPriority(p);
