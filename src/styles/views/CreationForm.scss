@@ -11,8 +11,24 @@
         margin-bottom: 50px;
         border-radius: $borderRadius;
         border: 2px solid $borderColor;
-        background-color: $background;
+        //background-color: $background;
+        background-color: white;
         transition: opacity 0.5s ease, transform 0.5s ease;
+
+        // Background colors according to priority
+        &.task_priority_none {
+            background-color: $task_priority_none;
+        }
+        &.task_priority_low {
+            background-color: $task_priority_low;
+        }
+        &.task_priority_medium {
+            background-color: $task_priority_medium;
+        }
+        &.task_priority_high {
+            background-color: $task_priority_high;
+        }
+
     }
 
     &.header {

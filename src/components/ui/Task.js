@@ -7,6 +7,39 @@ import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurned
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
+// Task only has edit button if task is still active.
+// Rated tasks show rating.
+const EditOrRating = ({props, taskFunctions, editIcon}) => {
+  // Generate right side according to task.status
+  let editOrRating = [];
+  if (props.status === "ACTIVE") {
+    editOrRating.push(
+        <div className="editButton" onClick={() => taskFunctions.editTask(props)} >
+          <img src={editIcon} alt="Edit task" />
+        </div>
+    );
+  }
+  return editOrRating;
+}
+
+
+// Task footer only has buttons for completion and calendar export if task is still active
+const TaskFooter = ({props, taskFunctions}) => {
+  // Generate task footer according to task.status
+  let footer = [];
+  footer.push(<DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)}/>);
+  if (props.status === "ACTIVE") {
+    footer.push(<CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props)} />);
+    footer.push(<AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props)} />);
+  }
+  return (
+      <div className="task-footer">
+        {footer}
+      </div>
+  );
+}
+
+
 export const Task = ({props, taskFunctions}) => (
     <div className={"task-container task_priority_" + props.priority.toLowerCase()}>
       <div className="task-header">{props.title}</div>
@@ -28,16 +61,10 @@ export const Task = ({props, taskFunctions}) => (
           </div>
           <div className="task-content bottom-container elements-right">
             <div><span className="label">Estimate:</span> {props.estimate}h</div>
-            <div className="editButton" onClick={() => taskFunctions.editTask(props.taskId)} >
-              <img src={editIcon} />
-            </div>
+            <EditOrRating props={props} taskFunctions={taskFunctions} editIcon={editIcon} />
           </div>
         </div>
       </div>
-      <div className="task-footer">
-        <DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props.taskId)} />
-        <CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props.taskId)} />
-        <AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props.taskId)} />
-      </div>
+      <TaskFooter props={props} taskFunctions={taskFunctions} />
     </div>
 );

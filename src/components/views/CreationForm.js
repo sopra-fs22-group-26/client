@@ -93,7 +93,7 @@ const CreationForm = () => {
         <div className="base-container left-frame">
         </div>
         <div className="base-container main-frame">
-          <div className = "creation-form container">
+          <div id="form-container" className = "creation-form container">
             <div className="creation-form header">
               <input
                   className="creation-form input"
@@ -121,7 +121,8 @@ const CreationForm = () => {
                 <Selection
                     label="Priority:"
                     value={priority}
-                    onChange={p => setPriority(p)}
+                    onChange={p => {setPriority(p);
+                      document.getElementById("form-container").className = "creation-form container task_priority_" + p.toLowerCase()}}
                 />
                 <FormField
                     label = "Location:"
@@ -151,7 +152,7 @@ const CreationForm = () => {
               </Button>
               <Button
                   className="menu-button default"
-                  disabled={!title}
+                  disabled={!(title && description && dueDate && estimate)}
                   onClick={() => saveTask()}
               >
                 Save

@@ -1,0 +1,41 @@
+@import 'styles/theme';
+
+.left-menu {
+  width: 100%;
+  justify-content: right;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  font-size: 16px;
+  font-weight: $fontWeightLight;
+
+  h3 {
+    margin: 3px 0 -2px 15px;
+    padding: 0 0 3px 0;
+    width: available;
+    border-bottom: 1px solid black;
+    font-size: 16px;
+  }
+  ul {
+    margin: 7px 0 30px 0;
+    padding: 0;
+    list-style: none;
+    text-align: right;
+    li {
+      margin: 0;
+      padding: 3px 0;
+      &:hover {
+        color: $yellow_dark;
+        font-weight: $fontWeightSemibold;
+        cursor: pointer;
+      }
+      &.selected {
+        font-weight: $fontWeightSemibold;
+        color: $brown_dark;
+        cursor: unset;
+      }
+    }
+  }
+}

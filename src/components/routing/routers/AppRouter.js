@@ -10,6 +10,8 @@ import Signup from "components/views/Signup";
 import Profile from "components/views/Profile";
 import EditProfile from "components/views/EditProfile";
 
+import EditForm from "../../views/EditForm";
+
 
 /**
  * Main router of your application.
@@ -26,6 +28,11 @@ const AppRouter = () => {
         <Route exact path="/creationform">
           <MainGuard>
             <CreationForm/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/editform/:task_id">
+          <MainGuard>
+            <EditForm/>
           </MainGuard>
         </Route>
         <Route exact path="/login">
