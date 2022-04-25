@@ -7,6 +7,9 @@ import Login from "components/views/Login";
 import CreationForm from "components/views/CreationForm";
 import Dashboard from "components/views/Dashboard";
 import Signup from "components/views/Signup";
+import Profile from "components/views/Profile";
+import EditProfile from "components/views/EditProfile";
+
 
 /**
  * Main router of your application.
@@ -35,6 +38,15 @@ const AppRouter = () => {
             <Signup/>
           </LoginGuard>
         </Route>
+
+        <Route exact path="/profile">
+            <Profile/>
+        </Route>
+
+        <Route exact path="/editProfile">
+          <EditProfile/>
+        </Route>
+
         <Route exact path="/">
           <Redirect to="/dashboard"/>
         </Route>
