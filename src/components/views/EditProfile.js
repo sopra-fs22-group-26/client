@@ -64,9 +64,9 @@ const EditProfile = props => {
                 // See here to get more data.
                 console.log(response);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
                 console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                alert("Something went wrong while fetching the profile! See the console for details.");
             }
         }
         fetchData();
@@ -77,8 +77,6 @@ const EditProfile = props => {
             const id = localStorage.getItem('id');
             const requestBody = JSON.stringify({id, name, username, emailAddress, birthDate, password, newPassword});
             const response = await api.put(`/users/${id}`, requestBody);
-            //set new username for logout
-            localStorage.setItem('username', user.username);
 
             history.push(`/profile`);
             alert("Your profile has been successfully edited!")

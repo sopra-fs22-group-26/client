@@ -5,6 +5,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import {Button} from "components/ui/Button";
 import 'styles/views/Dashboard.scss';
 import 'styles/views/Login.scss';
+import User from "../../models/User";
 
 
 
@@ -33,12 +34,17 @@ const Profile = () => {
                 setName(response.data.name);
                 setBirthDate(response.data.birthDate);
 
+
+                //set new username for logout
+                const user = new User(response.data);
+                localStorage.setItem('username', user.username);
+
                 // See here to get more data.
                 console.log(response);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
                 console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                alert("Something went wrong while fetching the profile! See the console for details.");
             }
         }
         fetchData();
@@ -69,7 +75,7 @@ const Profile = () => {
     return (
         <BaseContainer>
             <div className="base-container left-frame">
-                [left menu]
+                [left menu(?)]
             </div>
             <div className="base-container main-frame">
                 <div className="dashboard task-area">

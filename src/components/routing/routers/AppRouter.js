@@ -45,15 +45,16 @@ const AppRouter = () => {
             <Signup/>
           </LoginGuard>
         </Route>
-
         <Route exact path="/profile">
+          <MainGuard>
             <Profile/>
+          </MainGuard>
         </Route>
-
         <Route exact path="/editProfile">
-          <EditProfile/>
+          <MainGuard>
+            <EditProfile/>
+          </MainGuard>
         </Route>
-
         <Route exact path="/">
           <Redirect to="/dashboard"/>
         </Route>
