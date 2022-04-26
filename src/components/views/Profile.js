@@ -5,13 +5,11 @@ import BaseContainer from "components/ui/BaseContainer";
 import {Button} from "components/ui/Button";
 import 'styles/views/Dashboard.scss';
 import 'styles/views/Login.scss';
-import User from "../../models/User";
-
-
+import User from "models/User";
+import editIcon from "images/task_edit_icon.svg";
 
 
 const Profile = () => {
-
 
     const history = useHistory();
     const [user, setUser] = useState(null);
@@ -19,7 +17,6 @@ const Profile = () => {
     const [emailAddress, setEmailAddress] = useState(null);
     const [name, setName] = useState(null);
     const [birthDate, setBirthDate] = useState(null);
-
 
     useEffect(() => {
         async function fetchData() {
@@ -30,14 +27,13 @@ const Profile = () => {
                 // Get the returned user and update the state.
                 setUser(response.data);
                 setUsername(response.data.username);
-                setEmailAddress(response.data.emailAddress);
                 setName(response.data.name);
+                setEmailAddress(response.data.emailAddress);
                 setBirthDate(response.data.birthDate);
-
 
                 //set new username for logout
                 const user = new User(response.data);
-                localStorage.setItem('username', user.username);
+                //localStorage.setItem('username', user.username);
 
                 // See here to get more data.
                 console.log(response);
@@ -51,21 +47,38 @@ const Profile = () => {
     }, []);
 
     // Create content
-    let content = <div className="nothing">--- no profile for current view ---</div>;
+    let content =
+        <div className="dashboard task-area">
+            <div className="nothing">--- no profile for current view ---</div>
+        </div>
 
     if (user) {
         content =
             <div className="login container">
-                <h1>{name}'s Profile:</h1>
-                <h3>Name: {name}</h3>
-                <h3>Username: {username}</h3>
-                <h3>E-Mail Address: {emailAddress}</h3>
-                <h3>Birth Date: {birthDate}</h3>
-                <Button  className="menu-button"
-                    onClick={ () => history.push("/editProfile")}
-                >
-                    Edit Profile
-                </Button>
+                <div className="login header">My Profile</div>
+                <div className="login form">
+                    <div className="login field">
+                        <label className="login label">Name:</label>
+                        <div className="login value-display">{name ? name : "-"}</div>
+                    </div>
+                    <div className="login field">
+                        <label className="login label">Username:</label>
+                        <div className="login value-display">{username}</div>
+                    </div>
+                    <div className="login field">
+                        <label className="login label">E-Mail Address:</label>
+                        <div className="login value-display">{emailAddress}</div>
+                    </div>
+                    <div className="login field">
+                        <label className="login label">Birthdate:</label>
+                        <div className="login value-display">{birthDate ? new Date(birthDate).toLocaleString('ch-DE', {dateStyle: 'medium'}) : "-"}</div>
+                    </div>
+                    <div className="login button-container edit-button">
+                        <div onClick={() => history.push("/editProfile")} >
+                            <img src={editIcon} alt="Edit task" />
+                        </div>
+                    </div>
+                </div>
             </div>
 
         ;
@@ -74,13 +87,9 @@ const Profile = () => {
     // Combine contents and display dashboard
     return (
         <BaseContainer>
-            <div className="base-container left-frame">
-                [left menu(?)]
-            </div>
+            <div className="base-container left-frame" />
             <div className="base-container main-frame">
-                <div className="dashboard task-area">
-                    {content}
-                </div>
+                {content}
             </div>
             <div className="base-container right-frame">
                 <div className="dashboard poll-session-frame">
