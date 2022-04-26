@@ -7,9 +7,6 @@ import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
-
-
-
 const FormField = props => {
     return (
         <div className="login field">
@@ -54,11 +51,14 @@ const EditProfile = props => {
                 const id = localStorage.getItem("id");
                 const response = await api.get(`/users/${id}`);
 
+                // Get the returned user and update a new object.
+                const user = new User(response.data);
+
                 // Get the returned user and update the state.
-                setUser(response.data);
+                setUser(user);
+                setName(response.data.name);
                 setUsername(response.data.username);
                 setEmailAddress(response.data.emailAddress);
-                setName(response.data.name);
                 setBirthDate(response.data.birthDate);
 
                 // See here to get more data.
@@ -78,22 +78,34 @@ const EditProfile = props => {
             const requestBody = JSON.stringify({id, name, username, emailAddress, birthDate, password, newPassword});
             const response = await api.put(`/users/${id}`, requestBody);
 
+            localStorage.setItem('username', response.data.username);
+            if (response.data.name) {
+                localStorage.setItem('name', response.data.name);
+            }
+            else {
+                localStorage.removeItem('name');
+            }
+
+            //alert("Your profile has been successfully edited!")
             history.push(`/profile`);
-            alert("Your profile has been successfully edited!")
         } catch (error) {
             alert(`Something went wrong during edit: \n${handleError(error)}`);
         }
     };
 
+    let current_name = localStorage.getItem("name") ? localStorage.getItem("name") : localStorage.getItem("username");
+
+
     return (
-        <BaseContainer className="single-frame centered">
+        <BaseContainer className="single-frame">
             <div className="login container">
-                <div className="login header">Edit {name}'s Profile</div>
+                <div className="login header">Edit Profile</div>
                 <div className="login form">
                     <FormField
                         label="Name:"
+                        placeholder="choose name..."
                         value={name}
-                        disabled={name}
+                        onChange={n => setName(n)}
                     />
                     <FormField
                         label="Username:"
@@ -113,6 +125,9 @@ const EditProfile = props => {
                         type="date"
                         onChange={e => setBirthDate(e)}
                     />
+
+                    <div className="login section-title">Change password:</div>
+
                     <FormField
                         label="Current Password:"
                         value={password}
@@ -133,10 +148,16 @@ const EditProfile = props => {
                         onChange = {e => setPasswordNew2(e)}
 
                     />
-                    <div className="login button-container">
+                    <div className="login button-container multi-button">
                         <Button
-                            disabled={newPassword != passwordNew2}
-                            width="316px"
+                            className="menu-button"
+                            onClick={() => history.push(`/profile`)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="menu-button default"
+                            disabled={!(username && emailAddress) || (newPassword != passwordNew2) || (newPassword && !password)}
                             onClick={() => doUpdate()}
                         >
                             Save

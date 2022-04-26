@@ -152,9 +152,9 @@ const EditForm = () => {
           try {
             const response = await api.get(`/users`);
 
-            const tempUsers = response.data.map(user => {
+            let tempUsers = response.data.map(user => {
               let userOption = {};
-              userOption["label"] = user.name;
+              userOption["label"] = (user.name ? user.name : user.username);
               userOption["value"] = user.id;
 
               // Assign assignee and reporter if they match
@@ -168,6 +168,9 @@ const EditForm = () => {
               }
               return userOption;
             });
+
+            // sort options alphabetically
+              tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
             setUsers(tempUsers);
 
             console.log('User list:', tempUsers);
