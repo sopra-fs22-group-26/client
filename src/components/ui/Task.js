@@ -14,7 +14,7 @@ const EditOrRating = ({props, taskFunctions, editIcon}) => {
   let editOrRating = [];
   if (props.status === "ACTIVE") {
     editOrRating.push(
-        <div className="editButton" onClick={() => taskFunctions.editTask(props)} >
+        <div className="editButton" onClick={(e) => {taskFunctions.editTask(props); e.stopPropagation();}} >
           <img src={editIcon} alt="Edit task" />
         </div>
     );
@@ -27,10 +27,10 @@ const EditOrRating = ({props, taskFunctions, editIcon}) => {
 const TaskFooter = ({props, taskFunctions}) => {
   // Generate task footer according to task.status
   let footer = [];
-  footer.push(<DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)}/>);
+  footer.push(<DeleteForeverOutlinedIcon onClick={(e) => {taskFunctions.deleteTask(props); e.stopPropagation();}}/>);
   if (props.status === "ACTIVE") {
-    footer.push(<CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props)} />);
-    footer.push(<AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props)} />);
+    footer.push(<CalendarMonthOutlinedIcon onClick={(e) => {taskFunctions.exportCalendar(props); e.stopPropagation();}} />);
+    footer.push(<AssignmentTurnedInOutlinedIcon onClick={(e) => {taskFunctions.completeTask(props); e.stopPropagation();}} />);
   }
   return (
       <div className="task-footer">
@@ -41,7 +41,7 @@ const TaskFooter = ({props, taskFunctions}) => {
 
 
 export const Task = ({props, taskFunctions}) => (
-    <div className={"task-container task_priority_" + props.priority.toLowerCase()}>
+    <div className={"task-container task_priority_" + props.priority.toLowerCase()} onClick={() => taskFunctions.taskDetails(props)}>
       <div className="task-header">{props.title}</div>
       <div className="task-content">
         <div className="task-content top-container">

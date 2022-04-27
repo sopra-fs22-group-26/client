@@ -4,7 +4,6 @@ import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import Task from 'models/Task';
 import 'styles/views/CreationForm.scss';
 import React from "react";
 import Select from "react-select";
@@ -139,9 +138,6 @@ const CreationForm = () => {
       const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
 
       const response = await api.post('/tasks', requestBody);
-
-      // Get the returned task  and update a new object.
-      const task = new Task(response.data);
 
       // After succesful creation of a new task navigate to /dashboard
       history.push(`/dashboard`);
