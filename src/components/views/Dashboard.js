@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
+import {isInCurrentWeek} from 'helpers/dateFuncs';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import {Button} from "components/ui/Button";
 import {Task} from "components/ui/Task";
+import {EstimateTotals} from "components/ui/EstimateTotals";
 import {LeftMenuItems} from "models/LeftMenuItems";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
@@ -95,7 +97,6 @@ const Dashboard = () => {
 
   const history = useHistory();
   const [tasks, setTasks] = useState(null);
-  const [users, setUsers] = useState(null);
 
   /**
    * Filters and sorts
@@ -103,6 +104,7 @@ const Dashboard = () => {
   const [show, setShow] = useState(LeftMenuItems.TaskShow.Active);
   const [filter, setFilter] = useState(LeftMenuItems.TaskFilter.AllTasks);
   const [sort, setSort] = useState(LeftMenuItems.TaskSort.DueDate);
+  const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
 
   const prioritySortOrder = ["HIGH", "MEDIUM", "LOW", "NONE"];
 
@@ -120,16 +122,24 @@ const Dashboard = () => {
 
       try {
         // Get all tasks and users and store them temporarily
-        let [r_tasks, r_users] = await Promise.all([api.get(url), api.get('/users')]);
+        let [r_tasks, r_users, r_assignedTasks] =
+            await Promise.all([api.get(url),
+              api.get('/users'),
+              api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
 
         // Replace all assignee and reporter ids with users' names or usernames
         let userArray = r_users.data.map(user => [user.id, (user.name ? user.name : user.username)]);
         const userDictionary = Object.fromEntries(userArray);
-        setUsers(userDictionary);
 
         let tasks = r_tasks.data;
         tasks.forEach(task => task.assignee_name = task.assignee ? userDictionary[task.assignee] : null);
         tasks.forEach(task => task.reporter_name = task.reporter ? userDictionary[task.reporter] : null);
+
+        // Calculate Total Estimates for current user
+        let estimates = {currentWeek: 0, total: 0};
+        estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
+        estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
+        setEstimate(estimates);
 
         // Apply filter and sorts
 
@@ -142,7 +152,7 @@ const Dashboard = () => {
          * Sort tasks according to the current sort state
          */
         switch (sort) {
-          // Sort by DueDate
+            // Sort by DueDate
           case LeftMenuItems.TaskSort.DueDate:
             tasks = tasks.sort((a, b) => {
               if (a.dueDate === b.dueDate) {
@@ -154,24 +164,24 @@ const Dashboard = () => {
             });
             break;
 
-          // Sort by Priority
+            // Sort by Priority
           case LeftMenuItems.TaskSort.Priority:
-              tasks = tasks.sort((a, b) => {
-                if (a.priority === b.priority) {
-                  return a.dueDate > b.dueDate;
-                }
-                else {
-                  return prioritySortOrder.indexOf(a.priority) - prioritySortOrder.indexOf(b.priority);
-                }
-              });
+            tasks = tasks.sort((a, b) => {
+              if (a.priority === b.priority) {
+                return a.dueDate > b.dueDate;
+              }
+              else {
+                return prioritySortOrder.indexOf(a.priority) - prioritySortOrder.indexOf(b.priority);
+              }
+            });
             break;
 
-          // Sort by Title
+            // Sort by Title
           case LeftMenuItems.TaskSort.Title:
             tasks = tasks.sort((a, b) => a.title > b.title);
             break;
 
-          // Sort by Assignee
+            // Sort by Assignee
           case LeftMenuItems.TaskSort.Assignee:
             tasks = tasks.sort((a, b) => {
               if (a.assignee_name) {
@@ -183,7 +193,7 @@ const Dashboard = () => {
             });
             break;
 
-          // Sort by Reporter
+            // Sort by Reporter
           case LeftMenuItems.TaskSort.Reporter:
             tasks = tasks.sort((a, b) => {
               if (a.reporter_name) {
@@ -228,10 +238,10 @@ const Dashboard = () => {
         <div className="base-container left-frame">
           <div className="left-menu">
             <MenuSection
-              name="Show"
-              section="TaskShow"
-              state={show}
-              clickAction={setShow}
+                name="Show"
+                section="TaskShow"
+                state={show}
+                clickAction={setShow}
             />
             <MenuSection
                 name="Filter"
@@ -257,6 +267,10 @@ const Dashboard = () => {
             <h3>Estimate Poll Sessions</h3>
             <p>(Placeholder)</p>
           </div>
+          <EstimateTotals
+            currentWeek={estimate.currentWeek}
+            total={estimate.total}
+          />
           <Button
               onClick = { () => history.push('/creationform')}
           >

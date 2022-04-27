@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
+import {EstimateTotals} from "components/ui/EstimateTotals";
 import React from "react";
 import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
@@ -10,6 +11,7 @@ import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurned
 
 import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
+import {isInCurrentWeek} from "../../helpers/dateFuncs";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -67,6 +69,7 @@ const Task = ({props, taskFunctions}) => {
                         <div><span className="label">Assignee:</span> {props.assignee_name ? props.assignee_name : notDefined}</div>
                         <div><span className="label">Reporter:</span> {props.reporter_name ? props.reporter_name : notDefined}</div>
                         <div><span className="label">Due date:</span> {new Date(props.dueDate).toLocaleString('ch-DE', {dateStyle: 'medium'})}</div>
+                        <div><span className="label">Location:</span> {props.location ? props.location : notDefined}</div>
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
@@ -84,6 +87,7 @@ const Task = ({props, taskFunctions}) => {
 const TaskDetails = () => {
     const history = useHistory();
     const [task, setTask] = useState(null);
+    const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
 
     const params = useParams();
 
@@ -152,7 +156,9 @@ const TaskDetails = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users] = await Promise.all([api.get(`/tasks/${params["task_id"]}`), api.get('/users')]);
+                let [r_task, r_users, r_assignedTasks] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
+                    api.get('/users'),
+                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
@@ -165,6 +171,13 @@ const TaskDetails = () => {
                 taskResponse.reporter_name = taskResponse.reporter ? userDictionary[taskResponse.reporter] : null;
 
                 setTask(taskResponse);
+
+                // Calculate Total Estimates for current user
+                let estimates = {currentWeek: 0, total: 0};
+                estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
+                estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
+                setEstimate(estimates);
+
 
                 // See here to get more data.
                 console.log(r_task);
@@ -196,6 +209,10 @@ const TaskDetails = () => {
                     <h3>Estimate Poll Sessions</h3>
                     <p>(Placeholder)</p>
                 </div>
+                <EstimateTotals
+                    currentWeek={estimate.currentWeek}
+                    total={estimate.total}
+                />
                 <Button
                     onClick = { () => history.push('/creationform')}
                 >
