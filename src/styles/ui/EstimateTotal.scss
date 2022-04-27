@@ -1,0 +1,27 @@
+@import 'styles/theme';
+
+.estimate-total-container {
+  font-family: $fontText;
+  font-weight: $fontWeightLight;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 36px 0;
+  padding: 7px 10px 4px;
+  font-size: 15px;
+  background-color: $yellow_light;
+  border: 1px solid $gray_light;
+  //width: max-content;
+  h3 {
+    font-weight: $fontWeightBold;
+    font-size: 16px;
+    margin: 0 0 6px 0;
+    padding-bottom: 3px;
+    border-bottom: 1px solid black;
+  }
+  & .estimate-dataset {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 0 3px 0;
+  }
+}

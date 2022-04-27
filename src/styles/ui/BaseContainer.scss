@@ -1,37 +1,5 @@
 @import 'styles/theme';
 
-/*
-.base-container-old {
-  margin: 32px 0 0 146px;
-  padding: 0;
-  //min-width: 1195px;
-  min-width: max-content;
-  color: $textColor;
-  justify-content: left;
-  &.centered {
-    margin-right: 146px;
-    display: flex;
-    justify-content: center;
-  }
-
-  &.two-frames {
-    flex-direction: row;
-    display: flex;
-    align-content: space-between;
-    min-width: 1215px;
-
-  }
-  &.main-area {
-    margin: 0 0 20px 0;
-    width: 100%;
-  }
-  &.right-frame {
-    margin: 0 26px 50px auto;
-  }
-}
-
- */
-
 .base-container {
   display: flex;
   flex-direction: row;
