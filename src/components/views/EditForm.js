@@ -61,32 +61,32 @@ Selection.propTypes = {
 
 // Define REACT selection component
 const ReactSelection = (props) => {
-  return (
-      <div className="creation-form field">
-        <label className='creation-form label react-select'>
-          {props.label}
-        </label>
-        <Select
-            isClearable
-            className="react-select-container"
-            classNamePrefix="react-select"
-            options={props.options}
-            defaultValue={props.defaultValue}
-            onChange={e => props.onChange(e ? e.value : null)}
-            getOptionValue={(option) => option.value}
-            theme={(theme) => ({
-              ...theme,
-              borderRadius: 0,
-            })}
-        />
-      </div>
-  );
+    return (
+        <div className="creation-form field">
+            <label className='creation-form label react-select'>
+                {props.label}
+            </label>
+            <Select
+                isClearable
+                className="react-select-container"
+                classNamePrefix="react-select"
+                options={props.options}
+                defaultValue={props.defaultValue}
+                onChange={e => props.onChange(e ? e.value : null)}
+                getOptionValue={(option) => option.value}
+                theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 0,
+                })}
+            />
+        </div>
+    );
 };
 ReactSelection.propTypes = {
-  label: PropTypes.string,
-  options: PropTypes.array,
-  onChange: PropTypes.func,
-  defaultValue: PropTypes.object
+    label: PropTypes.string,
+    options: PropTypes.array,
+    onChange: PropTypes.func,
+    defaultValue: PropTypes.object
 };
 
 // Output form
@@ -122,64 +122,49 @@ const EditForm = () => {
 
     useEffect(() => {
         async function fetchData() {
-          let fa, fr;
             try {
-                const response = await api.get(`/tasks/${params["task_id"]}`);
+                let [r_task, r_users] = await Promise.all([api.get(`/tasks/${params["task_id"]}`), api.get('/users')]);
+
                 // Get the returned tasks and update the states.
-                setTask(response.data);
+                let taskResponse = r_task.data;
+                setTask(taskResponse);
+                setTitle(taskResponse.title);
+                setDescription(taskResponse.description);
+                setPriority(taskResponse.priority ? taskResponse.priority : "NONE");
+                setDueDate(new Date(taskResponse.dueDate).toISOString().split('T')[0]);
+                setLocation(taskResponse.location);
+                setEstimate(taskResponse.estimate);
 
-                setTitle(response.data.title);
-                setDescription(response.data.description);
-                setPriority(response.data.priority ? response.data.priority : "NONE");
-                setDueDate(new Date(response.data.dueDate).toISOString().split('T')[0]);
-                setLocation(response.data.location);
-                setEstimate(response.data.estimate);
+                // Get all users to define options for assignee and reporter
+                let tempUsers = r_users.data.map(user => {
+                    let userOption = {};
+                    userOption["label"] = (user.name ? user.name : user.username);
+                    userOption["value"] = user.id;
 
-                // Temporarily save assignee and reporter id
-                fa = response.data.assignee;
-                fr = response.data.reporter;
+                    // Assign assignee and reporter if they match
+                    if (user.id === taskResponse.assignee) {
+                        setFirstAssignee(userOption);
+                        setAssignee(user.id);
+                    }
+                    if (user.id === taskResponse.reporter) {
+                        setFirstReporter(userOption)
+                        setReporter(user.id);
+                    }
+                    return userOption;
+                });
+
+                // sort options alphabetically
+                tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
+                setUsers(tempUsers);
 
                 // See here to get more data.
-                console.log(response.data);
-                console.log(task);
+                console.log(r_task);
+                console.log(r_users);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
                 console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                alert("Something went wrong while fetching the data! See the console for details.");
             }
-
-          // Get all users to define options for assignee and reporter
-          try {
-            const response = await api.get(`/users`);
-
-            let tempUsers = response.data.map(user => {
-              let userOption = {};
-              userOption["label"] = (user.name ? user.name : user.username);
-              userOption["value"] = user.id;
-
-              // Assign assignee and reporter if they match
-              if (user.id === fa) {
-                setFirstAssignee(userOption);
-                setAssignee(user.id);
-              }
-              if (user.id === fr) {
-                setFirstReporter(userOption)
-                setReporter(user.id);
-              }
-              return userOption;
-            });
-
-            // sort options alphabetically
-              tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
-            setUsers(tempUsers);
-
-            console.log('User list:', tempUsers);
-          }
-          catch (error) {
-            console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-            console.error("Details:", error);
-            alert("Something went wrong while fetching the users! See the console for details.");
-          }
         }
         fetchData();
     }, []);
@@ -214,23 +199,23 @@ const EditForm = () => {
                             value={dueDate}
                             onChange={dd => setDueDate(dd)}
                         />
-                      <ReactSelection
-                          label="Assignee:"
-                          defaultValue={firstAssignee}
-                          options={users}
-                          onChange={a => setAssignee(a)}
-                      />
-                      <ReactSelection
-                          label="Reporter:"
-                          defaultValue={firstReporter}
-                          options={users}
-                          onChange={r => setReporter(r)}
-                      />
-                      <Selection
+                        <ReactSelection
+                            label="Assignee:"
+                            defaultValue={firstAssignee}
+                            options={users}
+                            onChange={a => setAssignee(a)}
+                        />
+                        <ReactSelection
+                            label="Reporter:"
+                            defaultValue={firstReporter}
+                            options={users}
+                            onChange={r => setReporter(r)}
+                        />
+                        <Selection
                             label="Priority:"
                             value={priority}
                             onChange={p => {setPriority(p);
-                              document.getElementById("form-container").className = "creation-form container task_priority_" + p.toLowerCase()}}
+                                document.getElementById("form-container").className = "creation-form container task_priority_" + p.toLowerCase()}}
                         />
                         <FormField
                             label="Location:"

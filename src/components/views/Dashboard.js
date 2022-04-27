@@ -89,7 +89,8 @@ const Dashboard = () => {
     "completeTask": doTaskComplete,
     "editTask": doTaskEdit,
     "deleteTask": doTaskDelete,
-    "exportCalendar": doTaskCalendarExport
+    "exportCalendar": doTaskCalendarExport,
+    "taskDetails": (t) => history.push('/task/' + t.taskId)
   }
 
   const history = useHistory();
@@ -118,16 +119,15 @@ const Dashboard = () => {
       }
 
       try {
-        // Get all tasks and store them temporarily
-        const response = await api.get(url);
-        let tasks = response.data;
+        // Get all tasks and users and store them temporarily
+        let [r_tasks, r_users] = await Promise.all([api.get(url), api.get('/users')]);
 
-        // Get all users and replace assigne and reporter ids with user names
-        const response2 = await api.get(`/users`);
-        let userArray = response2.data.map(user => [user.id, user.name]);
+        // Replace all assignee and reporter ids with users' names or usernames
+        let userArray = r_users.data.map(user => [user.id, (user.name ? user.name : user.username)]);
         const userDictionary = Object.fromEntries(userArray);
         setUsers(userDictionary);
 
+        let tasks = r_tasks.data;
         tasks.forEach(task => task.assignee_name = task.assignee ? userDictionary[task.assignee] : null);
         tasks.forEach(task => task.reporter_name = task.reporter ? userDictionary[task.reporter] : null);
 
@@ -135,7 +135,6 @@ const Dashboard = () => {
 
         // Filter tasks according to the current filter state
         if (filter === LeftMenuItems.TaskFilter.MyTasks) {
-          //alert(localStorage.getItem("id"));
           tasks = tasks.filter(a => a.assignee === parseInt(localStorage.getItem("id")));
         }
 
@@ -201,7 +200,8 @@ const Dashboard = () => {
         setTasks(tasks);
 
         // See here to get more data.
-        console.log(response);
+        console.log(r_tasks);
+        console.log(r_users);
       } catch (error) {
         console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
         console.error("Details:", error);

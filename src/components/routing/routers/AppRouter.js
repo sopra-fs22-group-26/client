@@ -1,16 +1,17 @@
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
-// import {GameGuard} from "components/routing/routeProtectors/GameGuard";
-//import GameRouter from "components/routing/routers/GameRouter";
 import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
 import {MainGuard} from "components/routing/routeProtectors/MainGuard";
+
 import Login from "components/views/Login";
-import CreationForm from "components/views/CreationForm";
-import Dashboard from "components/views/Dashboard";
 import Signup from "components/views/Signup";
+import Dashboard from "components/views/Dashboard";
+
 import Profile from "components/views/Profile";
 import EditProfile from "components/views/EditProfile";
 
-import EditForm from "../../views/EditForm";
+import TaskDetails from "components/views/TaskDetails";
+import EditForm from "components/views/EditForm";
+import CreationForm from "components/views/CreationForm";
 
 
 /**
@@ -23,6 +24,11 @@ const AppRouter = () => {
         <Route exact path="/dashboard">
           <MainGuard>
             <Dashboard/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/task/:task_id">
+          <MainGuard>
+            <TaskDetails/>
           </MainGuard>
         </Route>
         <Route exact path="/creationform">
