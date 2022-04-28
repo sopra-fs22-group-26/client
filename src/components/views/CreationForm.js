@@ -17,6 +17,7 @@ const FormField = props => {
         </label>
         <input
             type = {props.type}
+            min = {props.min}
             className = "creation-form input"
             placeholder = {props.placeholder}
             value = {props.value}
@@ -97,7 +98,7 @@ const CreationForm = () => {
   const [reporter, setReporter] = useState(null);
   const [dueDate, setDueDate] = useState(null);
   const [location, setLocation] = useState(null);
-  const [estimate, setEstimate] = useState(null);
+  const [estimate, setEstimate] = useState(0);
   const [users, setUsers] = useState(null);
 
 
@@ -202,8 +203,9 @@ const CreationForm = () => {
               </div>
               <div className="creation-form attributes-container attributes-column rightalign">
                 <FormField
-                    label = "Estimate:"
+                    label = "Estimate (h):"
                     type = "number"
+                    min = "0"
                     width = "80px"
                     align = "right"
                     placeholder = "h"
@@ -221,7 +223,7 @@ const CreationForm = () => {
               </Button>
               <Button
                   className="menu-button default"
-                  disabled={!(title && description && dueDate && estimate)}
+                  disabled={!(title && description && dueDate && estimate !== "")}
                   onClick={() => saveTask()}
               >
                 Save

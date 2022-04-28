@@ -226,7 +226,7 @@ const EditForm = () => {
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">
                         <FormField
-                            label="Estimate:"
+                            label="Estimate (h):"
                             type="number"
                             width="80px"
                             align="right"
@@ -245,7 +245,7 @@ const EditForm = () => {
                     </Button>
                     <Button
                         className="menu-button default"
-                        disabled={!(title && description && dueDate && estimate)}
+                        disabled={!(title && description && dueDate && estimate !== "")}
                         onClick={() => saveEdit()}
                     >
                         Save
