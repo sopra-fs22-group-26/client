@@ -56,36 +56,6 @@ function doTaskDelete(task) {
 // Export calendar file for a task
 // => needs to be implemented!
 function exportCalendar(task) {
-    /*
-    //return (<Ics />);
-
-    const Ics = require('ics');
-
-    const event = {
-        start: [2022, 4, 30, 6, 30],
-        duration: { hours: 2, minutes: 30 },
-        title: 'Bolder Boulder',
-        description: 'Annual 10-kilometer run in Boulder, Colorado',
-        location: 'Folsom Field, University of Colorado (finish line)',
-        url: 'http://www.bolderboulder.com/',
-        geo: { lat: 40.0095, lon: 105.2669 },
-    }
-
-    Ics.createEvent(event, (error, value) => {
-        if (error) {
-            console.log(error);
-            return;
-        }
-    });
-
-    let data = new File([Ics], { type: "text/plain" });
-    let icsFile = window.URL.createObjectURL(data);
-
-    task.history.push(icsFile);
-
-    // return icsFile;
-     */
-
     alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
 }
 
@@ -100,11 +70,12 @@ const notDefined = (<span className="not-specified">not specified</span>);
 // Task only has edit button if task is still active.
 // Rated tasks show rating.
 const EditOrRating = ({props, editIcon}) => {
+    const history = useHistory();
     // Generate right side according to task.status
     let editOrRating = [];
     if (props.status === "ACTIVE") {
         editOrRating.push(
-            <div className="editButton" onClick={(e) => {editTask(props); e.stopPropagation();}} >
+            <div className="editButton" onClick={(e) => {history.push('/editform/' + props.taskId); e.stopPropagation();}} >
                 <img src={editIcon} alt="Edit task" />
             </div>
         );
