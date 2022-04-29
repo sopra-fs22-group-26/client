@@ -33,68 +33,6 @@ const MenuSection = props => {
 
 const Dashboard = () => {
   const params = useParams();
-
-  /**
-   * Functions to manipulate tasks:
-   * - delete and complete (directly)
-   * - edit (redirect to edit page)
-   * - calendar export
-   */
-
-  // Delete task
-  function doTaskDelete(task) {
-    if (window.confirm(`Do you really want to delete the task \"${task.title}\"?`)) {
-      async function deleteTask() {
-        try {
-          const response = await api.delete(`/tasks/${task.taskId}`);
-          console.log(response);
-        } catch (error) {
-          console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
-          console.error("Details:", error);
-          alert("Something went wrong while deleting the task! See the console for details.");
-        }
-      }
-      deleteTask();
-    }
-  }
-
-  function doTaskComplete(task) {
-    if (window.confirm(`Do you really want to complete the task \"${task.title}\"?`)) {
-      async function completeTask() {
-        try {
-          const requestBody = JSON.stringify({});
-          const response = await api.put(`/tasks/${task.taskId}?updateStatus=completed`, requestBody);
-          console.log(response);
-        } catch (error) {
-          console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
-          console.error("Details:", error);
-          alert("Something went wrong while updating the task! See the console for details.");
-        }
-      }
-      completeTask();
-    }
-  }
-
-  // Edit task
-  function doTaskEdit(task) {
-    history.push('/editform/' + task.taskId);
-  }
-
-  // Export calendar file for a task
-  // => needs to be implemented!
-  function doTaskCalendarExport(task) {
-    alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
-  }
-
-  // Functions will be passed to task child component (for reference)
-  const myTaskFunctions = {
-    "completeTask": doTaskComplete,
-    "editTask": doTaskEdit,
-    "deleteTask": doTaskDelete,
-    "exportCalendar": doTaskCalendarExport,
-    "taskDetails": (t) => history.push('/task/' + t.taskId)
-  }
-
   const history = useHistory();
   const [tasks, setTasks] = useState(null);
 
@@ -226,7 +164,7 @@ const Dashboard = () => {
 
   if (tasks && tasks.length > 0) {
     content = tasks.map(task => (
-        <Task props={task} key={task.id} taskFunctions={myTaskFunctions}/>
+        <Task props={task} key={task.id} />
     ));
   }
 
