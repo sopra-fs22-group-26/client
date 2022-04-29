@@ -69,7 +69,7 @@ const Login = props => {
   return (
       <BaseContainer className="single-frame centered">
         <div className="login container">
-          <div className="login header">Login</div>
+          <div className="login header">Login (M3)</div>
           <div className="login form">
             <FormField
                 label="Username:"
