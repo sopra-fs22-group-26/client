@@ -1,0 +1,124 @@
+@import 'styles/theme';
+
+.task-details-container {
+  width: fit-content;
+  min-width: 687px;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: $borderRadius;
+  border: 2px solid $borderColor;
+  font-family: $fontText;
+  font-weight: $fontWeightRegular;
+  font-size: 22px;
+  background-color: $task_priority_none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.private {
+    border-style: dashed;
+  }
+
+  // Background colors according to priority
+  &.task_priority_none {
+    background-color: $task_priority_none;
+  }
+  &.task_priority_low {
+    background-color: $task_priority_low;
+  }
+  &.task_priority_medium {
+    background-color: $task_priority_medium;
+  }
+  &.task_priority_high {
+    background-color: $task_priority_high;
+  }
+
+
+  /**
+  / Building blocks of the task
+   **/
+
+  // Header
+  .task-header {
+    padding: 5px 15px;
+    font-weight: $fontWeightBold;
+    font-size: 22px;
+    border-top-left-radius: $borderInnerRadius;
+    background-color: $yellow_dark;
+    border-top-right-radius: $borderInnerRadius;
+  }
+
+  // Main content
+  .task-content {
+    font-size: 14px;
+    &.top-container {
+      padding: 14px 10px;
+      border-bottom: 2px solid $brown_dark;
+      line-height: 1.2em;
+    }
+    &.task-description {
+      height: unset;
+    }
+    &.comments {
+      //color: $brown_dark;
+      color: black;
+      margin: 0;
+      padding: 0;
+      .comments-title {
+        font-weight: $fontWeightSemibold;
+        font-size: 15px;
+        margin: 0;
+      }
+    }
+    &.bottom-container {
+      margin: 0;
+      padding: 10px 10px;
+      font-size: 15px;
+      line-height: 1.8em;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      .label {
+        font-weight: $fontWeightBold;
+      }
+      .not-specified {
+        font-weight: $fontWeightLight;
+        color: $gray_dark;
+        font-style: oblique;
+      }
+      &.task-attributes, &.elements-right {
+        padding: unset;
+        flex-direction: column;
+        justify-content: flex-start;
+        .editButton {
+          margin: 7px 7px 0 0;
+          padding: 0;
+          text-align: right;
+          &:hover {
+            cursor: pointer;
+          }
+          & img {
+            width: 64px;
+          }
+        }
+      }
+    }
+  }
+
+  // Footer
+  .task-footer {
+    padding: 7px 15px;
+    display: flex;
+    justify-content: space-between;
+    background-color: $yellow_dark;
+    color: $brown_darker;
+    border-bottom-left-radius: $borderInnerRadius;
+    border-bottom-right-radius: $borderInnerRadius;
+    & svg {
+      font-size: 36px;
+    }
+    & *:hover {
+      color: $brown_dark;
+    }
+  }
+}

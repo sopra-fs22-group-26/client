@@ -10,11 +10,29 @@
 
 $accent: #97ABFF;
 $accentDark: #123597;
-$textColor: white;
-$background: #262632;
+$textColor: black;
+$background: #FFEFCB; //#262632;
+$borderColor: #C97D00;
+
+/* ScrumbleBee Colors */
+$gray_light: #E5E5E5;
+$gray_medium: #CECECE;
+$gray_dark: #929191;
+
+$brown_dark: #C97D00;
+$brown_darker: #a26300;
+
+$yellow_dark: #FFB30E;
+$yellow_light: #FFEFCB;
+
+/* Element Colors */
+$task_priority_none: white;
+$task_priority_low: #F2FFDD;
+$task_priority_medium: #FFEFCB;
+$task_priority_high: #FFE2E0;
+
 
 /* some constants */
-
 $DESKTOP_WIDTH: 1160px;
 $SMALL_LAPTOPS_WIDTH: 970px;
 $TABLETS_WIDTH: 750px;
@@ -25,10 +43,23 @@ $SMALL_WIDTH: 768px;
 $fontDefault: "M PLUS Rounded 1c", sans-serif;
 $fontMono: "Roboto Mono", monospace;
 
+$fontMenu: "Oleo Script", cursive;
+$fontText: "Nunito", sans-serif;
+
+$fontWeightBold: 700;
+$fontWeightSemibold: 600;
+$fontWeightRegular: 400;
+$fontWeightLight: 300;
+
+
 /* a standard drop shadow */
 $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
 
-$borderRadius: 0.75em;
+$borderRadius: 8px;
+$taskHeaderRadius: 7px;
+$borderInnerRadius: 6px;
+$buttonBorderRadius: 6px;
+$formButtonRadius: 4px;
 
 /* mixins
 

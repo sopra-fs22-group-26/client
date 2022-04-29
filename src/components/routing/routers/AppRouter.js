@@ -1,34 +1,68 @@
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
-import {GameGuard} from "components/routing/routeProtectors/GameGuard";
-import GameRouter from "components/routing/routers/GameRouter";
 import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
+import {MainGuard} from "components/routing/routeProtectors/MainGuard";
+
 import Login from "components/views/Login";
+import Signup from "components/views/Signup";
+import Dashboard from "components/views/Dashboard";
+
+import Profile from "components/views/Profile";
+import EditProfile from "components/views/EditProfile";
+
+import TaskDetails from "components/views/TaskDetails";
+import EditForm from "components/views/EditForm";
+import CreationForm from "components/views/CreationForm";
+
 
 /**
  * Main router of your application.
- * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
- * and another Router that matches the route "/game".
- * The main difference between these two routes is the following:
- * /login renders another component without any sub-route
- * /game renders a Router that contains other sub-routes that render in turn other react components
- * Documentation about routing in React: https://reacttraining.com/react-router/web/guides/quick-start
  */
 const AppRouter = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter forceRefresh={true}>
       <Switch>
-        <Route path="/game">
-          <GameGuard>
-            <GameRouter base="/game"/>
-          </GameGuard>
+        <Route exact path="/dashboard">
+          <MainGuard>
+            <Dashboard/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/task/:task_id">
+          <MainGuard>
+            <TaskDetails/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/creationform">
+          <MainGuard>
+            <CreationForm/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/editform/:task_id">
+          <MainGuard>
+            <EditForm/>
+          </MainGuard>
         </Route>
         <Route exact path="/login">
           <LoginGuard>
             <Login/>
           </LoginGuard>
         </Route>
+        <Route exact path="/signup">
+          <LoginGuard>
+            <Signup/>
+          </LoginGuard>
+        </Route>
+        <Route exact path="/profile">
+          <MainGuard>
+            <Profile/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/editProfile">
+          <MainGuard>
+            <EditProfile/>
+          </MainGuard>
+        </Route>
         <Route exact path="/">
-          <Redirect to="/game"/>
+          <Redirect to="/dashboard"/>
         </Route>
       </Switch>
     </BrowserRouter>

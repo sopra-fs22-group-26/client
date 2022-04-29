@@ -1,53 +1,122 @@
 @import 'styles/theme';
 
 .login {
+  p {
+    font-family: $fontText;
+    font-weight: $fontWeightRegular;
+    padding: 0;
+    margin: 0;
+  }
+  a {
+    color: $brown_dark;
+    text-decoration-line: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.1em;
+    &:hover {
+      color: $yellow_dark;
+    }
+
+  }
   &.container {
-    margin-top: 2em;
-    min-height: 300px;
-    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-    @include center;
+    display: flex;
     flex-direction: column;
+    width: fit-content;
+    justify-content: center;
+    padding: 0;
+    border-radius: $borderRadius;
+    border: 2px solid $borderColor;
+    background-color: $background;
+
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  &.header {
+    padding: 5px 15px;
+    font-weight: $fontWeightBold;
+    font-size: 22px;
+    color: white;
+    border-top-left-radius: $borderInnerRadius;
+    background-color: $yellow_dark;
+    border-top-right-radius: $borderInnerRadius;
   }
   &.form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60%;
-    max-width: 30em;
-    height: 20em;
-    font-size: 16px;
-    font-weight: 300;
+    margin: 45px 36px;
+    font-size: 18px;
+    font-weight: $fontWeightBold;
     padding-left: 37px;
     padding-right: 37px;
-    border-radius: 0.75em;
-    background-color: $background;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    box-shadow: $dropShadow;
   }
   &.field {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: table;
+    text-align: right;
   }
   &.input {
-    height: 35px;
-    padding-left: 15px;
-    margin-left: -4px;
-    border: none;
-    border-radius: 0.75em;
+    font-weight: $fontWeightRegular;
+    height: 34px;
+    width: 316px;
+    padding-left: 8px;
+    margin: 0;
+    border: 1px solid $borderColor;
+    border-radius: 0;
     margin-bottom: 20px;
-    background: transparentize(white, 0.85);
+    background: transparentize(white, 0);
     color: $textColor;
   }
   &.label {
     color: $textColor;
-    margin-bottom: 10px;
-    text-transform: lowercase;
-    font-weight: 300;
+    margin-right: 10px;
+    font-weight: $fontWeightBold;
   }
   &.button-container {
     display: flex;
-    justify-content: center;
-    margin-top: 2em;
+    align-items: flex-end;
+    margin-top: 16px;
+    flex-direction: column;
+    &.multi-button {
+      flex-direction: row;
+      justify-content: right;
+      gap: 14px;
+    }
+    &.edit-button {
+      margin: -60px -40px -20px -20px;
+      padding: 0;
+      &:hover {
+        cursor: pointer;
+      }
+      & img {
+        width: 64px;
+      }
+    }
   }
+  &.link-container {
+    width: 316px;
+    margin: 36px 0 0 0;
+    padding: 0;
+  }
+  &.remark {
+    margin-right: 330px;
+    font-size: 14px;
+    font-weight: $fontWeightLight;
+    text-align: right;
+  }
+  &.section-title {
+    margin: 16px 0 12px auto;
+    text-align: left;
+    width: 316px;
+    justify-self: right;
+    font-weight: $fontWeightLight;
+  }
+  &.value-display {
+    font-weight: $fontWeightRegular;
+    float: right;
+    text-align: left;
+    height: 34px;
+    width: 316px;
+    padding-left: 8px;
+    margin: 0;
+    margin-bottom: 14px;
+  }
+
 }

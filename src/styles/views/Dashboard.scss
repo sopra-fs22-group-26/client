@@ -1,0 +1,24 @@
+@import 'styles/theme';
+
+.dashboard {
+  &.task-area {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 36px;
+    //max-width: 860px;
+    margin: 0 0 50px 0;
+    .nothing {
+      color: $gray_dark;
+      font-style: oblique;
+    }
+  }
+  &.poll-session-frame {
+    width: 250px;
+    height: 200px;
+    border: 1px solid black;
+    margin: 0 0 24px 0;
+    padding: 7px;
+  }
+
+}

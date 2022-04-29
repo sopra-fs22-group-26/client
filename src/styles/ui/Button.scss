@@ -1,27 +1,67 @@
 @import 'styles/theme';
 
 .primary-button {
+  margin: 0;
+  padding: 1px;
+  font-family: $fontMenu;
+  font-weight: $fontWeightRegular;
+  font-size: 24px;
+  text-align: center;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  border-radius: $formButtonRadius;
+  cursor: pointer;
+  opacity: 1;
+  background-color: $gray_light;
+  transition: all 0.2s ease;
+
   &:hover {
-    transform: translateY(-2px);
+    border-color: $brown_dark;
+    background-color: $gray_medium;
   }
   &:disabled {
     cursor: default;
     opacity: 0.4;
     &:hover {
-      transform: none;
+      border-color: black;
+      background-color: $gray_light;
     }
   }
-  padding: 6px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
+}
+
+.menu-button {
+  min-width: 100px;
+  padding: 3px 14px;
+  font-family: $fontText;
+  font-weight: $fontWeightRegular;
+  font-size: 16px;
   text-align: center;
-  height: 35px;
-  border: none;
-  border-radius: $borderRadius;
+  border-style: solid;
+  border-width: 2px;
+  border-color: $gray_dark;
+  border-radius: $buttonBorderRadius;
   cursor: pointer;
   opacity: 1;
-  color: $background;
-  background-color: $accent;
-  transition: all 0.3s ease;
+  background-color: white;
+  transition: all 0.1s ease;
+
+  &.default {
+    font-weight: $fontWeightBold;
+    border-color: $gray_dark;
+    border-width: 3px;
+  }
+
+  &:hover {
+    border-color: $brown_dark;
+    background-color: $yellow_light;
+  }
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+    &:hover {
+      border-color: $gray_dark;
+      background-color: white;
+    }
+  }
 }

@@ -30,10 +30,26 @@ const Game = () => {
   // more information can be found under https://reactjs.org/docs/hooks-state.html
   const [users, setUsers] = useState(null);
 
+  /*
   const logout = () => {
+    const token = localStorage.getItem("token");
+    async function logoutUser() {
+      try {
+        const requestBody = JSON.stringify({token});
+        const response = await api.post('/logout', requestBody);
+      }
+      catch (error) {
+        console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
+        console.error("Details:", error);
+      }
+    }
+    logoutUser();
     localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
     history.push('/login');
   }
+  */
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
@@ -82,12 +98,6 @@ const Game = () => {
             <Player user={user} key={user.id}/>
           ))}
         </ul>
-        <Button
-          width="100%"
-          onClick={() => logout()}
-        >
-          Logout
-        </Button>
       </div>
     );
   }
