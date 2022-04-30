@@ -5,6 +5,7 @@ import {MainGuard} from "components/routing/routeProtectors/MainGuard";
 import Login from "components/views/Login";
 import Signup from "components/views/Signup";
 import Dashboard from "components/views/Dashboard";
+import Reports from "components/views/Reports";
 
 import Profile from "components/views/Profile";
 import EditProfile from "components/views/EditProfile";
@@ -24,6 +25,11 @@ const AppRouter = () => {
         <Route exact path="/dashboard">
           <MainGuard>
             <Dashboard/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/reports">
+          <MainGuard>
+            <Reports/>
           </MainGuard>
         </Route>
         <Route exact path="/task/:task_id">
