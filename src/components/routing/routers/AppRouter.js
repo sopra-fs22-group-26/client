@@ -13,6 +13,7 @@ import EditProfile from "components/views/EditProfile";
 import TaskDetails from "components/views/TaskDetails";
 import EditForm from "components/views/EditForm";
 import CreationForm from "components/views/CreationForm";
+import Scoreboard from "components/views/Scoreboard";
 
 
 /**
@@ -65,6 +66,11 @@ const AppRouter = () => {
         <Route exact path="/editProfile">
           <MainGuard>
             <EditProfile/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/scoreboard">
+          <MainGuard>
+            <Scoreboard/>
           </MainGuard>
         </Route>
         <Route exact path="/">

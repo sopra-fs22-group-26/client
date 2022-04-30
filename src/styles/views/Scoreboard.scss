@@ -1,0 +1,66 @@
+@import 'styles/theme';
+
+.score-board {
+    &.container {
+        display: flex;
+        flex-direction: column;
+        min-width: 400px;
+        width: fit-content;
+        justify-content: space-between;
+        padding: 0;
+        margin-bottom: 50px;
+        border-radius: $borderRadius;
+        border: 2px solid $borderColor;
+        //background-color: $background;
+        background-color: white;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+
+        // Background colors according to priority
+        &.task_priority_none {
+            background-color: $task_priority_none;
+        }
+        &.task_priority_low {
+            background-color: $task_priority_low;
+        }
+        &.task_priority_medium {
+            background-color: $task_priority_medium;
+        }
+        &.task_priority_high {
+            background-color: $task_priority_high;
+        }
+
+    }
+
+    &.header {
+        padding: 5px 15px;
+        border-top-left-radius: $borderInnerRadius;
+        background-color: $yellow_dark;
+        border-top-right-radius: $borderInnerRadius;
+        font-weight: bold;
+        font-size: 25px;
+        color: white;
+    }
+
+    &.scores-container {
+        display: flex;
+        flex-direction: row;
+        min-height: fit-content;
+        padding:30px 30px;
+        background-color: $yellow_light;
+        justify-content: space-between;
+       
+    }
+    &.name-entry {
+        padding-bottom: 10px;
+        //padding-left: 30px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    &.score-entry {
+        padding-bottom: 10px;
+        padding-left: 30px;
+        font-size: 20px;
+    }
+
+}
