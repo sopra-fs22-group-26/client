@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {isInCurrentWeek} from 'helpers/dateFuncs';
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import {Button} from "components/ui/Button";
 import {Task} from "components/ui/Task";
@@ -32,9 +32,9 @@ const MenuSection = props => {
 };
 
 const Dashboard = () => {
-  const params = useParams();
   const history = useHistory();
   const [tasks, setTasks] = useState(null);
+  const [users, setUsers] = useState(null);
 
   /**
    * Filters and sorts
@@ -44,9 +44,10 @@ const Dashboard = () => {
   const [sort, setSort] = useState(LeftMenuItems.TaskSort.DueDate);
   const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
 
-  const prioritySortOrder = ["HIGH", "MEDIUM", "LOW", "NONE"];
-
   useEffect(() => {
+
+    const prioritySortOrder = ["HIGH", "MEDIUM", "LOW", "NONE"];
+
     async function fetchData() {
 
       // Apply show filter to fetch active or completed tasks
@@ -66,7 +67,8 @@ const Dashboard = () => {
               api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
 
         // Replace all assignee and reporter ids with users' names or usernames
-        let userArray = r_users.data.map(user => [user.id, (user.name ? user.name : user.username)]);
+        let users = r_users.data;
+        let userArray = users.map(user => [user.id, (user.name ? user.name : user.username)]);
         const userDictionary = Object.fromEntries(userArray);
 
         let tasks = r_tasks.data;
@@ -97,7 +99,7 @@ const Dashboard = () => {
                 return prioritySortOrder.indexOf(a.priority) - prioritySortOrder.indexOf(b.priority);
               }
               else {
-                return a.dueDate > b.dueDate;
+                return a.dueDate > b.dueDate ? 1 : -1;
               }
             });
             break;
@@ -106,7 +108,7 @@ const Dashboard = () => {
           case LeftMenuItems.TaskSort.Priority:
             tasks = tasks.sort((a, b) => {
               if (a.priority === b.priority) {
-                return a.dueDate > b.dueDate;
+                return a.dueDate > b.dueDate ? 1 : -1;
               }
               else {
                 return prioritySortOrder.indexOf(a.priority) - prioritySortOrder.indexOf(b.priority);
@@ -116,14 +118,14 @@ const Dashboard = () => {
 
             // Sort by Title
           case LeftMenuItems.TaskSort.Title:
-            tasks = tasks.sort((a, b) => a.title > b.title);
+            tasks = tasks.sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1);
             break;
 
             // Sort by Assignee
           case LeftMenuItems.TaskSort.Assignee:
             tasks = tasks.sort((a, b) => {
               if (a.assignee_name) {
-                return a.assignee_name > b.assignee_name;
+                return (b.assignee_name && a.assignee_name.toLowerCase() > b.assignee_name.toLowerCase()) ? 1 : -1;
               }
               else {
                 return 1;
@@ -135,17 +137,20 @@ const Dashboard = () => {
           case LeftMenuItems.TaskSort.Reporter:
             tasks = tasks.sort((a, b) => {
               if (a.reporter_name) {
-                return a.reporter_name > b.reporter_name;
+                return (b.reporter_name && a.reporter_name.toLowerCase() > b.reporter_name.toLowerCase()) ? 1 : -1;
               }
               else {
                 return 1;
               }
             });
             break;
+          default:
+            // do nothing
         }
 
         // Get the returned tasks and update the state.
         setTasks(tasks);
+        setUsers(users);
 
         // See here to get more data.
         console.log(r_tasks);
@@ -157,12 +162,12 @@ const Dashboard = () => {
       }
     }
     fetchData();
-  }, [tasks]);
+  }, [tasks, filter, show, sort]);
 
   // Create content
   let content = <div className="nothing">--- no tasks for current view ---</div>;
 
-  if (tasks && tasks.length > 0) {
+  if (tasks && tasks.length > 0 && users) {
     content = tasks.map(task => (
         <Task props={task} key={task.id} />
     ));
