@@ -10,14 +10,8 @@ import {useHistory} from "react-router-dom";
 /**
  * Functions to manipulate tasks:
  * - delete and complete (directly)
- * - show details and edit (redirect to details or edit page)
  * - calendar export
  */
-
-// Edit task
-function editTask(task) {
-    task.history.push('/editform/' + task.taskId);
-}
 
 function doTaskComplete(task) {
     if (window.confirm(`Do you really want to complete the task \"${task.title}\"?`)) {
@@ -56,9 +50,8 @@ function doTaskDelete(task) {
 // Export calendar file for a task
 // => needs to be implemented!
 function exportCalendar(task) {
-    alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
+    alert("Export calendar event for \"" + task.title + "\"\n(Not implemented yet...)");
 }
-
 
 /**
  * Define and configure display elements
