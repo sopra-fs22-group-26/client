@@ -78,9 +78,9 @@ const EditProfile = props => {
             const requestBody = JSON.stringify({id, name, username, emailAddress, birthDate, password, newPassword});
             const response = await api.put(`/users/${id}`, requestBody);
 
-            localStorage.setItem('username', response.data.username);
-            if (response.data.name) {
-                localStorage.setItem('name', response.data.name);
+            localStorage.setItem('username', username);
+            if (name) {
+                localStorage.setItem('name', name);
             }
             else {
                 localStorage.removeItem('name');
