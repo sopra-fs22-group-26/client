@@ -1,9 +1,9 @@
 import React from "react";
 import "styles/ui/Task.scss";
-import editIcon from "images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {api, handleError} from "../../helpers/api";
 import {useHistory} from "react-router-dom";
 
@@ -60,18 +60,36 @@ function exportCalendar(task) {
 // Placeholder for undefined values
 const notDefined = (<span className="not-specified">not specified</span>);
 
-// Task only has edit button if task is still active.
+// Task has edit button if task is still active
+// or rating button if task has to be rated and current user is reporter.
 // Rated tasks show rating.
-const EditOrRating = ({props, editIcon}) => {
+const EditOrRating = ({props}) => {
     const history = useHistory();
     // Generate right side according to task.status
     let editOrRating = [];
-    if (props.status === "ACTIVE") {
-        editOrRating.push(
-            <div className="editButton" onClick={(e) => {history.push('/editform/' + props.taskId); e.stopPropagation();}} >
-                <img src={editIcon} alt="Edit task" />
-            </div>
-        );
+    switch (props.status) {
+        case "ACTIVE":
+            editOrRating.push(
+                <ScrumbleButton
+                    type="edit"
+                    onClick={(e) => {history.push('/editform/' + props.taskId); e.stopPropagation();}}
+                />
+            );
+            break;
+        case "COMPLETED":
+            if (props.reporter && localStorage.getItem("id") && props.reporter == localStorage.getItem("id")){
+                editOrRating.push(
+                    <ScrumbleButton
+                        type="rate"
+                        onClick={(e) => {alert("Rating of tasks coming soon..."); e.stopPropagation();}}
+                    />
+                );
+            }
+            break;
+        case "REPORTED":
+            // Show rating...
+        default:
+            // do nothing
     }
     return editOrRating;
 }
@@ -127,7 +145,7 @@ export const Task = ({props}) => {
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
-                        <EditOrRating props={props} editIcon={editIcon} />
+                        <EditOrRating props={props} />
                     </div>
                 </div>
             </div>
