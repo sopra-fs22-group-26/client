@@ -30,7 +30,7 @@ const Scoreboard = () => {
         let tempUsernames;
 
         // sort users by score in descending order
-        tempUsers = tempUsers.sort((a, b) => a.score > b.score);
+        tempUsers = tempUsers.sort((a, b) => b.score - a.score);
         setUsers(tempUsers);
         console.log('User list:', tempUsers);
         /** 
