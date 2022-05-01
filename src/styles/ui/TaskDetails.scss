@@ -118,6 +118,7 @@
     border-bottom-right-radius: $borderInnerRadius;
     & svg {
       font-size: 36px;
+      cursor: pointer;
     }
     & *:hover {
       color: $brown_dark;
