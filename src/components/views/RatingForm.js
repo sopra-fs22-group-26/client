@@ -89,15 +89,11 @@ const RateForm = () => {
      */
     const rateTask = async () => {
         try {
+            const taskRequestBody = JSON.stringify({score, assignee, reporter, status:"REPORTED"})
+            const userRequestBody = JSON.stringify( {score});
 
-            const id = localStorage.getItem('id');
-            const requestBody = JSON.stringify( {score});
-
-
-            await api.put(`/tasks/${params["task_id"]}`, requestBody);
-            await api.put('/users/' + assignee, requestBody);
-
-
+            await api.put(`/tasks/${params["task_id"]}`, taskRequestBody);
+            await api.put('/users/' + assignee, userRequestBody);
 
             // After successful rating of a  task navigate to /reports
             history.push(`/reports`);
