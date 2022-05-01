@@ -90,15 +90,17 @@
         padding: unset;
         flex-direction: column;
         justify-content: flex-start;
-        .editButton {
-          margin: 7px 7px 0 0;
-          padding: 0;
+        &.elements-right {
           text-align: right;
-          &:hover {
-            cursor: pointer;
-          }
-          & img {
-            width: 64px;
+        }
+        .scrumbleImage {
+          width: 64px
+        }
+        .ratingDisplay {
+          margin-top: 24px;
+          svg {
+            width: 160px;
+            height: auto;
           }
         }
       }

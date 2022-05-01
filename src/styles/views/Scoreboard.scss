@@ -1,0 +1,59 @@
+@import 'styles/theme';
+
+.score-board {
+    &.container {
+        display: flex;
+        flex-direction: column;
+        min-width: 440px;
+        width: fit-content;
+        justify-content: space-between;
+        padding: 0;
+        margin-bottom: 50px;
+        border-radius: $borderRadius;
+        border: 2px solid $borderColor;
+        background-color: $background;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    &.header {
+        padding: 5px 15px;
+        border-top-left-radius: $borderInnerRadius;
+        background-color: $yellow_dark;
+        border-top-right-radius: $borderInnerRadius;
+        font-weight: $fontWeightBold;
+        font-size: 22px;
+        color: white;
+    }
+
+    &.scores-container {
+        display: flex;
+        flex-direction: row;
+        min-height: fit-content;
+        padding:30px 40px;
+        justify-content: space-between;
+    }
+    &.left-frame {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+    }
+    &.rank-entry {
+        padding-bottom: 10px;
+        font-weight: $fontWeightBold;
+        font-size: 20px;
+        text-align: right;
+    }
+    &.name-entry {
+        padding-bottom: 10px;
+        font-weight: $fontWeightBold;
+        font-size: 20px;
+        margin: 0 24px;
+    }
+    &.score-entry {
+        padding-bottom: 10px;
+        padding-left: 30px;
+        font-size: 20px;
+        text-align: right;
+    }
+
+}

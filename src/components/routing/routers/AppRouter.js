@@ -5,6 +5,7 @@ import {MainGuard} from "components/routing/routeProtectors/MainGuard";
 import Login from "components/views/Login";
 import Signup from "components/views/Signup";
 import Dashboard from "components/views/Dashboard";
+import Reports from "components/views/Reports";
 
 import Profile from "components/views/Profile";
 import EditProfile from "components/views/EditProfile";
@@ -12,6 +13,8 @@ import EditProfile from "components/views/EditProfile";
 import TaskDetails from "components/views/TaskDetails";
 import EditForm from "components/views/EditForm";
 import CreationForm from "components/views/CreationForm";
+import Scoreboard from "components/views/Scoreboard";
+import RatingForm from "../../views/RatingForm";
 
 
 /**
@@ -24,6 +27,11 @@ const AppRouter = () => {
         <Route exact path="/dashboard">
           <MainGuard>
             <Dashboard/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/reports">
+          <MainGuard>
+            <Reports/>
           </MainGuard>
         </Route>
         <Route exact path="/task/:task_id">
@@ -39,6 +47,11 @@ const AppRouter = () => {
         <Route exact path="/editform/:task_id">
           <MainGuard>
             <EditForm/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/ratingform/:task_id">
+          <MainGuard>
+            <RatingForm/>
           </MainGuard>
         </Route>
         <Route exact path="/login">
@@ -59,6 +72,11 @@ const AppRouter = () => {
         <Route exact path="/editProfile">
           <MainGuard>
             <EditProfile/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/scoreboard">
+          <MainGuard>
+            <Scoreboard/>
           </MainGuard>
         </Route>
         <Route exact path="/">

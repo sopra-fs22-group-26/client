@@ -1,30 +1,25 @@
 import React from "react";
 import "styles/ui/Task.scss";
-import editIcon from "images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import {ScrumbleButton} from "components/ui/ScrumbleButton";
+import {RatingDisplay} from "components/ui/RatingDisplay";
 import {api, handleError} from "../../helpers/api";
 import {useHistory} from "react-router-dom";
 
 /**
  * Functions to manipulate tasks:
  * - delete and complete (directly)
- * - show details and edit (redirect to details or edit page)
  * - calendar export
  */
-
-// Edit task
-function editTask(task) {
-    task.history.push('/editform/' + task.taskId);
-}
 
 function doTaskComplete(task) {
     if (window.confirm(`Do you really want to complete the task \"${task.title}\"?`)) {
         async function completeTask() {
             try {
-                const requestBody = JSON.stringify({});
-                const response = await api.put(`/tasks/${task.taskId}?updateStatus=completed`, requestBody);
+                const requestBody = JSON.stringify({status: "COMPLETED", assignee: task.assignee, reporter: task.reporter});
+                const response = await api.put(`/tasks/${task.taskId}`, requestBody);
                 console.log(response);
             } catch (error) {
                 console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
@@ -56,9 +51,8 @@ function doTaskDelete(task) {
 // Export calendar file for a task
 // => needs to be implemented!
 function exportCalendar(task) {
-    alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
+    alert("Export calendar event for \"" + task.title + "\"\n(Not implemented yet...)");
 }
-
 
 /**
  * Define and configure display elements
@@ -67,18 +61,44 @@ function exportCalendar(task) {
 // Placeholder for undefined values
 const notDefined = (<span className="not-specified">not specified</span>);
 
-// Task only has edit button if task is still active.
+// Task has edit button if task is still active
+// or rating button if task has to be rated and current user is reporter.
 // Rated tasks show rating.
-const EditOrRating = ({props, editIcon}) => {
+const EditOrRating = ({props}) => {
     const history = useHistory();
     // Generate right side according to task.status
     let editOrRating = [];
-    if (props.status === "ACTIVE") {
-        editOrRating.push(
-            <div className="editButton" onClick={(e) => {history.push('/editform/' + props.taskId); e.stopPropagation();}} >
-                <img src={editIcon} alt="Edit task" />
-            </div>
-        );
+    switch (props.status) {
+        case "ACTIVE":
+            // Show edit button
+            editOrRating.push(
+                <ScrumbleButton
+                    type="edit"
+                    onClick={(e) => {history.push('/editform/' + props.taskId); e.stopPropagation();}}
+                />
+            );
+            break;
+        case "COMPLETED":
+            // If current user is reporter of this task => show rating button
+            if (props.reporter && localStorage.getItem("id") && props.reporter == localStorage.getItem("id")){
+                editOrRating.push(
+                    <ScrumbleButton
+                        type="rate"
+                        onClick={(e) => {history.push('/ratingForm/' + props.taskId); e.stopPropagation();}}
+                    />
+                );
+            }
+            break;
+        case "REPORTED":
+            // Show rating
+            editOrRating.push(
+                <RatingDisplay
+                    score={props.score}
+                />
+            );
+            break;
+        default:
+            // do nothing
     }
     return editOrRating;
 }
@@ -134,7 +154,7 @@ export const Task = ({props}) => {
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
-                        <EditOrRating props={props} editIcon={editIcon} />
+                        <EditOrRating props={props} />
                     </div>
                 </div>
             </div>

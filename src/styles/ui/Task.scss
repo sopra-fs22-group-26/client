@@ -85,17 +85,9 @@
         padding: unset;
         flex-direction: column;
         justify-content: flex-start;
-        .editButton {
-          margin: 7px 7px 0 0;
-          padding: 0;
-          text-align: right;
-          &:hover {
-            cursor: pointer;
-          }
-          & img {
-            width: 40px;
-          }
-        }
+      }
+      &.elements-right {
+        text-align: right;
       }
     }
   }
@@ -113,4 +105,12 @@
       color: $brown_dark;
     }
   }
+}
+
+// Rating Display
+.ratingDisplay {
+  cursor: unset;
+  margin: 14px 0 0 auto;
+  padding: 0;
+  text-align: right;
 }

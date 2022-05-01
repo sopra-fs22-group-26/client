@@ -10,6 +10,7 @@ class User {
     this.status = null;
     this.email = null;
     this.birthDate = null;
+    this.score = null;
     Object.assign(this, data);
   }
 }
