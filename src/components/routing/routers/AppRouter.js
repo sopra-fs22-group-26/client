@@ -14,6 +14,7 @@ import TaskDetails from "components/views/TaskDetails";
 import EditForm from "components/views/EditForm";
 import CreationForm from "components/views/CreationForm";
 import Scoreboard from "components/views/Scoreboard";
+import RatingForm from "../../views/RatingForm";
 
 
 /**
@@ -46,6 +47,11 @@ const AppRouter = () => {
         <Route exact path="/editform/:task_id">
           <MainGuard>
             <EditForm/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/ratingform/:task_id">
+          <MainGuard>
+            <RatingForm/>
           </MainGuard>
         </Route>
         <Route exact path="/login">

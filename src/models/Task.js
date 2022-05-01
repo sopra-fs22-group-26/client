@@ -14,6 +14,7 @@
       this.assignee = null;
       this.reporter = null;
       this.nofComments = null;
+      this.score = null;
       Object.assign(this, data);
     }
   }
