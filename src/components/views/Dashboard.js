@@ -168,7 +168,7 @@ const Dashboard = () => {
     // Update data regularly
     const interval = setInterval(()=>{
       fetchData()
-    },5000);
+    },3000);
     return() => clearInterval(interval);
 
   }, [filter, show, sort]);

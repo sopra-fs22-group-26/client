@@ -81,6 +81,7 @@ const RateForm = () => {
     const history = useHistory();
     const [assignee, setAssignee] = useState(null);
     const [reporter, setReporter] = useState(null);
+    const [estimate, setEstimate] = useState(null);
     const [birthDate, setBirthDate] = useState(null);
     const [score, setScore] = useState(0);
 
@@ -107,6 +108,7 @@ const RateForm = () => {
                 // Otherwise, they will be reset on server side
                 setAssignee(taskResponse.assignee);
                 setReporter(taskResponse.reporter);
+                setEstimate(taskResponse.estimate);
 
                 // We also have to store the birthdate of the assignee
                 let r_assignee = await api.get(`/users/${taskResponse.assignee}`);
@@ -130,7 +132,7 @@ const RateForm = () => {
      */
     const rateTask = async () => {
         try {
-            const taskRequestBody = JSON.stringify({score, assignee, reporter, status:"REPORTED"})
+            const taskRequestBody = JSON.stringify({score, assignee, reporter, estimate, status:"REPORTED"})
             const userRequestBody = JSON.stringify( {score, birthDate});
 
             await Promise.all([

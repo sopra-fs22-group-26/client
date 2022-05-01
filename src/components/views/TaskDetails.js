@@ -153,7 +153,12 @@ const TaskDetails = () => {
         if (window.confirm(`Do you really want to complete the task \"${task.title}\"?`)) {
             async function completeTask() {
                 try {
-                    const requestBody = JSON.stringify({status: "COMPLETED", assignee: task.assignee, reporter: task.reporter});
+                    const requestBody = JSON.stringify({
+                        status: "COMPLETED",
+                        assignee: task.assignee,
+                        reporter: task.reporter,
+                        estimate: task.estimate
+                    });
                     const response = await api.put(`/tasks/${task.taskId}`, requestBody);
                     console.log(response);
                     history.push('/dashboard')
