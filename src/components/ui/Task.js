@@ -92,7 +92,9 @@ const EditOrRating = ({props}) => {
         case "REPORTED":
             // Show rating
             editOrRating.push(
-                <RatingDisplay />
+                <RatingDisplay
+                    score={props.score}
+                />
             );
             break;
         default:
