@@ -15,6 +15,7 @@
       this.reporter = null;
       this.score = null;
       this.nofComments = null;
+      this.score = null;
       Object.assign(this, data);
     }
   }

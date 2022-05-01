@@ -84,7 +84,7 @@ const EditOrRating = ({props}) => {
                 editOrRating.push(
                     <ScrumbleButton
                         type="rate"
-                        onClick={(e) => {alert("Rating of tasks coming soon..."); e.stopPropagation();}}
+                        onClick={(e) => {history.push('/ratingForm/' + props.taskId); e.stopPropagation();}}
                     />
                 );
             }
