@@ -10,6 +10,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
+import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 
 import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
@@ -237,10 +238,7 @@ const TaskDetails = () => {
                 {content}
             </div>
             <div className="base-container right-frame">
-                <div className="dashboard poll-session-frame">
-                    <h3>Estimate Poll Sessions</h3>
-                    <p>(Placeholder)</p>
-                </div>
+                <PollSessionMonitor />
                 <EstimateTotals
                     currentWeek={estimate.currentWeek}
                     total={estimate.total}

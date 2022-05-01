@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
+import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Scoreboard.scss';
 import React from "react";
 
@@ -81,10 +82,7 @@ const Scoreboard = () => {
           </div>
         </div>
         <div className="base-container right-frame">
-          <div className="dashboard poll-session-frame">
-            <h3>Estimate Poll Sessions</h3>
-            <p>(Placeholder)</p>
-          </div>
+          <PollSessionMonitor />
         </div>
       </BaseContainer>
   );

@@ -7,6 +7,7 @@ import {Button} from "components/ui/Button";
 import {Task} from "components/ui/Task";
 import {EstimateTotals} from "components/ui/EstimateTotals";
 import {LeftMenuItems} from "models/LeftMenuItems";
+import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
 import React from "react";
@@ -206,10 +207,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="base-container right-frame">
-          <div className="dashboard poll-session-frame">
-            <h3>Estimate Poll Sessions</h3>
-            <p>(Placeholder)</p>
-          </div>
+          <PollSessionMonitor />
           <EstimateTotals
             currentWeek={estimate.currentWeek}
             total={estimate.total}
