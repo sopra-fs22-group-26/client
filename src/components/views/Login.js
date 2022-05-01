@@ -8,6 +8,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
 
+// Define component for login form
 const FormField = props => {
   return (
     <div className="login field">
@@ -24,7 +25,6 @@ const FormField = props => {
     </div>
   );
 };
-
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
@@ -66,6 +66,7 @@ const Login = props => {
     }
   };
 
+  // Display page content
   return (
       <BaseContainer className="single-frame centered">
         <div className="login container">
