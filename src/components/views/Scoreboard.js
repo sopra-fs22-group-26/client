@@ -43,6 +43,13 @@ const Scoreboard = () => {
       }
     }
     fetchData();
+
+    // Update data regularly
+    const interval = setInterval(()=>{
+      fetchData()
+    },5000);
+    return() => clearInterval(interval);
+
   }, []);
 
   let numbering = [];

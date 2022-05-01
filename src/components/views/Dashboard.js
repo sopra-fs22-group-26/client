@@ -162,8 +162,16 @@ const Dashboard = () => {
         alert("Something went wrong while fetching the tasks! See the console for details.");
       }
     }
+
     fetchData();
-  }, [tasks, filter, show, sort]);
+
+    // Update data regularly
+    const interval = setInterval(()=>{
+      fetchData()
+    },5000);
+    return() => clearInterval(interval);
+
+  }, [filter, show, sort]);
 
   // Create content
   let content = <div className="nothing">--- no tasks for current view ---</div>;
@@ -209,8 +217,8 @@ const Dashboard = () => {
         <div className="base-container right-frame">
           <PollSessionMonitor />
           <EstimateTotals
-            currentWeek={estimate.currentWeek}
-            total={estimate.total}
+              currentWeek={estimate.currentWeek}
+              total={estimate.total}
           />
           <Button
               onClick = { () => history.push('/creationform')}
