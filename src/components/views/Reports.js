@@ -155,7 +155,7 @@ const Reports = () => {
             }
         }
         fetchData();
-    }, [tasks, show, sort]);
+    }, [show, sort]);
 
     // Create content
     let content = <div className="nothing">--- no tasks for current view ---</div>;

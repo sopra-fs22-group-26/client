@@ -4,6 +4,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
+import {RatingDisplay} from "components/ui/RatingDisplay";
 import {api, handleError} from "../../helpers/api";
 import {useHistory} from "react-router-dom";
 
@@ -69,6 +70,7 @@ const EditOrRating = ({props}) => {
     let editOrRating = [];
     switch (props.status) {
         case "ACTIVE":
+            // Show edit button
             editOrRating.push(
                 <ScrumbleButton
                     type="edit"
@@ -77,6 +79,7 @@ const EditOrRating = ({props}) => {
             );
             break;
         case "COMPLETED":
+            // If current user is reporter of this task => show rating button
             if (props.reporter && localStorage.getItem("id") && props.reporter == localStorage.getItem("id")){
                 editOrRating.push(
                     <ScrumbleButton
@@ -87,7 +90,11 @@ const EditOrRating = ({props}) => {
             }
             break;
         case "REPORTED":
-            // Show rating...
+            // Show rating
+            editOrRating.push(
+                <RatingDisplay />
+            );
+            break;
         default:
             // do nothing
     }

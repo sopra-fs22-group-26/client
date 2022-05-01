@@ -90,8 +90,18 @@
         padding: unset;
         flex-direction: column;
         justify-content: flex-start;
+        &.elements-right {
+          text-align: right;
+        }
         .scrumbleImage {
           width: 64px
+        }
+        .ratingDisplay {
+          margin-top: 24px;
+          svg {
+            width: 160px;
+            height: auto;
+          }
         }
       }
     }
