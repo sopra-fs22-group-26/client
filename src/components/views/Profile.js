@@ -2,11 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
+import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import {Button} from "components/ui/Button";
 import 'styles/views/Dashboard.scss';
 import 'styles/views/Login.scss';
 import User from "models/User";
 import editIcon from "images/task_edit_icon.svg";
+import {EstimateTotals} from "../ui/EstimateTotals";
+import {isInCurrentWeek} from "../../helpers/dateFuncs";
 
 
 const Profile = () => {
@@ -18,27 +21,31 @@ const Profile = () => {
     const [name, setName] = useState(null);
     const [birthDate, setBirthDate] = useState(null);
     const [score, setScore] = useState(null);
+    const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const id = localStorage.getItem("id");
-                const response = await api.get(`/users/${id}`);
+
+                let [r_user, r_assignedTasks] =
+                    await Promise.all([
+                        api.get(`/users/${id}`),
+                        api.get(`/tasks/assignee/${id}`)]);
+
+                // Calculate Total Estimates for current user
+                let estimates = {currentWeek: 0, total: 0};
+                estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
+                estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
+                setEstimate(estimates);
 
                 // Get the returned user and update the state.
-                setUser(response.data);
-                setUsername(response.data.username);
-                setName(response.data.name);
-                setEmailAddress(response.data.emailAddress);
-                setBirthDate(response.data.birthDate);
-                setScore(response.data.score);
-
-                //set new username for logout
-                const user = new User(response.data);
-                //localStorage.setItem('username', user.username);
-
-                // See here to get more data.
-                console.log(response);
+                setUser(r_user.data);
+                setUsername(r_user.data.username);
+                setName(r_user.data.name);
+                setEmailAddress(r_user.data.emailAddress);
+                setBirthDate(r_user.data.birthDate);
+                setScore(r_user.data.score);
             } catch (error) {
                 console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -98,10 +105,11 @@ const Profile = () => {
                 {content}
             </div>
             <div className="base-container right-frame">
-                <div className="dashboard poll-session-frame">
-                    <h3>Estimate Poll Sessions</h3>
-                    <p>(Placeholder)</p>
-                </div>
+                <PollSessionMonitor />
+                <EstimateTotals
+                    currentWeek={estimate.currentWeek}
+                    total={estimate.total}
+                />
                 <Button
                     onClick = { () => history.push('/creationform')}
                 >

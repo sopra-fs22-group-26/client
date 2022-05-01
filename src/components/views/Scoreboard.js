@@ -5,10 +5,15 @@ import BaseContainer from "components/ui/BaseContainer";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Scoreboard.scss';
 import React from "react";
+import {EstimateTotals} from "../ui/EstimateTotals";
+import {Button} from "../ui/Button";
+import {isInCurrentWeek} from "../../helpers/dateFuncs";
 
 
 const Scoreboard = () => {
   const [users, setUsers] = useState([]);
+  const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
+  const history = useHistory();
 
   // Get all users to define options for assignee and reporter
   useEffect(() => {
@@ -16,25 +21,24 @@ const Scoreboard = () => {
       try {
         const response = await api.get(`/users`);
 
-        let tempUsers = response.data;
+        const id = localStorage.getItem("id");
+        let [r_users, r_assignedTasks] =
+            await Promise.all([
+              api.get(`/users/`),
+              api.get(`/tasks/assignee/${id}`)]);
+
+        let tempUsers = r_users.data;
 
         // sort users by score in descending order
         tempUsers = tempUsers.sort((a, b) => b.score - a.score);
         setUsers(tempUsers);
         console.log('User list:', tempUsers);
-        /** 
-        // Should already be in the right order
-        setScores(tempScores = tempUsers.map(x => x.score));
-        console.log('Score list:', tempScores);
 
-        // Should already be in the right order
-        setNames(tempNames = tempUsers.map(x => x.name));
-        console.log('Name list:', tempNames);
-
-        // Should already be in the right order
-        setUsernames(tempUsernames = tempUsers.map(x => x.username));
-        console.log('Username list:', tempUsernames);
-        */
+        // Calculate Total Estimates for current user
+        let estimates = {currentWeek: 0, total: 0};
+        estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
+        estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
+        setEstimate(estimates);
       }
       catch (error) {
         console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
@@ -90,6 +94,15 @@ const Scoreboard = () => {
         </div>
         <div className="base-container right-frame">
           <PollSessionMonitor />
+          <EstimateTotals
+              currentWeek={estimate.currentWeek}
+              total={estimate.total}
+          />
+          <Button
+              onClick = { () => history.push('/creationform')}
+          >
+            Create new task
+          </Button>
         </div>
       </BaseContainer>
   );
