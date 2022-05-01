@@ -13,6 +13,7 @@
       this.status = null;
       this.assignee = null;
       this.reporter = null;
+      this.score = null;
       this.nofComments = null;
       Object.assign(this, data);
     }
