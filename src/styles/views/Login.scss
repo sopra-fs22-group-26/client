@@ -51,6 +51,9 @@
   &.field {
     display: table;
     text-align: right;
+    &.space-above {
+      margin-top: 36px;
+    }
   }
   &.input {
     font-weight: $fontWeightRegular;

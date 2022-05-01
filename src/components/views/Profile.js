@@ -17,6 +17,7 @@ const Profile = () => {
     const [emailAddress, setEmailAddress] = useState(null);
     const [name, setName] = useState(null);
     const [birthDate, setBirthDate] = useState(null);
+    const [score, setScore] = useState(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -30,6 +31,7 @@ const Profile = () => {
                 setName(response.data.name);
                 setEmailAddress(response.data.emailAddress);
                 setBirthDate(response.data.birthDate);
+                setScore(response.data.score);
 
                 //set new username for logout
                 const user = new User(response.data);
@@ -72,6 +74,10 @@ const Profile = () => {
                     <div className="login field">
                         <label className="login label">Birthdate:</label>
                         <div className="login value-display">{birthDate ? new Date(birthDate).toLocaleString('ch-DE', {dateStyle: 'medium'}) : "-"}</div>
+                    </div>
+                    <div className="login field space-above">
+                        <label className="login label">Task Score:</label>
+                        <div className="login value-display">{score}</div>
                     </div>
                     <div className="login button-container edit-button">
                         <div onClick={() => history.push("/editProfile")} >
