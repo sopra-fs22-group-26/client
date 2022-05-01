@@ -81,6 +81,7 @@ const RateForm = () => {
     const history = useHistory();
     const [assignee, setAssignee] = useState(null);
     const [reporter, setReporter] = useState(null);
+    const [birthDate, setBirthDate] = useState(null);
     const [score, setScore] = useState(0);
 
     const [task, setTask] = useState(null);
@@ -94,15 +95,23 @@ const RateForm = () => {
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
+                let userResponse = r_users.data;
 
                 // Get all users and replace assignee and reporter ids with user names
-                let userArray = r_users.data.map(user => [user.id, (user.name ? user.name : user.username)]);
+                let userArray = userResponse.map(user => [user.id, (user.name ? user.name : user.username)]);
                 const userDictionary = Object.fromEntries(userArray);
                 taskResponse.assignee_name = taskResponse.assignee ? userDictionary[taskResponse.assignee] : null;
                 taskResponse.reporter_name = taskResponse.reporter ? userDictionary[taskResponse.reporter] : null;
 
+                // We need to store the following values because they have be passed with the PUT request.
+                // Otherwise, they will be reset on server side
                 setAssignee(taskResponse.assignee);
                 setReporter(taskResponse.reporter);
+
+                // We also have to store the birthdate of the assignee
+                let r_assignee = await api.get(`/users/${taskResponse.assignee}`);
+                setBirthDate(r_assignee.data.birthDate);
+
                 setTask(taskResponse);
             }
             catch (error) {
@@ -122,7 +131,7 @@ const RateForm = () => {
     const rateTask = async () => {
         try {
             const taskRequestBody = JSON.stringify({score, assignee, reporter, status:"REPORTED"})
-            const userRequestBody = JSON.stringify( {score});
+            const userRequestBody = JSON.stringify( {score, birthDate});
 
             await Promise.all([
                 api.put(`/tasks/${params["task_id"]}`, taskRequestBody),
