@@ -1,0 +1,54 @@
+@import 'styles/theme';
+
+.poll-session-monitor {
+    font-family: $fontText;
+    width: 250px;
+    border: 1px solid black;
+    margin: 0 0 24px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    &.psm-header {
+        width: unset;
+        margin: 0;
+        padding: 4px 8px;
+        border: unset;
+        border-bottom: 1px solid black;
+        background-color: $gray_dark;
+        font-family: $fontMenu;
+        font-weight: $fontWeightLight;
+        font-size: 24px;
+        color: white;
+        h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+            font-weight: $fontWeightRegular;
+        }
+    }
+    &.psm-body {
+        width: unset;
+        margin: 4px 8px;
+        padding: unset;
+        border: unset;
+        gap: 36px;
+        &.psm-section {
+            margin: 0 0 4px 0;
+            gap: unset;
+            h3 {
+                font-weight: $fontWeightBold;
+                margin: 4px 7px;
+                font-size: 18px;
+            }
+            p {
+                margin: 4px 7px;
+                font-size: 14px;
+                &.no-session {
+                    font-style: oblique;
+                    font-weight: $fontWeightLight;
+                }
+            }
+        }
+    }
+
+}
