@@ -1,22 +1,13 @@
 import {useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
-import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import 'styles/views/Scoreboard.scss';
 import React from "react";
-import Select from "react-select";
-
 
 
 const Scoreboard = () => {
-  const history = useHistory();
   const [users, setUsers] = useState([]);
-  const [names, setNames] = useState(null);
-  const [scores, setScores] = useState(null);
-  const [usernames, setUsernames] = useState(null);
-
 
   // Get all users to define options for assignee and reporter
   useEffect(() => {
@@ -25,9 +16,6 @@ const Scoreboard = () => {
         const response = await api.get(`/users`);
 
         let tempUsers = response.data;
-        let tempScores;
-        let tempNames;
-        let tempUsernames;
 
         // sort users by score in descending order
         tempUsers = tempUsers.sort((a, b) => b.score - a.score);
@@ -54,7 +42,7 @@ const Scoreboard = () => {
       }
     }
     fetchData();
-  }, []); 
+  }, []);
 
   let numbering = [];
   let rank = 0;
@@ -63,31 +51,39 @@ const Scoreboard = () => {
     numbering.push(rank);
   }
 
-  const nameList = users.map(x => 
-    <div className="score-board name-entry">{x.name}:</div>
+  const ranking = numbering.map(x =>
+      <div className="score-board rank-entry">{x}.</div>
+  );
+
+  const nameList = users.map(x =>
+    <div className="score-board name-entry">{x.name ? x.name : x.username}:</div>
   );
 
   const scoreList = users.map(x =>
     <div className="score-board score-entry">{x.score}</div>
   );
 
-  const ranking = numbering.map(x =>
-    <div className="score-board name-entry">{x}.</div>
-  );
-
   return (
       <BaseContainer>
         <div className="base-container left-frame"></div>
-        <div className="base-container main-frame">
+        <div className="base-container main-frame centered">
           <div className="score-board container">
             <div className="score-board header">
               Scoreboard
             </div>
             <div className="score-board scores-container">
-              <div>{ranking}</div>
-              <div>{nameList}</div>
+              <div className="score-board left-frame">
+                <div>{ranking}</div>
+                <div>{nameList}</div>
+              </div>
               <div>{scoreList}</div>
             </div>
+          </div>
+        </div>
+        <div className="base-container right-frame">
+          <div className="dashboard poll-session-frame">
+            <h3>Estimate Poll Sessions</h3>
+            <p>(Placeholder)</p>
           </div>
         </div>
       </BaseContainer>
