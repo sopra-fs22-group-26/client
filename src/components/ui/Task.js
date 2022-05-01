@@ -51,7 +51,7 @@ function doTaskDelete(task) {
 // Export calendar file for a task
 // => needs to be implemented!
 function exportCalendar(task) {
-    alert("Export calendar event for \"" + task.title + "\"\n(Not implemented yet...)");
+    alert("Calendar export functionality coming soon...");
 }
 
 /**
@@ -111,7 +111,7 @@ const TaskFooter = ({props}) => {
     let footer = [];
     footer.push(<DeleteForeverOutlinedIcon onClick={(e) => {doTaskDelete(props); e.stopPropagation();}}/>);
     if (props.status === "ACTIVE") {
-        footer.push(<CalendarMonthOutlinedIcon onClick={(e) => {exportCalendar(props); e.stopPropagation();}} />);
+        footer.push(<CalendarMonthOutlinedIcon color="disabled" alt="co" onClick={(e) => {exportCalendar(props); e.stopPropagation();}} />);
         footer.push(<AssignmentTurnedInOutlinedIcon onClick={(e) => {doTaskComplete(props); e.stopPropagation();}} />);
     }
     return (

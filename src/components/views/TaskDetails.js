@@ -70,7 +70,7 @@ const TaskFooter = ({props, taskFunctions}) => {
     let footer = [];
     footer.push(<DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)}/>);
     if (props.status === "ACTIVE") {
-        footer.push(<CalendarMonthOutlinedIcon onClick={() => taskFunctions.exportCalendar(props)} />);
+        footer.push(<CalendarMonthOutlinedIcon color="disabled" onClick={() => taskFunctions.exportCalendar(props)} />);
         footer.push(<AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props)} />);
     }
     return (
@@ -175,7 +175,7 @@ const TaskDetails = () => {
     // Export calendar file for a task
     // => needs to be implemented!
     function doTaskCalendarExport(task) {
-        alert("Export calendar event for task with id " + task.taskId + "\n(Not implemented yet...)");
+        alert("Calendar export functionality coming soon...");
     }
 
     // Functions will be passed to task child component (for reference)
