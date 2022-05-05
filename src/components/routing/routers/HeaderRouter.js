@@ -18,6 +18,9 @@ const HeaderRouter = () => {
           <Route path="/creationform">
             <Header selectedMenu="none" active="0"/>
           </Route>
+          <Route path="/sessionlobby">
+            <Header selectedMenu="none" active="0"/>
+          </Route>
           <Route>
             <Header selectedMenu="none" active="0"/>
           </Route>

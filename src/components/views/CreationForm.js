@@ -212,6 +212,10 @@ const CreationForm = () => {
                     value={estimate}
                     onChange={e => setEstimate(e)}
                 />
+                <Button
+                  onClick = { () => history.push('/sessionlobby')}>
+                  Start Estimate Poll Session
+                </Button>
               </div>
             </div>
             <div className="creation-form footer">
