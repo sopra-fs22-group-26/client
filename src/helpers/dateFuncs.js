@@ -19,3 +19,13 @@ export const isInCurrentWeek = (dateToCheck) => {
 
     return (lastMondayTimestamp <= dateToCheckTimestamp && dateToCheckTimestamp < nextMondayTimestamp);
 }
+
+export const convertDateToIcsDatestring = (myDate) => {
+    return [
+        myDate.getFullYear(),
+        myDate.getMonth() < 9 ? "0" : "",
+        myDate.getMonth() + 1,
+        myDate.getDate() < 10 ? "0" : "",
+        myDate.getDate()
+    ].join("");
+}
