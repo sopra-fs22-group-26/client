@@ -15,6 +15,7 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
+import {icsExport} from "helpers/icsExport";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -177,18 +178,12 @@ const TaskDetails = () => {
         history.push('/editform/' + task.taskId);
     }
 
-    // Export calendar file for a task
-    // => needs to be implemented!
-    function doTaskCalendarExport(task) {
-        alert("Calendar export functionality coming soon...");
-    }
-
     // Functions will be passed to task child component (for reference)
     const myTaskFunctions = {
         "completeTask": doTaskComplete,
         "editTask": doTaskEdit,
         "deleteTask": doTaskDelete,
-        "exportCalendar": doTaskCalendarExport
+        "exportCalendar": icsExport
     }
 
     useEffect(() => {
