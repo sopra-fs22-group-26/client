@@ -110,7 +110,7 @@ const TaskFooter = ({props}) => {
     let footer = [];
     footer.push(<DeleteForeverOutlinedIcon onClick={(e) => {doTaskDelete(props); e.stopPropagation();}}/>);
     if (props.status === "ACTIVE") {
-        footer.push(<CalendarMonthOutlinedIcon color="disabled" alt="co" onClick={(e) => {icsExport(props); e.stopPropagation();}} />);
+        footer.push(<CalendarMonthOutlinedIcon alt="Export task to calendar" onClick={(e) => {icsExport(props); e.stopPropagation();}} />);
         footer.push(<AssignmentTurnedInOutlinedIcon onClick={(e) => {doTaskComplete(props); e.stopPropagation();}} />);
     }
     return (
