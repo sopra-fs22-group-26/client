@@ -213,8 +213,9 @@ const CreationForm = () => {
                     onChange={e => setEstimate(e)}
                 />
                 <Button
-                  onClick = { () => history.push('/sessionlobby')}>
-                  Start Estimate Poll Session
+                    disabled={!(title && description && dueDate && estimate !== "")}
+                    onClick = { () => { history.push('/sessionlobby'); saveTask();}}>
+                    Start Estimate Poll Session
                 </Button>
               </div>
             </div>
