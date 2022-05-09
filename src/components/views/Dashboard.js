@@ -174,13 +174,14 @@ const Dashboard = () => {
     }, [filter, show, sort]);
 
 
-
-
   // Create content
   let content = <div className="nothing">--- no tasks for current view ---</div>;
 
-
-
+  if (tasks && tasks.length > 0 && users) {
+    content = tasks.map(task => (
+        <Task props={task} key={task.id} />
+    ));
+  }
   /**
    * Combine contents and display dashboard
    */

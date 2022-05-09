@@ -313,7 +313,15 @@ const TaskDetails = () => {
             }
         }
         fetchData();
+
+        // Update data regularly
+        const interval = setInterval(()=>{
+            fetchData()
+        },3000);
+        return() => clearInterval(interval);
+
     }, []);
+
 
     let content = <div className="nothing"> loading task info</div>;
 
