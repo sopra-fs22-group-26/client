@@ -15,6 +15,7 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
+import {icsExport} from "helpers/icsExport";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -61,7 +62,47 @@ const EditOrRating = ({props}) => {
     }
     return editOrRating;
 }
+const Comments = ({comments, taskFunctions}) => {
 
+    let id = localStorage.getItem('id');
+
+    const commentslist = comments.map(x => {
+        let val;
+        //if comment.author != id do basic else add delete button
+        if (x.authorId != id) {
+           val = <div className="label">{x.authorId}: {x.content}</div>
+        } else{
+            val = <div>{x.authorId}: {x.content}
+                    <Button
+                        onClick = {() => {taskFunctions.deleteComment(x)}}
+                    >Delete</Button>
+                </div>
+        }
+        return val;
+    });
+
+    return commentslist;
+}
+
+const WriteComment = ({props, taskFunctions}) => {
+
+    const [comment, setComment] = useState(null);
+
+    return (
+        <div>
+             <textarea
+                 rows="1"
+                 value={comment}
+                 placeholder="Leave a comment..."
+                 onChange = {(e) => {setComment(e.target.value)}}
+                />
+            <Button
+            onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
+            disabled={!comment}
+            >Post</Button>
+        </div>
+    );
+}
 
 
 // Task footer only has buttons for completion and calendar export if task is still active
@@ -70,7 +111,7 @@ const TaskFooter = ({props, taskFunctions}) => {
     let footer = [];
     footer.push(<DeleteForeverOutlinedIcon onClick={() => taskFunctions.deleteTask(props)}/>);
     if (props.status === "ACTIVE") {
-        footer.push(<CalendarMonthOutlinedIcon color="disabled" onClick={() => taskFunctions.exportCalendar(props)} />);
+        footer.push(<CalendarMonthOutlinedIcon alt="Export task to calendar" onClick={() => taskFunctions.exportCalendar(props)} />);
         footer.push(<AssignmentTurnedInOutlinedIcon onClick={() => taskFunctions.completeTask(props)} />);
     }
     return (
@@ -81,7 +122,7 @@ const TaskFooter = ({props, taskFunctions}) => {
 }
 
 
-const Task = ({props, taskFunctions}) => {
+const Task = ({props,comments, setComment, taskFunctions}) => {
     return (
         <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
             <div className="task-header">{props.title}</div>
@@ -93,7 +134,9 @@ const Task = ({props, taskFunctions}) => {
                 </div>
                 <div className="task-content top-container">
                     <div className="task-content comments">
-                        <div className="comments-title">{props.nofComments ? props.nofComments : "No"} comments</div>
+                        <Comments comments={comments} taskFunctions={taskFunctions}></Comments>
+                        <h4>-----------------</h4>
+                        <WriteComment props={props} taskFunctions={taskFunctions}></WriteComment>
                     </div>
                 </div>
                 <div className="task-content bottom-container">
@@ -121,6 +164,7 @@ const TaskDetails = () => {
     const history = useHistory();
     const [task, setTask] = useState(null);
     const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
+    const [comments, setComments] = useState(null);
 
     const params = useParams();
 
@@ -177,18 +221,59 @@ const TaskDetails = () => {
         history.push('/editform/' + task.taskId);
     }
 
+
     // Export calendar file for a task
     // => needs to be implemented!
     function doTaskCalendarExport(task) {
         alert("Calendar export functionality coming soon...");
     }
 
+    function doCommentPost(comment, task, setComment){
+            async function postComment() {
+                try {
+                    //prepare comment to post
+                    let content = comment;
+                    let belongingTask = task.taskId;
+                    let authorId = localStorage.getItem("id");
+                    const requestBody = JSON.stringify({content, authorId, belongingTask, task});
+                    const response = await api.post(`/comments`, requestBody);
+
+                    //reset input field via the hook after comment has been posted
+                    setComment("");
+
+                } catch (error) {
+                    console.error(`Something went wrong while posting the comment: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while commenting the task! See the console for details.");
+                }
+            }
+            postComment();
+    }
+
+    function doCommentDelete(comment){
+        async function deleteComment() {
+            try {
+                const response = await api.delete(`/comments/${comment.commentId}`);
+                console.log(response);
+
+            } catch(error){
+                console.error(`Something went wrong while deleting the comment: \n${handleError(error)}`);
+                console.error("Details:", error);
+                alert("Something went wrong while deleting the comment! See the console for details.");
+            }
+        }
+        deleteComment();
+    }
+
+
     // Functions will be passed to task child component (for reference)
     const myTaskFunctions = {
         "completeTask": doTaskComplete,
         "editTask": doTaskEdit,
         "deleteTask": doTaskDelete,
-        "exportCalendar": doTaskCalendarExport
+        "exportCalendar": icsExport,
+        "postComment" : doCommentPost,
+        "deleteComment" : doCommentDelete
     }
 
     useEffect(() => {
@@ -208,6 +293,8 @@ const TaskDetails = () => {
                 taskResponse.assignee_name = taskResponse.assignee ? userDictionary[taskResponse.assignee] : null;
                 taskResponse.reporter_name = taskResponse.reporter ? userDictionary[taskResponse.reporter] : null;
 
+                let commentsResponse = r_task.data.comments;
+                setComments(commentsResponse);
                 setTask(taskResponse);
 
                 // Calculate Total Estimates for current user
@@ -215,7 +302,6 @@ const TaskDetails = () => {
                 estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
                 estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
                 setEstimate(estimates);
-
 
                 // See here to get more data.
                 console.log(r_task);
@@ -227,12 +313,20 @@ const TaskDetails = () => {
             }
         }
         fetchData();
+
+        // Update data regularly
+        const interval = setInterval(()=>{
+            fetchData()
+        },3000);
+        return() => clearInterval(interval);
+
     }, []);
+
 
     let content = <div className="nothing"> loading task info</div>;
 
     if(task) {
-        content = <Task props={task} key={task.id} taskFunctions={myTaskFunctions}/>;
+        content = <Task props={task} comments={comments} key={task.id} taskFunctions={myTaskFunctions}/>;
     }
 
     return (
