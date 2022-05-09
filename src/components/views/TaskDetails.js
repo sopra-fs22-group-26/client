@@ -271,8 +271,8 @@ const TaskDetails = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users, r_comments, r_assignedTasks] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
-                    api.get('/users'),api.get(`/comments/${params["task_id"]}`) ,
+                let [r_task, r_users, r_assignedTasks] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
+                    api.get('/users'),
                     api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
 
                 // Get the returned tasks and update the states.
@@ -285,7 +285,7 @@ const TaskDetails = () => {
                 taskResponse.assignee_name = taskResponse.assignee ? userDictionary[taskResponse.assignee] : null;
                 taskResponse.reporter_name = taskResponse.reporter ? userDictionary[taskResponse.reporter] : null;
 
-                let commentsResponse = r_comments.data;
+                let commentsResponse = r_task.data.comments;
                 setComments(commentsResponse);
                 setTask(taskResponse);
 
