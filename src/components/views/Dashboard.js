@@ -169,9 +169,15 @@ const Dashboard = () => {
         alert("Something went wrong while fetching the tasks! See the console for details.");
       }
     }
-
     fetchData();
-    }, [filter, show, sort]);
+
+    // Update data regularly
+    const interval = setInterval(()=>{
+      fetchData()
+    },3000);
+    return() => clearInterval(interval);
+
+  }, [filter, show, sort]);
 
 
   // Create content
