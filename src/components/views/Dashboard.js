@@ -82,6 +82,13 @@ const Dashboard = () => {
         estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
         setEstimate(estimates);
 
+        //get number of comments and assign it to task attribute
+        function getLength(aTask){
+          let r_comments = aTask.comments;
+          return r_comments.length;
+        }
+        tasks.forEach(task => task.nofComments = getLength(task));
+
         // Apply filter and sorts
 
         // Filter tasks according to the current filter state
@@ -164,23 +171,15 @@ const Dashboard = () => {
     }
 
     fetchData();
+    }, [filter, show, sort]);
 
-    // Update data regularly
-    const interval = setInterval(()=>{
-      fetchData()
-    },3000);
-    return() => clearInterval(interval);
 
-  }, [filter, show, sort]);
+
 
   // Create content
   let content = <div className="nothing">--- no tasks for current view ---</div>;
 
-  if (tasks && tasks.length > 0 && users) {
-    content = tasks.map(task => (
-        <Task props={task} key={task.id} />
-    ));
-  }
+
 
   /**
    * Combine contents and display dashboard
