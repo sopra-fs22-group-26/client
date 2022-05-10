@@ -40,12 +40,25 @@
 
   // Header
   .task-header {
-    padding: 5px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 6px 5px 15px;
     font-weight: $fontWeightBold;
     font-size: 22px;
     border-top-left-radius: $borderInnerRadius;
     background-color: $yellow_dark;
     border-top-right-radius: $borderInnerRadius;
+
+    .action-icon {
+      color: $brown_darker;
+      font-size: 30px;
+      cursor: pointer;
+      &:hover {
+        color: $brown_dark;
+      }
+
+    }
   }
 
   // Main content
