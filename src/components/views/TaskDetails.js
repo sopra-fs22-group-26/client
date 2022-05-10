@@ -8,6 +8,7 @@ import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
@@ -123,9 +124,13 @@ const TaskFooter = ({props, taskFunctions}) => {
 
 
 const Task = ({props,comments, setComment, taskFunctions}) => {
+    const history = useHistory();
     return (
         <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
-            <div className="task-header">{props.title}</div>
+            <div className="task-header">
+                <div>{props.title}</div>
+                <CloseOutlinedIcon className="action-icon" onClick={() => history.goBack()} />
+            </div>
             <div className="task-content">
                 <div className="task-content top-container">
                     <div className="task-content task-description">

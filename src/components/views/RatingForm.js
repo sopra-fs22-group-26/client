@@ -57,7 +57,7 @@ const Task = ({props, score, setScore, rateTask, history}) => {
             <div className="creation-form footer">
                 <Button
                     className="menu-button"
-                    onClick={() => history.push(`/reports`)}
+                    onClick={() => history.goBack()}
                 >
                     Cancel
                 </Button>

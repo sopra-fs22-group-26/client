@@ -217,7 +217,7 @@ const CreationForm = () => {
             <div className="creation-form footer">
               <Button
                   className="menu-button"
-                  onClick={() => history.push(`/dashboard`)}
+                  onClick={() => history.goBack()}
               >
                 Cancel
               </Button>
