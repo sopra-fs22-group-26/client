@@ -66,8 +66,7 @@ const SessionLobby = () => {
     const [users, setUsers] = useState(null);
     const [invitee, setInvitee] = useState(null);
     const [estimateThreshold, setThreshold] = useState(null);
-    const params = useParams();
-    console.log(params);
+
     // Get all users to define options for assignee and reporter
     useEffect(() => {
         async function fetchData() {
@@ -99,12 +98,12 @@ const SessionLobby = () => {
     const startSession = async () => {
         try {
             const creatorId = localStorage.getItem("id");
-            const taskId = 1; // TO BE MODIFIED TO EXACT TASK ID
+            const taskId = localStorage.getItem("taskId");
             const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, invitee});
 
             const response = await api.post('/poll-meetings', requestBody);
 
-            // After succesful creation of a new task navigate to /dashboard
+            // After successful creation of a new poll navigate to /waitinglobby
             history.push('/waitinglobby');
 
         } catch (error) {

@@ -148,6 +148,24 @@ const CreationForm = () => {
     }
   };
 
+    /**
+     * Save task and get task id
+     * @returns {Promise<void>}
+     */
+    const saveTaskGetTaskId = async () => {
+        try {
+            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
+
+            const response = await api.post('/tasks', requestBody);
+
+            localStorage.setItem("taskId", response.data.taskId)
+
+            history.push('/sessionlobby');
+        } catch (error) {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
+    };
+
   return (
       <BaseContainer>
         <div className="base-container left-frame">
@@ -214,7 +232,7 @@ const CreationForm = () => {
                 />
                 <Button
                     disabled={!(title && description && dueDate && estimate !== "")}
-                    onClick = { () => {history.push('/sessionlobby'); saveTask();}}>
+                    onClick = { () => saveTaskGetTaskId()}>
                     Start Estimate Poll Session
                 </Button>
               </div>
