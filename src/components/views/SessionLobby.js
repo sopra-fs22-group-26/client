@@ -64,10 +64,10 @@ const ReactSelection = props => {
 const SessionLobby = () => {
     const history = useHistory();
     const [users, setUsers] = useState(null);
-    const [invitee, setInvitee] = useState(null);
+    const [participants, setParticipants] = useState(null);
     const [estimateThreshold, setThreshold] = useState(null);
 
-    // Get all users to define options for assignee and reporter
+    // Get all users to define options for invitees
     useEffect(() => {
         async function fetchData() {
             try {
@@ -99,9 +99,9 @@ const SessionLobby = () => {
         try {
             const creatorId = localStorage.getItem("id");
             const taskId = localStorage.getItem("taskId");
-            const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, invitee});
+            const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, participants});
 
-            const response = await api.post('/poll-meetings', requestBody);
+            // const response = await api.post('/poll-meetings', requestBody);
 
             // After successful creation of a new poll navigate to /waitinglobby
             history.push('/waitinglobby');
@@ -128,7 +128,7 @@ const SessionLobby = () => {
                             <ReactSelection
                                 label="Search:"
                                 options={users}
-                                onChange={a => setInvitee(a)}
+                                onChange={a => setParticipants(a)}
                             />
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">

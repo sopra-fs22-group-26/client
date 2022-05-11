@@ -1,0 +1,19 @@
+@import 'styles/theme';
+
+.participant-name-container {
+  margin-bottom: 1em;
+  margin-right: 1em;
+  padding: 10px;
+  font-family: $fontMenu;
+  font-weight: $fontWeightRegular;
+  font-size: 24px;
+  text-align: start;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  border-radius: $formButtonRadius;
+  cursor: pointer;
+  opacity: 1;
+  background-color: $gray_light;
+  transition: all 0.2s ease;
+}

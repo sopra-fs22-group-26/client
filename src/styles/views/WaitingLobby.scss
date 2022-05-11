@@ -62,34 +62,15 @@
     }
   }
 
-  &.description-container {
-    border-bottom: 2px solid $brown_dark;
-    width: 100%;
-    & textarea {
-      background-color: white;
-      border-color: $brown_dark;
-      border-style: solid;
-      border-width: 1px;
-      border-radius: 0;
-      margin: 14px;
-      padding: 4px 8px;
-      font-weight: $fontWeightRegular;
-      width: 655px;
-    }
-  }
-  &.attributes-container {
-    display: flex;
-    flex-direction: row;
-    margin: 7px;
 
-    &.attributes-column {
-      width: fit-content;
-      flex-direction: column;
-      &.rightalign {
-        margin: 0 0 0 auto;
-      }
-    }
+  &.participant-container {
+
   }
+
+  &.participant-area {
+
+  }
+
 
   &.field {
     display: flex;
