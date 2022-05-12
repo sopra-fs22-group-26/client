@@ -3,7 +3,7 @@ import {api, handleError} from "helpers/api";
 import {useHistory} from "react-router-dom";
 import {Menu, Avatar, Divider, ListItemIcon, MenuItem, Tooltip} from "@mui/material";
 import {Logout} from "@mui/icons-material";
-import {initialsOf} from "../../helpers/userDisplay";
+import {initialsOf} from "helpers/userDisplay";
 
 import "styles/ui/UserMenu.scss";
 
@@ -134,6 +134,5 @@ export const UserMenu = () => {
         </div>
     );
 };
-
 
 
