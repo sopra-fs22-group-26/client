@@ -8,6 +8,9 @@ import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/icons-material/Delete";
+import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
@@ -16,6 +19,7 @@ import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
 import {icsExport} from "helpers/icsExport";
+import {LoadingButton} from "@mui/lab";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -70,12 +74,14 @@ const Comments = ({comments, taskFunctions}) => {
         let val;
         //if comment.author != id do basic else add delete button
         if (x.authorId != id) {
-           val = <div className="label">{x.authorId}: {x.content}</div>
+           val = <div className="task-content comments-field">{x.authorName}: {x.content}</div>
         } else{
-            val = <div>{x.authorId}: {x.content}
-                    <Button
+            val = <div className="task-content comments-field">{x.authorName}: {x.content}
+                    <IconButton
+                        size = "large"
+                        startIcon = {<DeleteIcon />}
                         onClick = {() => {taskFunctions.deleteComment(x)}}
-                    >Delete</Button>
+                    >Delete</IconButton>
                 </div>
         }
         return val;
@@ -91,14 +97,16 @@ const WriteComment = ({props, taskFunctions}) => {
     return (
         <div>
              <textarea
+                 className="task-content commenting"
                  rows="1"
                  value={comment}
                  placeholder="Leave a comment..."
                  onChange = {(e) => {setComment(e.target.value)}}
                 />
             <Button
-            onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
-            disabled={!comment}
+                className="task-content commenting button"
+                onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
+                disabled={!comment}
             >Post</Button>
         </div>
     );
@@ -135,7 +143,6 @@ const Task = ({props,comments, setComment, taskFunctions}) => {
                 <div className="task-content top-container">
                     <div className="task-content comments">
                         <Comments comments={comments} taskFunctions={taskFunctions}></Comments>
-                        <h4>-----------------</h4>
                         <WriteComment props={props} taskFunctions={taskFunctions}></WriteComment>
                     </div>
                 </div>
@@ -234,8 +241,9 @@ const TaskDetails = () => {
                     //prepare comment to post
                     let content = comment;
                     let belongingTask = task.taskId;
+                    let authorName = localStorage.getItem("username");
                     let authorId = localStorage.getItem("id");
-                    const requestBody = JSON.stringify({content, authorId, belongingTask, task});
+                    const requestBody = JSON.stringify({content, authorName, authorId, belongingTask, task});
                     const response = await api.post(`/comments`, requestBody);
 
                     //reset input field via the hook after comment has been posted

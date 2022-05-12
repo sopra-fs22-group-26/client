@@ -68,6 +68,13 @@ const Reports = () => {
                 tasks.forEach(task => task.assignee_name = task.assignee ? userDictionary[task.assignee] : null);
                 tasks.forEach(task => task.reporter_name = task.reporter ? userDictionary[task.reporter] : null);
 
+                //get number of comments and assign it to task attribute
+                function getLength(aTask){
+                    let r_comments = aTask.comments;
+                    return r_comments.length;
+                }
+                tasks.forEach(task => task.nofComments = getLength(task));
+
                 // Calculate Total Estimates for current user
                 let estimates = {currentWeek: 0, total: 0};
                 estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);

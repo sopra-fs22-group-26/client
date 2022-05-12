@@ -18,7 +18,7 @@ import Rating from '@mui/lab/Rating';
  * @returns {JSX.Element}
  * @constructor
  */
-const Task = ({props, score, setScore, rateTask, history}) => {
+const Task = ({props, score, comments, setScore, rateTask, history}) => {
     return (
         <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
             <div className="task-header">{props.title}</div>
@@ -30,7 +30,8 @@ const Task = ({props, score, setScore, rateTask, history}) => {
                 </div>
                 <div className="task-content top-container">
                     <div className="task-content comments">
-                        <div className="comments-title">{props.nofComments ? props.nofComments : "No"} comments</div>
+                        <div className="comments-title"> Comments: </div>
+                        <Comments comments={comments}></Comments>
                     </div>
                 </div>
                 <div className="task-content bottom-container">
@@ -73,6 +74,16 @@ const Task = ({props, score, setScore, rateTask, history}) => {
     )
 };
 
+const Comments = ({comments}) => {
+
+    let commentList = comments.map(comment => {
+        let val;
+        val = <div className="task-content comments-field">{comment.authorName}: {comment.content}</div>
+        return val;
+    });
+    return commentList;
+}
+
 const notDefined = (<span className="not-specified">not specified</span>);
 
 // Output component
@@ -84,6 +95,7 @@ const RateForm = () => {
     const [estimate, setEstimate] = useState(null);
     const [birthDate, setBirthDate] = useState(null);
     const [score, setScore] = useState(0);
+    const [comments, setComments] = useState(null);
 
     const [task, setTask] = useState(null);
 
@@ -98,6 +110,7 @@ const RateForm = () => {
                 let taskResponse = r_task.data;
                 let userResponse = r_users.data;
 
+
                 // Get all users and replace assignee and reporter ids with user names
                 let userArray = userResponse.map(user => [user.id, (user.name ? user.name : user.username)]);
                 const userDictionary = Object.fromEntries(userArray);
@@ -109,6 +122,14 @@ const RateForm = () => {
                 setAssignee(taskResponse.assignee);
                 setReporter(taskResponse.reporter);
                 setEstimate(taskResponse.estimate);
+                setComments(taskResponse.comments);
+
+                //get number of comments and assign it to task attribute
+                function getLength(aTask){
+                    let r_comments = aTask.comments;
+                    return r_comments.length;
+                }
+                taskResponse.nofComments = getLength(taskResponse);
 
                 // We also have to store the birthdate of the assignee
                 let r_assignee = await api.get(`/users/${taskResponse.assignee}`);
@@ -157,6 +178,7 @@ const RateForm = () => {
         content = (
             <Task
                 props={task}
+                comments={comments}
                 key={task.id}
                 score={score}
                 setScore={(s) => setScore(s)}

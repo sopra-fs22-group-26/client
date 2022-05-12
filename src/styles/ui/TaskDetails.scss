@@ -70,6 +70,13 @@
         margin: 0;
       }
     }
+    &.comments-field {
+      background: white;
+      margin: 4px;
+      vertical-align: middle;
+      padding: 4px 4px;
+      border-radius: $borderInnerRadius;
+    }
     &.bottom-container {
       margin: 0;
       padding: 10px 10px;
