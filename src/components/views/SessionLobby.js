@@ -85,7 +85,8 @@ const SessionLobby = () => {
             const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, invitees});
             console.log(requestBody)
             const response = await api.post('/poll-meetings', requestBody);
-
+            // console.log(response.data);
+            localStorage.setItem("meetingId", response.data.meetingId);
             // After successful creation of a new poll navigate to /waitinglobby
             history.push('/waitinglobby');
 
