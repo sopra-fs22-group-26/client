@@ -37,35 +37,18 @@ FormField.propTypes = {
     onChange: PropTypes.func
 };
 
-// Define REACT selection component
-const ReactSelection = props => {
-    return (
-        <div className="creation-form field">
-            <label className='creation-form label react-select'>
-                {props.label}
-            </label>
-            <Select
-                isClearable
-                className="react-select-container"
-                classNamePrefix="react-select"
-                options={props.options}
-                onChange={e => props.onChange(e ? e.value : null)}
-                getOptionValue={(option) => option.value}
-                theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 0,
-                })}
-            />
-        </div>
-    );
-};
-
 
 const SessionLobby = () => {
     const history = useHistory();
     const [users, setUsers] = useState(null);
-    const [participants, setParticipants] = useState(null);
+    const [invitees, setInvitees] = useState(null);
     const [estimateThreshold, setThreshold] = useState(null);
+
+    const handleChange = (invitees) => {
+        let inviteesId = [];
+        invitees.map(p => inviteesId.push(p.value));
+        setInvitees(inviteesId);
+    }
 
     // Get all users to define options for invitees
     useEffect(() => {
@@ -99,9 +82,9 @@ const SessionLobby = () => {
         try {
             const creatorId = localStorage.getItem("id");
             const taskId = localStorage.getItem("taskId");
-            const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, participants});
-
-            // const response = await api.post('/poll-meetings', requestBody);
+            const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, invitees});
+            console.log(requestBody)
+            const response = await api.post('/poll-meetings', requestBody);
 
             // After successful creation of a new poll navigate to /waitinglobby
             history.push('/waitinglobby');
@@ -125,11 +108,25 @@ const SessionLobby = () => {
                     </div>
                     <div id="form-container" className="creation-form container">
                         <div className="creation-form attributes-container attributes-column">
-                            <ReactSelection
-                                label="Search:"
-                                options={users}
-                                onChange={a => setParticipants(a)}
-                            />
+                            <div className="creation-form field">
+                                <label className='creation-form label react-select'>
+                                    Search:
+                                </label>
+                                <Select
+                                    isMulti
+                                    closeMenuOnSelect={false}
+                                    hideSelectedOptions={false}
+                                    className="react-select-container"
+                                    classNamePrefix="react-select"
+                                    options={users}
+                                    allowSelectAll={true}
+                                    onChange={handleChange}
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        borderRadius: 0,
+                                    })}
+                                />
+                            </div>
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">
                             <FormField
