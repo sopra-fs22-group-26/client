@@ -8,7 +8,9 @@
     display: flex;
   }
   &.mainlogo {
-    cursor: default;
+    &.online {
+      cursor: pointer;
+    }
     & img {
       object-fit: none;
     }
