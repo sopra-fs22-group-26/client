@@ -8,8 +8,10 @@ import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import OutboxOutlinedIcon from '@mui/icons-material/OutboxOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/icons-material/Delete";
+import IconButton from '@mui/material/IconButton';
 import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
@@ -67,27 +69,23 @@ const EditOrRating = ({props}) => {
     return editOrRating;
 }
 const Comments = ({comments, taskFunctions}) => {
-
-    let id = localStorage.getItem('id');
-
-    const commentslist = comments.map(x => {
-        let val;
-        //if comment.author != id do basic else add delete button
-        if (x.authorId != id) {
-           val = <div className="task-content comments-field">{x.authorName}: {x.content}</div>
-        } else{
-            val = <div className="task-content comments-field">{x.authorName}: {x.content}
-                    <IconButton
-                        size = "large"
-                        startIcon = {<DeleteIcon />}
-                        onClick = {() => {taskFunctions.deleteComment(x)}}
-                    >Delete</IconButton>
-                </div>
+    return comments.map(x => {
+        let deleteContainer;
+        let commentClass = "task-content comments comment-container comment";
+        //if comment.author == id, add delete button
+        if (x.authorId == localStorage.getItem('id')) {
+            commentClass += " myComment";
+            deleteContainer = <DeleteForeverOutlinedIcon onClick = {() => {taskFunctions.deleteComment(x)}}/>;
         }
-        return val;
+        return (
+            <div className="task-content comments comment-container">
+                <div className={commentClass}><strong>{x.authorName}:</strong> {x.content}</div>
+                <div className="task-content comments comment-container delete-container">
+                    {deleteContainer}
+                </div>
+            </div>
+        );
     });
-
-    return commentslist;
 }
 
 const WriteComment = ({props, taskFunctions}) => {
@@ -95,19 +93,21 @@ const WriteComment = ({props, taskFunctions}) => {
     const [comment, setComment] = useState(null);
 
     return (
-        <div>
+        <div className="task-content comments comment-submit-container">
              <textarea
                  className="task-content commenting"
-                 rows="1"
+                 rows="2"
                  value={comment}
                  placeholder="Leave a comment..."
                  onChange = {(e) => {setComment(e.target.value)}}
-                />
-            <Button
-                className="task-content commenting button"
-                onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
+             />
+            <IconButton
+                disableRipple
                 disabled={!comment}
-            >Post</Button>
+                onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
+            >
+                <SendIcon />
+            </IconButton>
         </div>
     );
 }
