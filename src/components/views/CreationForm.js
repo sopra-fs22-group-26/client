@@ -223,7 +223,7 @@ const CreationForm = () => {
               </Button>
               <Button
                   className="menu-button default"
-                  disabled={!(title && description && dueDate && estimate !== "")}
+                  disabled={!(title && description && dueDate && estimate !== "") || (reporter && !assignee)}
                   onClick={() => saveTask()}
               >
                 Save
