@@ -8,9 +8,6 @@ import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
-import OutboxOutlinedIcon from '@mui/icons-material/OutboxOutlined';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from '@mui/material/IconButton';
 import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
@@ -21,7 +18,6 @@ import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
 import {icsExport} from "helpers/icsExport";
-import {LoadingButton} from "@mui/lab";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
