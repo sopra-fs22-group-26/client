@@ -9,6 +9,8 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import IconButton from '@mui/material/IconButton';
+import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
@@ -64,25 +66,23 @@ const EditOrRating = ({props}) => {
     return editOrRating;
 }
 const Comments = ({comments, taskFunctions}) => {
-
-    let id = localStorage.getItem('id');
-
-    const commentslist = comments.map(x => {
-        let val;
-        //if comment.author != id do basic else add delete button
-        if (x.authorId != id) {
-           val = <div className="label">{x.authorId}: {x.content}</div>
-        } else{
-            val = <div>{x.authorId}: {x.content}
-                    <Button
-                        onClick = {() => {taskFunctions.deleteComment(x)}}
-                    >Delete</Button>
-                </div>
+    return comments.map(x => {
+        let deleteContainer;
+        let commentClass = "task-content comments comment-container comment";
+        //if comment.author == id, add delete button
+        if (x.authorId == localStorage.getItem('id')) {
+            commentClass += " myComment";
+            deleteContainer = <DeleteForeverOutlinedIcon onClick = {() => {taskFunctions.deleteComment(x)}}/>;
         }
-        return val;
+        return (
+            <div className="task-content comments comment-container">
+                <div className={commentClass}><strong>{x.authorName}:</strong> {x.content}</div>
+                <div className="task-content comments comment-container delete-container">
+                    {deleteContainer}
+                </div>
+            </div>
+        );
     });
-
-    return commentslist;
 }
 
 const WriteComment = ({props, taskFunctions}) => {
@@ -90,17 +90,21 @@ const WriteComment = ({props, taskFunctions}) => {
     const [comment, setComment] = useState(null);
 
     return (
-        <div>
+        <div className="task-content comments comment-submit-container">
              <textarea
-                 rows="1"
+                 className="task-content commenting"
+                 rows="2"
                  value={comment}
                  placeholder="Leave a comment..."
                  onChange = {(e) => {setComment(e.target.value)}}
-                />
-            <Button
-            onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
-            disabled={!comment}
-            >Post</Button>
+             />
+            <IconButton
+                disableRipple
+                disabled={!comment}
+                onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
+            >
+                <SendIcon />
+            </IconButton>
         </div>
     );
 }
@@ -140,7 +144,6 @@ const Task = ({props,comments, setComment, taskFunctions}) => {
                 <div className="task-content top-container">
                     <div className="task-content comments">
                         <Comments comments={comments} taskFunctions={taskFunctions}></Comments>
-                        <h4>-----------------</h4>
                         <WriteComment props={props} taskFunctions={taskFunctions}></WriteComment>
                     </div>
                 </div>
@@ -239,8 +242,9 @@ const TaskDetails = () => {
                     //prepare comment to post
                     let content = comment;
                     let belongingTask = task.taskId;
+                    let authorName = localStorage.getItem("username");
                     let authorId = localStorage.getItem("id");
-                    const requestBody = JSON.stringify({content, authorId, belongingTask, task});
+                    const requestBody = JSON.stringify({content, authorName, authorId, belongingTask, task});
                     const response = await api.post(`/comments`, requestBody);
 
                     //reset input field via the hook after comment has been posted
