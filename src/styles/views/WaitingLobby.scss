@@ -64,60 +64,31 @@
 
 
   &.participant-container {
-
-  }
-
-  &.participant-area {
-
-  }
-
-
-  &.field {
+    width: 100%;
     display: flex;
-  }
-  &.label {
-    color: $textColor;
-    margin-right: 10px;
-    font-weight: $fontWeightBold;
-    text-align: left;
-    padding-top: 4px;
-    &.react-select {
-      padding-top: 6px;
+    column-count: 3;
+    background-color: $yellow_light;
+    &.spinner-container {
+      display: flex;
+      order: 1;
+      border-top: 2px solid $brown_dark;
+      text-align: center;
+      font-weight: bold;
+      &.spinner {
+      }
+    }
+    &.participant-left {
+      display: flex;
+      order: 0;
+      flex-direction: row;
+      border-top: 2px solid $brown_dark;
+    }
+    &.participant-right {
+      order: 2;
+      display: flex;
+      flex-direction: row;
+      border-top: 2px solid $brown_dark;
     }
   }
-  &.input {
-    font-weight: $fontWeightRegular;
-    height: 34px;
-    width: 316px;
-    padding: 0 8px;
-    margin: 0 7px 20px auto;
-    border: 1px solid $borderColor;
-    border-radius: 0;
-    background: transparentize(white, 0);
-    color: $textColor;
-  }
-  & select {
-    height: 34px;
-    width: 100px;
-    margin: 0 223px 20px auto;
-    padding: 0 8px;
-    font-family: $fontText;
-    font-size: 14px;
-    font-weight: $fontWeightRegular;
-    background-color: white;
-    border: 1px solid $brown_dark;
-  }
-}
 
-.react-select-container {
-  width: 316px;
-  margin: 0 7px 20px auto;
-  text-align: left;
-  justify-content: left;
-  font-family: $fontText;
-  font-size: 14px;
-  border-radius: 0;
-}
-.react-select__menu {
-  border: 1px solid $brown_dark;
 }

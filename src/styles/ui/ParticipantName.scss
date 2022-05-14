@@ -1,6 +1,6 @@
 @import 'styles/theme';
 
-.participant-name-container {
+.participant-name {
   margin-bottom: 1em;
   margin-right: 1em;
   padding: 10px;
@@ -10,7 +10,7 @@
   text-align: start;
   border-style: solid;
   border-width: 2px;
-  border-color: black;
+  border-color: saddlebrown;
   border-radius: $formButtonRadius;
   cursor: pointer;
   opacity: 1;

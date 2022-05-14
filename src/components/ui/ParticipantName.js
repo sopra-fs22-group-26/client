@@ -1,10 +1,10 @@
 import "styles/ui/ParticipantName.scss";
 
 export const ParticipantName = props => (
-    <div
+    <button
         {...props}
         style={{width: props.width, ...props.style}}
-        className="participant-name-container">
-        {props.username}
-    </div>
+        className={`primary-button ${props.className}`}>
+        {props.children}
+    </button>
 );
