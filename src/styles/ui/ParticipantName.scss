@@ -7,13 +7,10 @@
   font-family: $fontMenu;
   font-weight: $fontWeightRegular;
   font-size: 24px;
-  text-align: start;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
   border-color: saddlebrown;
   border-radius: $formButtonRadius;
-  cursor: pointer;
   opacity: 1;
-  background-color: $gray_light;
-  transition: all 0.2s ease;
+  background-color: $yellow_dark;
 }

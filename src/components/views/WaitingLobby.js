@@ -58,9 +58,9 @@ const WaitingLobby = () => {
             console.log(participants_left);
             console.log(typeof participants_left);
             content_left = participants_left.map(participant => (
-                <div>
+                <ParticipantName>
                     {participant}
-                </div>));
+                </ParticipantName>));
         }
     }
 
@@ -72,9 +72,9 @@ const WaitingLobby = () => {
             for (let i = half; i<tempParticipants.length; i++){
                 participants_right.push(tempParticipants[i])};
             content_right = participants_right.map(participant => (
-                <div>
+                <ParticipantName>
                     {participant}
-                </div>));
+                </ParticipantName>));
         }
     }
 
@@ -91,17 +91,22 @@ const WaitingLobby = () => {
                         Give your estimate. After the host started the poll, you have 60 seconds to
                          enter a number<br></br> between given 0 to {estimateThreshold} hours. Then the poll will close.
                     </div>
+                    <div className="waiting-lobby midtext">
+                        Waiting for start
+                    </div>
                     <div className="waiting-lobby participant-container">
                         <div className="waiting-lobby participant-container participant-left">
-                            {content_left}
-                        </div>
-                        <div className="waiting-lobby spinner-container">
-                            Waiting for start
+                            <div className="waiting-lobby participant-container participant-left name">
+                                {content_left}
+                            </div>
                         </div>
                         <div className="waiting-lobby participant-container participant-right">
-                            {content_right}
+                            <div className="waiting-lobby participant-container participant-right name">
+                                {content_right}
+                            </div>
                         </div>
                     </div>
+                    <div className="waiting-lobby footer"/>
 
                 </div>
             </div>
