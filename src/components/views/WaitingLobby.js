@@ -17,48 +17,6 @@ const WaitingLobby = () => {
     const [participants, setParticipants] = useState(null);
     const [tempParticipants,setTempParticipants] = useState(null);
 
-    const ParticipantLeftFrame = (props) => {
-        let content_left = <div>participants name</div>;
-        if(props && props["props"].length > 0) {
-            const half = Math.ceil(props["props"].length / 2)
-            const participants_left = [];
-            for (let i = 0; i<half; i++){
-                participants_left.push(props["props"][i]);
-            }
-            console.log(participants_left);
-                content_left = participants_left.map(participant => (
-                    <ParticipantName>
-                        {participant}
-                    </ParticipantName>));
-        }
-        return (
-            <div>
-                {content_left}
-            </div>
-        );
-    };
-
-    const ParticipantRightFrame = (props) => {
-        let content_right = <div>participants name</div>
-        if(props && props["props"].length > 0) {
-            const half = Math.ceil(props["props"].length / 2)
-            const participants_right = [];
-            for (let i = half; i<props["props"].length; i++){
-                participants_right.push(props["props"][i])};
-                content_right = participants_right.map(participant => (
-                    <ParticipantName>
-                        {participant}
-                    </ParticipantName>));
-        }
-        return (
-            <div>
-                {content_right}
-            </div>
-        );
-    };
-
-
-
     // Get all users to define options for invitees
     useEffect(() => {
         async function fetchData() {
@@ -87,7 +45,38 @@ const WaitingLobby = () => {
             }
         }
         fetchData();
-    }, []);
+    }, [setTempParticipants]);
+
+    let content_left = <div>participants name</div>;
+    if(tempParticipants!==null){
+        if (tempParticipants.length > 0){
+            const half = Math.ceil(tempParticipants.length / 2)
+            const participants_left = [];
+            for (let i = 0; i < half; i++) {
+                participants_left.push(tempParticipants[i]);
+            }
+            console.log(participants_left);
+            console.log(typeof participants_left);
+            content_left = participants_left.map(participant => (
+                <div>
+                    {participant}
+                </div>));
+        }
+    }
+
+    let content_right = <div>participants name</div>
+    if(tempParticipants!==null) {
+        if(tempParticipants.length > 0) {
+            const half = Math.ceil(tempParticipants.length / 2)
+            const participants_right = [];
+            for (let i = half; i<tempParticipants.length; i++){
+                participants_right.push(tempParticipants[i])};
+            content_right = participants_right.map(participant => (
+                <div>
+                    {participant}
+                </div>));
+        }
+    }
 
     return (
         <BaseContainer>
@@ -104,17 +93,13 @@ const WaitingLobby = () => {
                     </div>
                     <div className="waiting-lobby participant-container">
                         <div className="waiting-lobby participant-container participant-left">
-                            <ParticipantLeftFrame
-                                props={tempParticipants}
-                            />
+                            {content_left}
                         </div>
                         <div className="waiting-lobby spinner-container">
                             Waiting for start
                         </div>
                         <div className="waiting-lobby participant-container participant-right">
-                            <ParticipantRightFrame
-                                props={tempParticipants}
-                            />
+                            {content_right}
                         </div>
                     </div>
 
