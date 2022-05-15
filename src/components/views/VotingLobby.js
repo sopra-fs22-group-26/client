@@ -20,6 +20,7 @@ const FormField = props => {
             <input
                 type = {props.type}
                 min = {props.min}
+                max = {props.max}
                 className = "creation-form input"
                 placeholder = {props.placeholder}
                 value = {props.value}
@@ -48,6 +49,7 @@ const VotingLobby = () => {
     const [userId, setUserId] = useState(null);
     const [creatorId, setCreatorId] = useState(null);
     const [pollStatus, setPollStatus] = useState(null);
+    const [voteInput, setVoteInput] = useState(null);
 
     // Get all users to define options for invitees
     useEffect(() => {
@@ -70,12 +72,16 @@ const VotingLobby = () => {
                 setPollStatus(pollStatus);
 
                 let tempParticipants = participants.map(participant => {
-                        const participantName = participant.user.name ? participant.user.name : participant.user.username;
+                        const participantName = participant.user.username;
                         return participantName;
                     });
                 console.log(typeof tempParticipants);
                 console.log(tempParticipants);
                 setTempParticipants(tempParticipants);
+
+                if(pollStatus=="ENDED"){
+                    history.push("/dashboard");
+                }
             }
             catch (error) {
                 console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
@@ -84,6 +90,12 @@ const VotingLobby = () => {
             }
         }
         fetchData();
+
+        // Update data regularly
+        const interval = setInterval(()=>{
+            fetchData()
+        },3000);
+        return() => clearInterval(interval);
     }, [setTempParticipants]);
 
 
@@ -149,12 +161,17 @@ const VotingLobby = () => {
                                 className = "waiting-lobby participant-container participant-left form"
                                 type = "number"
                                 min = "0"
-                                value = {getVote(participant)}
+                                max = {estimateThreshold}
+                                value = {participant==localStorage.getItem("username")? voteInput : getVote(participant)}
                                 width = "80px"
                                 align = "right"
                                 placeholder = "h"
-                                disabled={participant!=localStorage.getItem("username")}
-                                onChange={e => sendVote(e)}
+                                disabled={participant!=localStorage.getItem("username")&&pollStatus!="VOTING"}
+                                onChange={e => {
+                                    const voteInput = e;
+                                    setVoteInput(voteInput);
+                                    sendVote(e);
+                                }}
                             />
                         ]));
         }
@@ -173,12 +190,17 @@ const VotingLobby = () => {
                             className = "waiting-lobby participant-container participant-left form"
                             type = "number"
                             min = "0"
-                            value = {getVote(participant)}
+                            max = {estimateThreshold}
+                            value = {participant==localStorage.getItem("username")? voteInput : getVote(participant)}
                             width = "80px"
                             align = "right"
                             placeholder = "h"
-                            disabled={participant!=localStorage.getItem("username")}
-                            onChange={e => sendVote(e)}
+                            disabled={participant!=localStorage.getItem("username")&&pollStatus!="VOTING"}
+                            onChange={e => {
+                                const voteInput = e;
+                                setVoteInput(voteInput);
+                                sendVote(e);
+                            }}
                         />,
                         <ParticipantName>
                             {participant}
