@@ -29,7 +29,10 @@ const WaitingLobby = () => {
                 const participants = response.data.participants;
                 setParticipants(participants);
                 console.log(typeof participants);
-
+                const pollStatus = response.data.status;
+                if(pollStatus=="VOTING"){
+                    history.push("/votinglobby");
+                }
                 let tempParticipants = participants.map(participant => {
                         const participantName = participant.user.name ? participant.user.name : participant.user.username;
                         return participantName;
