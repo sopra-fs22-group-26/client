@@ -89,7 +89,7 @@ const WaitingLobby = () => {
                     </div>
                     <div className="waiting-lobby header2">
                         Give your estimate. After the host started the poll, you have 60 seconds to
-                         enter a number<br></br> between given 0 to {estimateThreshold} hours. Then the poll will close.
+                         enter a number<br></br> between 0 to {estimateThreshold} hours. Then the poll will close.
                     </div>
                     <div className="waiting-lobby midtext">
                         Waiting for start

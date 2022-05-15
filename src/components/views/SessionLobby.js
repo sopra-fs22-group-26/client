@@ -88,7 +88,7 @@ const SessionLobby = () => {
             // console.log(response.data);
             localStorage.setItem("meetingId", response.data.meetingId);
             // After successful creation of a new poll navigate to /waitinglobby
-            history.push('/waitinglobby');
+            history.push('/votinglobby');
 
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);

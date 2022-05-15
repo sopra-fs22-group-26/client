@@ -24,6 +24,9 @@ const HeaderRouter = () => {
           <Route path="/waitinglobby">
             <Header selectedMenu="none" active="0"/>
           </Route>
+          <Route path="/votinglobby">
+            <Header selectedMenu="none" active="0"/>
+          </Route>
           <Route>
             <Header selectedMenu="none" active="0"/>
           </Route>

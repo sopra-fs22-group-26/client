@@ -17,6 +17,7 @@ import Scoreboard from "components/views/Scoreboard";
 import RatingForm from "../../views/RatingForm";
 import SessionLobby from "components/views/SessionLobby";
 import WaitingLobby from "../../views/WaitingLobby";
+import VotingLobby from "../../views/VotingLobby";
 
 /**
  * Main router of your application.
@@ -53,6 +54,11 @@ const AppRouter = () => {
         <Route exact path="/waitinglobby">
           <MainGuard>
             <WaitingLobby/>
+          </MainGuard>
+        </Route>
+        <Route exact path="/votinglobby">
+          <MainGuard>
+            <VotingLobby/>
           </MainGuard>
         </Route>
         <Route exact path="/editform/:task_id">
