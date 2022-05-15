@@ -8,6 +8,7 @@ import Task from 'models/Task';
 import 'styles/views/VotingLobby.scss';
 import React from "react";
 import Select from "react-select";
+import {Button} from "../ui/Button";
 
 // Define input text field component
 const FormField = props => {
@@ -45,6 +46,9 @@ const VotingLobby = () => {
     const [tempParticipants,setTempParticipants] = useState(null);
     const [meetingId, setMeetingId] = useState(null);
     const [userId, setUserId] = useState(null);
+    const [creatorId, setCreatorId] = useState(null);
+    const [pollStatus, setPollStatus] = useState(null);
+
     // Get all users to define options for invitees
     useEffect(() => {
         async function fetchData() {
@@ -60,7 +64,10 @@ const VotingLobby = () => {
                 console.log(participants);
                 const userId = localStorage.getItem("id");
                 setUserId(userId);
-
+                const creatorId = response.data.creatorId;
+                setCreatorId(creatorId);
+                const pollStatus = response.data.status;
+                setPollStatus(pollStatus);
 
                 let tempParticipants = participants.map(participant => {
                         const participantName = participant.user.name ? participant.user.name : participant.user.username;
@@ -86,6 +93,28 @@ const VotingLobby = () => {
 
             const response = await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody);
 
+        } catch (error) {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
+    }
+
+    const startPoll = async () => {
+        try {
+            const requestBody = JSON.stringify({status: "VOTING"});
+
+            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+
+        } catch (error) {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
+    }
+
+    const endPoll = async () => {
+        try {
+            const requestBody = JSON.stringify({status: "ENDED"});
+
+            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+            history.push("/dashboard");
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);
         }
@@ -186,7 +215,18 @@ const VotingLobby = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="voting-lobby footer"/>
+                    <div className="voting-lobby footer">
+                        <Button
+                            disabled={localStorage.getItem("id")!=creatorId || pollStatus != "OPEN"}
+                            onClick = { () => startPoll()}>
+                            Start voting
+                        </Button>
+                        <Button
+                            disabled={localStorage.getItem("id")!=creatorId}
+                            onClick = { () => endPoll()}>
+                            End and Confirm estimate
+                        </Button>
+                    </div>
 
                 </div>
             </div>
