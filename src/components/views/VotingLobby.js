@@ -80,7 +80,7 @@ const VotingLobby = () => {
                 console.log(tempParticipants);
                 setTempParticipants(tempParticipants);
 
-                if(pollStatus=="ENDED"){
+                if(pollStatus=="ENDED" & localStorage.getItem("id")!=creatorId){
                     history.push("/dashboard");
                 }
             }
@@ -127,6 +127,16 @@ const VotingLobby = () => {
             const requestBody = JSON.stringify({status: "ENDED"});
 
             const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+
+        } catch (error) {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
+    }
+
+    const leave = async () => {
+        try {
+            const response = await api.delete(`/poll-meetings/${meetingId}`);
+
             history.push("/dashboard");
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);
@@ -247,7 +257,12 @@ const VotingLobby = () => {
                         <Button
                             disabled={localStorage.getItem("id")!=creatorId}
                             onClick = { () => endPoll()}>
-                            End and Confirm estimate
+                            End and confirm estimate
+                        </Button>
+                        <Button
+                            disabled={localStorage.getItem("id")!=creatorId || pollStatus!="ENDED"}
+                            onClick = { () => leave()}>
+                            Leave the session
                         </Button>
                     </div>
 
