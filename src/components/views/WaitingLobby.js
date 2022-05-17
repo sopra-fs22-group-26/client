@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {ParticipantName} from 'components/ui/ParticipantName';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Task from 'models/Task';
@@ -13,6 +13,7 @@ const WaitingLobby = () => {
 
 
     const history = useHistory();
+    const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
     const [participants, setParticipants] = useState(null);
     const [tempParticipants,setTempParticipants] = useState(null);
@@ -21,7 +22,7 @@ const WaitingLobby = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const meetingId = localStorage.getItem("meetingId");
+                const meetingId = params["meetingId"];
                 const response = await api.get(`/poll-meetings/${meetingId}`);
                 console.log(response.data);
                 const estimateThreshold = response.data.estimateThreshold;
@@ -38,7 +39,7 @@ const WaitingLobby = () => {
                 setTempParticipants(tempParticipants);
                 const pollStatus = response.data.status;
                 if(pollStatus=="VOTING"){
-                    history.push("/votinglobby");
+                    history.push(`/votinglobby/${meetingId}`);
                 }
             }
             catch (error) {

@@ -86,9 +86,9 @@ const SessionLobby = () => {
             console.log(requestBody)
             const response = await api.post('/poll-meetings', requestBody);
             // console.log(response.data);
-            localStorage.setItem("meetingId", response.data.meetingId);
+            const meetingId = response.data.meetingId;
             // After successful creation of a new poll navigate to /waitinglobby
-            history.push('/votinglobby');
+            history.push(`/votinglobby/${meetingId}`);
 
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);

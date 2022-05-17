@@ -15,18 +15,6 @@ const HeaderRouter = () => {
           <Route path="/scoreboard">
             <Header selectedMenu="scoreboard" active="1"/>
           </Route>
-          <Route path="/creationform">
-            <Header selectedMenu="none" active="0"/>
-          </Route>
-          <Route path="/sessionlobby">
-            <Header selectedMenu="none" active="0"/>
-          </Route>
-          <Route path="/waitinglobby">
-            <Header selectedMenu="none" active="0"/>
-          </Route>
-          <Route path="/votinglobby">
-            <Header selectedMenu="none" active="0"/>
-          </Route>
           <Route>
             <Header selectedMenu="none" active="0"/>
           </Route>

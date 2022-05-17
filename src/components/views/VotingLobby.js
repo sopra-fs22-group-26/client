@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {ParticipantName} from 'components/ui/ParticipantName';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Task from 'models/Task';
@@ -42,6 +42,7 @@ FormField.propTypes = {
 
 const VotingLobby = () => {
     const history = useHistory();
+    const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
     const [participants, setParticipants] = useState(null);
     const [tempParticipants,setTempParticipants] = useState(null);
@@ -55,7 +56,7 @@ const VotingLobby = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const meetingId = localStorage.getItem("meetingId");
+                const meetingId = params["meetingId"];
                 setMeetingId(meetingId);
                 const response = await api.get(`/poll-meetings/${meetingId}`);
                 console.log(response.data);

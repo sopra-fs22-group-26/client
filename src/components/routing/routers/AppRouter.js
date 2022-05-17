@@ -51,12 +51,12 @@ const AppRouter = () => {
             <SessionLobby/>
           </MainGuard>
         </Route>
-        <Route exact path="/waitinglobby">
+        <Route exact path="/waitinglobby/:meetingId">
           <MainGuard>
             <WaitingLobby/>
           </MainGuard>
         </Route>
-        <Route exact path="/votinglobby">
+        <Route exact path="/votinglobby/:meetingId">
           <MainGuard>
             <VotingLobby/>
           </MainGuard>
