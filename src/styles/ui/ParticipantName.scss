@@ -1,0 +1,16 @@
+@import 'styles/theme';
+
+.participant-name {
+  margin-bottom: 1em;
+  margin-right: 1em;
+  padding: 10px;
+  font-family: $fontMenu;
+  font-weight: $fontWeightRegular;
+  font-size: 24px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: saddlebrown;
+  border-radius: $formButtonRadius;
+  opacity: 1;
+  background-color: $yellow_dark;
+}
