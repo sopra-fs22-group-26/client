@@ -80,7 +80,7 @@ const VotingLobby = () => {
                 console.log(tempParticipants);
                 setTempParticipants(tempParticipants);
 
-                if(pollStatus=="ENDED" & localStorage.getItem("id")!=creatorId){
+                if(pollStatus=="ENDED" && localStorage.getItem("id")!=creatorId){
                     history.push("/dashboard");
                 }
             }
