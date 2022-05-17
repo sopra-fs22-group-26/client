@@ -8,13 +8,14 @@ import "styles/ui/PollSessionMonitor.scss"
 import {api, handleError} from "helpers/api";
 import {React, useState, useEffect} from "react";
 import {Button} from "./Button";
-
+import {useHistory} from "react-router-dom";
 
 /**
  * Poll-session-monitor components for invitations and running sessions
  */
 const PendingInvitations = ({props}) => {
     // Generate running session element
+    const history = useHistory();
     return (
         <div className="session-container invitation">
             <h4>{props.task.title}</h4>
@@ -22,7 +23,7 @@ const PendingInvitations = ({props}) => {
             <div className="button-container">
                 <Button
                     className="menu-button default"
-                    onClick={() => joinSession(props.meetingId)}
+                    onClick={() => joinSession(props.meetingId, history)}
                 >
                     Join
                 </Button>
@@ -39,6 +40,7 @@ const PendingInvitations = ({props}) => {
 
 const RunningSession = ({props}) => {
     // Generate running session element
+    const history = useHistory();
     return (
         <div className="session-container">
             <h4>{props.task.title}</h4>
@@ -46,7 +48,7 @@ const RunningSession = ({props}) => {
             <div className="button-container">
                 <Button
                     className="menu-button default"
-                    onClick={() => joinSession(props.meetingId)}
+                    onClick={() => joinSession(props.meetingId, history)}
                 >
                     Join
                 </Button>
@@ -58,15 +60,17 @@ const RunningSession = ({props}) => {
 /**
  * Join a session
  */
-async function joinSession(sessionId) {
+async function joinSession(meetingId, history) {
+
     try {
         const requestBody = JSON.stringify({
             userId: localStorage.getItem("id")
         });
-        const response = await api.put(`/poll-meetings/${sessionId}?action=join`, requestBody);
+        const response = await api.put(`/poll-meetings/${meetingId}?action=join`, requestBody);
 
         if(response != null){
-            // navigate to sessionLobby
+            // navigate to WaitingLobby
+            history.push(`/waitinglobby/${meetingId}`);
         }
     } catch (error) {
         console.error(`Something went wrong while joining the poll-session: \n${handleError(error)}`);
@@ -77,12 +81,12 @@ async function joinSession(sessionId) {
 /**
  * Decline an invitation
  */
-async function declineInvitation(sessionId) {
+async function declineInvitation(meetingId) {
     try {
         const requestBody = JSON.stringify({
             userId: localStorage.getItem("id")
         });
-        await api.put(`/poll-meetings/${sessionId}?action=decline`, requestBody);
+        await api.put(`/poll-meetings/${meetingId}?action=decline`, requestBody);
     } catch (error) {
         console.error(`Something went wrong while declining the poll-session: \n${handleError(error)}`);
         alert("Something went wrong while declining the poll-session! See the console for details.");
@@ -98,6 +102,8 @@ export const PollSessionMonitor = props => {
 
     const [invitations, setInvitations] = useState(null);
     const [sessions, setSessions] = useState(null);
+
+    const history = useHistory();
 
     useEffect(() => {
 
