@@ -56,12 +56,16 @@ const SessionLobby = () => {
             try {
                 const response = await api.get(`/users`);
 
-                let tempUsers = response.data.map(user => {
+                let tempUsersO = response.data.map(user => {
                     let userOption = {};
                     userOption["label"] = (user.name ? user.name : user.username);
                     userOption["value"] = user.id;
                     return userOption;
                 });
+
+                let tempUsers = tempUsersO.filter(user =>
+                    user.value != localStorage.getItem('id'));
+                console.log(tempUsers);
 
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
