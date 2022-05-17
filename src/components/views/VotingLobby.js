@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {ParticipantName} from 'components/ui/ParticipantName';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Task from 'models/Task';
@@ -42,6 +42,7 @@ FormField.propTypes = {
 
 const VotingLobby = () => {
     const history = useHistory();
+    const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
     const [participants, setParticipants] = useState(null);
     const [tempParticipants,setTempParticipants] = useState(null);
@@ -55,7 +56,7 @@ const VotingLobby = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const meetingId = localStorage.getItem("meetingId");
+                const meetingId = params["meetingId"];
                 setMeetingId(meetingId);
                 const response = await api.get(`/poll-meetings/${meetingId}`);
                 console.log(response.data);
@@ -79,7 +80,7 @@ const VotingLobby = () => {
                 console.log(tempParticipants);
                 setTempParticipants(tempParticipants);
 
-                if(pollStatus=="ENDED"){
+                if(pollStatus=="ENDED" & localStorage.getItem("id")!=creatorId){
                     history.push("/dashboard");
                 }
             }
@@ -126,6 +127,16 @@ const VotingLobby = () => {
             const requestBody = JSON.stringify({status: "ENDED"});
 
             const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+
+        } catch (error) {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
+    }
+
+    const leave = async () => {
+        try {
+            const response = await api.delete(`/poll-meetings/${meetingId}`);
+
             history.push("/dashboard");
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);
@@ -246,7 +257,12 @@ const VotingLobby = () => {
                         <Button
                             disabled={localStorage.getItem("id")!=creatorId}
                             onClick = { () => endPoll()}>
-                            End and Confirm estimate
+                            End and confirm estimate
+                        </Button>
+                        <Button
+                            disabled={localStorage.getItem("id")!=creatorId || pollStatus!="ENDED"}
+                            onClick = { () => leave()}>
+                            Leave the session
                         </Button>
                     </div>
 
