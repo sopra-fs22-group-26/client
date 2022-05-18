@@ -1,17 +1,14 @@
-# SoPra FS22 - Client Template
+# ScrumbleBee - Group 26 Project for SoPra 2022
+
+<p align="center">
+<img src="https://github.com/sopra-fs22-group-26/client/blob/main/src/images/scrumblebee_logo_508x95.png?raw=true" width="508" height="95" />
+</p>
+lets get started.  :ant: sgsdg
+
 
 ## Getting started
 
-Read and go through these Tutorials. It will make your life easier!
-
-- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
-- Do this React [Getting Started](https://reactjs.org/tutorial/tutorial.html) Tutorial (it doesn’t assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
-
-Next, there are two other technologies that you should look at:
-
-* [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://reactrouter.com/web/api/Hooks) let you access the router's state and perform navigation from inside your components.
+![Task GIF]()
 
 ## Prerequisites and Installation
 For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
