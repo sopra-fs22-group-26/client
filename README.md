@@ -2,7 +2,7 @@
 <img src="https://github.com/sopra-fs22-group-26/client/blob/main/src/images/scrumblebee_logo_508x95.png?raw=true" width="508" height="95" />
 </p>
 
-# ScrumbleBee - Group 26 Project for SoPra 2022
+# -- ScrumbleBee - Group 26 Project for SoPra 2022 --
 
 lets get started...
 
