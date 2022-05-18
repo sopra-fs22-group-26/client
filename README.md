@@ -3,12 +3,12 @@
 <p align="center">
 <img src="https://github.com/sopra-fs22-group-26/client/blob/main/src/images/scrumblebee_logo_508x95.png?raw=true" width="508" height="95" />
 </p>
-lets get started.  :ant: sgsdg
+lets get started.  :bee: sgsdg
 
 
 ## Getting started
 
-![Task GIF]()
+![Task GIF](https://github.com/sopra-fs22-group-26/client/blob/readme/src/images/gifs/ezgif.com-gif-maker.gif?raw=true)
 
 ## Prerequisites and Installation
 For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
