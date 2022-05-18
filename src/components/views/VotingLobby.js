@@ -51,6 +51,7 @@ const VotingLobby = () => {
     const [creatorId, setCreatorId] = useState(null);
     const [pollStatus, setPollStatus] = useState(null);
     const [voteInput, setVoteInput] = useState(null);
+    const [averageEstimate, setAverageEstimate] = useState(null);
 
     // Get all users to define options for invitees
     useEffect(() => {
@@ -71,6 +72,9 @@ const VotingLobby = () => {
                 setCreatorId(creatorId);
                 const pollStatus = response.data.status;
                 setPollStatus(pollStatus);
+                const averageEstimate = response.data.averageEstimate;
+                setAverageEstimate(averageEstimate);
+                console.log(averageEstimate);
 
                 let tempParticipants = participants.map(participant => {
                         const participantName = participant.user.username;
@@ -242,6 +246,9 @@ const VotingLobby = () => {
                                 {content_left}
                             </div>
                         </div>
+                        <div className="voting-lobby participant-container averageEstimate-container">
+                            {averageEstimate}
+                        </div>
                         <div className="voting-lobby participant-container participant-right">
                             <div className="voting-lobby participant-container participant-right name">
                                 {content_right}
@@ -255,7 +262,7 @@ const VotingLobby = () => {
                             Start voting
                         </Button>
                         <Button
-                            disabled={localStorage.getItem("id")!=creatorId}
+                            disabled={localStorage.getItem("id")!=creatorId || pollStatus=="ENDED"}
                             onClick = { () => endPoll()}>
                             End and confirm estimate
                         </Button>

@@ -49,6 +49,12 @@ const WaitingLobby = () => {
             }
         }
         fetchData();
+
+        // Update data regularly
+        const interval = setInterval(()=>{
+            fetchData()
+        },3000);
+        return() => clearInterval(interval);
     }, [setTempParticipants]);
 
     let content_left = <div>participants name</div>;
