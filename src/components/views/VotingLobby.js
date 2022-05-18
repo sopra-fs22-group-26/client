@@ -255,7 +255,7 @@ const VotingLobby = () => {
                             Start voting
                         </Button>
                         <Button
-                            disabled={localStorage.getItem("id")!=creatorId}
+                            disabled={localStorage.getItem("id")!=creatorId || pollStatus=="ENDED"}
                             onClick = { () => endPoll()}>
                             End and confirm estimate
                         </Button>
