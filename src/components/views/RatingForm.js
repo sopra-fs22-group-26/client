@@ -75,13 +75,9 @@ const Task = ({props, score, comments, setScore, rateTask, history}) => {
 };
 
 const Comments = ({comments}) => {
-
-    let commentList = comments.map(comment => {
-        let val;
-        val = <div className="task-content comments-field">{comment.authorName}: {comment.content}</div>
-        return val;
+    return comments.map(comment => {
+        return <div className="task-content comments-field">{comment.authorName}: {comment.content}</div>;
     });
-    return commentList;
 }
 
 const notDefined = (<span className="not-specified">not specified</span>);
@@ -103,12 +99,16 @@ const RateForm = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
-                    api.get('/users')]);
+                let [r_task, r_users, r_comments] = await Promise.all([
+                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get('/users'),
+                    api.get(`/comments/${params["task_id"]}`)
+                ]);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
                 let userResponse = r_users.data;
+                let commentsResponse = r_comments.data;
 
 
                 // Get all users and replace assignee and reporter ids with user names
@@ -122,14 +122,7 @@ const RateForm = () => {
                 setAssignee(taskResponse.assignee);
                 setReporter(taskResponse.reporter);
                 setEstimate(taskResponse.estimate);
-                setComments(taskResponse.comments);
-
-                //get number of comments and assign it to task attribute
-                function getLength(aTask){
-                    let r_comments = aTask.comments;
-                    return r_comments.length;
-                }
-                taskResponse.nofComments = getLength(taskResponse);
+                setComments(commentsResponse);
 
                 // We also have to store the birthdate of the assignee
                 let r_assignee = await api.get(`/users/${taskResponse.assignee}`);

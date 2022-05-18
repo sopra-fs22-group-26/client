@@ -143,8 +143,8 @@ const Task = ({props,comments, setComment, taskFunctions}) => {
                 </div>
                 <div className="task-content top-container">
                     <div className="task-content comments">
-                        <Comments comments={comments} taskFunctions={taskFunctions}></Comments>
-                        <WriteComment props={props} taskFunctions={taskFunctions}></WriteComment>
+                        <Comments comments={comments} taskFunctions={taskFunctions} />
+                        <WriteComment props={props} taskFunctions={taskFunctions} />
                     </div>
                 </div>
                 <div className="task-content bottom-container">
@@ -229,23 +229,15 @@ const TaskDetails = () => {
         history.push('/editform/' + task.taskId);
     }
 
-
-    // Export calendar file for a task
-    // => needs to be implemented!
-    function doTaskCalendarExport(task) {
-        alert("Calendar export functionality coming soon...");
-    }
-
     function doCommentPost(comment, task, setComment){
             async function postComment() {
                 try {
                     //prepare comment to post
                     let content = comment;
                     let belongingTask = task.taskId;
-                    let authorName = localStorage.getItem("username");
                     let authorId = localStorage.getItem("id");
-                    const requestBody = JSON.stringify({content, authorName, authorId, belongingTask, task});
-                    const response = await api.post(`/comments`, requestBody);
+                    const requestBody = JSON.stringify({content, authorId, belongingTask});
+                    await api.post(`/comments`, requestBody);
 
                     //reset input field via the hook after comment has been posted
                     setComment("");
@@ -288,11 +280,14 @@ const TaskDetails = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users, r_assignedTasks] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
+                let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
+                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get(`/comments/${params["task_id"]}`),
                     api.get('/users'),
-                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
+                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)
+                ]);
 
-                // Get the returned tasks and update the states.
+                // Get the returned tasks
                 let taskResponse = r_task.data;
 
                 // Get all users and replace assignee and reporter ids with user names
@@ -302,23 +297,23 @@ const TaskDetails = () => {
                 taskResponse.assignee_name = taskResponse.assignee ? userDictionary[taskResponse.assignee] : null;
                 taskResponse.reporter_name = taskResponse.reporter ? userDictionary[taskResponse.reporter] : null;
 
-                let commentsResponse = r_task.data.comments;
-                setComments(commentsResponse);
-                setTask(taskResponse);
+                // Get the returned comments
+                let commentsResponse = r_comments.data;
 
                 // Calculate Total Estimates for current user
                 let estimates = {currentWeek: 0, total: 0};
                 estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
                 estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
+
+                // Set all states
+                setComments(commentsResponse);
+                setTask(taskResponse);
                 setEstimate(estimates);
 
-                // See here to get more data.
-                console.log(r_task);
-                console.log(r_users);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                console.error(`Something went wrong while fetching the task data: \n${handleError(error)}`);
                 console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                alert("Something went wrong while fetching the task data! See the console for details.");
             }
         }
         fetchData();
