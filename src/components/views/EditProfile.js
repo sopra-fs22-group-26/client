@@ -6,22 +6,45 @@ import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import moment from "moment";
 
 const FormField = props => {
-    return (
-        <div className="login field">
-            <label className="login label">
-                {props.label}
-            </label>
-            <input
-                className="login input"
-                placeholder={props.placeholder ? props.placeholder : "enter here.."}
-                value={props.value}
-                type={props.type}
-                onChange={e => props.onChange(e.target.value)}
-            />
-        </div>
-    );
+    if(props.type != "date"){
+        return (
+            <div className="creation-form field">
+                <label className= 'creation-form label'>
+                    {props.label}
+                </label>
+                <input
+                    type = {props.type}
+                    min = {props.min}
+                    className = "creation-form input"
+                    placeholder = {props.placeholder}
+                    value = {props.value}
+                    onChange = {e => props.onChange(e.target.value)}
+                    style={{width: props.width, textAlign: props.align}}
+                />
+            </div>
+        );}
+    else{
+        return (
+            <div className="creation-form field">
+                <label className= 'creation-form label'>
+                    {props.label}
+                </label>
+                <input
+                    type = {props.type}
+                    min = {props.min}
+                    className = "creation-form input"
+                    placeholder = {props.placeholder}
+                    value = {props.value}
+                    onChange = {e => props.onChange(e.target.value)}
+                    style={{width: props.width, textAlign: props.align}}
+                    max={moment().format("YYYY-MM-DD")}
+                />
+            </div>
+        );
+    }
 };
 
 FormField.propTypes = {
