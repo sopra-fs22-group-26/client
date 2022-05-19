@@ -207,7 +207,7 @@ const Dashboard = () => {
                 state={sort}
                 clickAction={setSort}
             />
-            <Helper />
+            <Helper topic="dashboard" />
 
           </div>
         </div>

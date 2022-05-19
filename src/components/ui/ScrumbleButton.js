@@ -3,6 +3,7 @@ import "styles/ui/ScrumbleButton.scss";
 
 import {ReactComponent as TaskEditImage} from "images/task_edit-default.svg";
 import {ReactComponent as TaskRateImage} from "images/task_rate-default.svg";
+import {ReactComponent as HelpIconImage} from "images/help-default.svg";
 
 export const ScrumbleButton = props => {
 
@@ -13,6 +14,9 @@ export const ScrumbleButton = props => {
             break;
         case "rate":
             buttonImage = <TaskRateImage className="scrumbleImage" />
+            break;
+        case "help":
+            buttonImage = <HelpIconImage className="scrumbleImage" />
             break;
         default:
             // do nothing

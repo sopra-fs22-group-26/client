@@ -11,6 +11,7 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
 import React from "react";
+import {Helper} from "../ui/Helper";
 
 
 const MenuSection = props => {
@@ -193,6 +194,7 @@ const Reports = () => {
                         state={sort}
                         clickAction={setSort}
                     />
+                    <Helper topic="reports" />
                 </div>
             </div>
             <div className="base-container main-frame">
