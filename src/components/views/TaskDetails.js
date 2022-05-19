@@ -76,7 +76,7 @@ const Comments = ({comments, taskFunctions}) => {
         }
         return (
             <div className="task-content comments comment-container">
-                <div className={commentClass}><strong>{x.authorName}:</strong> {x.content}</div>
+                <div className={commentClass} style={{whiteSpace: "pre-wrap"}}><strong>{x.authorName}:</strong> {x.content}</div>
                 <div className="task-content comments comment-container delete-container">
                     {deleteContainer}
                 </div>
