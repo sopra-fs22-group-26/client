@@ -137,7 +137,7 @@ const Task = ({props,comments, setComment, taskFunctions}) => {
             </div>
             <div className="task-content">
                 <div className="task-content top-container">
-                    <div className="task-content task-description">
+                    <div className="task-content task-description" style={{whiteSpace: "pre-wrap"}}>
                         {props.description}
                     </div>
                 </div>
