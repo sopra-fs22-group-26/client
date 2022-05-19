@@ -7,25 +7,46 @@ import PropTypes from "prop-types";
 import 'styles/views/CreationForm.scss';
 import React from "react";
 import Select from "react-select";
+import moment from "moment";
 
 // Define input text field component
 const FormField = props => {
-  return (
-      <div className="creation-form field">
-        <label className= 'creation-form label'>
-          {props.label}
-        </label>
-        <input
-            type = {props.type}
-            min = {props.min}
-            className = "creation-form input"
-            placeholder = {props.placeholder}
-            value = {props.value}
-            onChange = {e => props.onChange(e.target.value)}
-            style={{width: props.width, textAlign: props.align}}
-        />
-      </div>
-  );
+    if(props.type != "date"){
+        return (
+            <div className="creation-form field">
+                <label className= 'creation-form label'>
+                    {props.label}
+                </label>
+                <input
+                    type = {props.type}
+                    min = {props.min}
+                    className = "creation-form input"
+                    placeholder = {props.placeholder}
+                    value = {props.value}
+                    onChange = {e => props.onChange(e.target.value)}
+                    style={{width: props.width, textAlign: props.align}}
+                />
+            </div>
+        );}
+    else{
+        return (
+            <div className="creation-form field">
+                <label className= 'creation-form label'>
+                    {props.label}
+                </label>
+                <input
+                    type = {props.type}
+                    min = {props.min}
+                    className = "creation-form input"
+                    placeholder = {props.placeholder}
+                    value = {props.value}
+                    onChange = {e => props.onChange(e.target.value)}
+                    style={{width: props.width, textAlign: props.align}}
+                    min={moment().format("YYYY-MM-DD")}
+                />
+            </div>
+        );
+    }
 };
 FormField.propTypes = {
   label: PropTypes.string,
