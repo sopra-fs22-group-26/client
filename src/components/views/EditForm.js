@@ -123,7 +123,10 @@ const EditForm = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users] = await Promise.all([api.get(`/tasks/${params["task_id"]}`), api.get('/users')]);
+                let [r_task, r_users] = await Promise.all([
+                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`),
+                    api.get('/users')
+                ]);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;

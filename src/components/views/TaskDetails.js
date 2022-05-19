@@ -279,12 +279,13 @@ const TaskDetails = () => {
 
     useEffect(() => {
         async function fetchData() {
+            const id = localStorage.getItem("id");
             try {
                 let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get(`/tasks/${params["task_id"]}?id=${id}`),
                     api.get(`/comments/${params["task_id"]}`),
                     api.get('/users'),
-                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)
+                    api.get(`/tasks/assignee/${id}`)
                 ]);
 
                 // Get the returned tasks
