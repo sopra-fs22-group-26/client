@@ -28,7 +28,9 @@
         &.task_priority_high {
             background-color: $task_priority_high;
         }
-
+        &.private {
+            border-style: dashed;
+        }
     }
 
     &.header {

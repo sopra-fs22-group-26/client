@@ -131,8 +131,14 @@ const TaskFooter = ({props}) => {
 
 export const Task = ({props}) => {
     const history = useHistory();
+
+    // Define class for task container, depending on status and privateFlag
+    let containerClass = "task-container task_priority_"
+        + props.priority.toLowerCase()
+        + (props.privateFlag ? " private" : "");
+
     return (
-        <div className={"task-container task_priority_" + props.priority.toLowerCase()}
+        <div className={containerClass}
              onClick={() => history.push('/task/' + props.taskId)}>
             <div className="task-header">{props.title}</div>
             <div className="task-content">

@@ -129,8 +129,14 @@ const TaskFooter = ({props, taskFunctions}) => {
 
 const Task = ({props,comments, setComment, taskFunctions}) => {
     const history = useHistory();
+
+    // Define class for task container, depending on status and privateFlag
+    let containerClass = "task-details-container task_priority_"
+        + props.priority.toLowerCase()
+        + (props.privateFlag ? " private" : "");
+
     return (
-        <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
+        <div className={containerClass}>
             <div className="task-header">
                 <div>{props.title}</div>
                 <CloseOutlinedIcon className="action-icon" onClick={() => history.goBack()} />

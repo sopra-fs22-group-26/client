@@ -175,8 +175,14 @@ const EditForm = () => {
     let content = <div className="nothing"> loading task info</div>;
 
     if(task && users) {
+
+        // Define class for task container, depending on status and privateFlag
+        let containerClass = "creation-form container task_priority_"
+            + task.priority.toLowerCase()
+            + (task.privateFlag ? " private" : "");
+
         content =
-            <div id="form-container" className={"creation-form container task_priority_" + task.priority.toLowerCase()}>
+            <div id="form-container" className={containerClass}>
                 <div className="creation-form header">
                     <input
                         className="creation-form input"
