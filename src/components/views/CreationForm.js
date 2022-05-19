@@ -252,7 +252,8 @@ const CreationForm = () => {
                     onChange={e => setEstimate(e)}
                 />
                 <Button
-                    disabled={!(title && description && dueDate && estimate !== "")}
+                    disabled={!(title && description && dueDate && estimate !== "")
+                        || (reporter && !assignee) || (estimate < 0) }
                     onClick = { () => saveTaskGetTaskId()}>
                     Start Estimate Poll Session
                 </Button>
@@ -267,7 +268,8 @@ const CreationForm = () => {
               </Button>
               <Button
                   className="menu-button default"
-                  disabled={!(title && description && dueDate && estimate !== "") || (reporter && !assignee)}
+                  disabled={!(title && description && dueDate && estimate !== "")
+                      || (reporter && !assignee) || (estimate < 0) }
                   onClick={() => saveTask()}
               >
                 Save

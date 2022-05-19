@@ -19,6 +19,7 @@ const FormField = props => {
                 type = {props.type}
                 className = "creation-form input"
                 placeholder = {props.placeholder}
+                min = {props.min}
                 value = {props.value}
                 onChange = {e => props.onChange(e.target.value)}
                 style={{width: props.width, textAlign: props.align}}
@@ -230,6 +231,7 @@ const EditForm = () => {
                             width="80px"
                             align="right"
                             placeholder="h"
+                            min = "0"
                             value={estimate}
                             onChange={e => setEstimate(e)}
                         />
@@ -244,7 +246,8 @@ const EditForm = () => {
                     </Button>
                     <Button
                         className="menu-button default"
-                        disabled={!(title && description && dueDate && estimate !== "") || (reporter && !assignee)}
+                        disabled={!(title && description && dueDate && estimate !== "")
+                            || (reporter && !assignee) || (estimate < 0) }
                         onClick={() => saveEdit()}
                     >
                         Save
