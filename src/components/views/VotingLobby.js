@@ -52,6 +52,7 @@ const VotingLobby = () => {
     const [pollStatus, setPollStatus] = useState(null);
     const [voteInput, setVoteInput] = useState(null);
     const [averageEstimate, setAverageEstimate] = useState(null);
+    const [participantMeName, setParticipantMeName] = useState(null);
 
     // Get all users to define options for invitees
     useEffect(() => {
@@ -60,12 +61,12 @@ const VotingLobby = () => {
                 const meetingId = params["meetingId"];
                 setMeetingId(meetingId);
                 const response = await api.get(`/poll-meetings/${meetingId}`);
-                console.log(response.data);
+
                 const estimateThreshold = response.data.estimateThreshold;
                 setEstimateThreshold(estimateThreshold);
                 const participants = response.data.participants;
                 setParticipants(participants);
-                console.log(participants);
+
                 const userId = localStorage.getItem("id");
                 setUserId(userId);
                 const creatorId = response.data.creatorId;
@@ -74,13 +75,33 @@ const VotingLobby = () => {
                 setPollStatus(pollStatus);
                 const averageEstimate = response.data.averageEstimate;
                 setAverageEstimate(averageEstimate);
-                console.log(averageEstimate);
 
-                let tempParticipants = participants.map(participant => {
+                let participantMe = participants.filter(participant => {
+                    let id = participant.user.id;
+                    if(String(id) === localStorage.getItem("id")){
+                        return participant;
+                    }
+                });
+                console.log(participantMe);
+                // setParticipantMe(participantMe);
+                let participantMeName = participantMe.map(participant => {
+                    const participantMeName = participant.user.username;
+                    return participantMeName;
+                })
+                console.log(participantMeName);
+                setParticipantMeName(participantMeName);
+                let tempParticipantsFiltered = participants.filter(participant => {
+                    let id = participant.user.id;
+                    if(String(id) !== localStorage.getItem("id")){
+                        return participant;
+                    }
+                });
+                console.log("filtered",tempParticipantsFiltered);
+                let tempParticipants = tempParticipantsFiltered.map(participant => {
                         const participantName = participant.user.username;
                         return participantName;
                     });
-                console.log(typeof tempParticipants);
+
                 console.log(tempParticipants);
                 setTempParticipants(tempParticipants);
 
@@ -148,13 +169,37 @@ const VotingLobby = () => {
     }
 
     function getVote(participant){
-        console.log(participant);
         for(let i=0;i< participants.length;i++){
-            console.log(participants[i]);
             if(participants[i]["user"].name==participant || participants[i]["user"].username==participant){
                 return participants[i]["vote"];
             }
         }
+    }
+
+    let voter = <div>me</div>;
+    if(participantMeName!==null){
+        console.log(participantMeName);
+        voter =
+        [<ParticipantName>
+            {participantMeName}
+        </ParticipantName>,
+            <FormField
+                className = "voting-lobby participant-container participant-right vote-container"
+                type = "number"
+                min = "0"
+                max = {estimateThreshold}
+                value = {participantMeName==localStorage.getItem("username")? voteInput : getVote(participantMeName)}
+                width = "65px"
+                align = "right"
+                placeholder = "h"
+                padding = "0.5px"
+                disabled={participantMeName!=localStorage.getItem("username")&&pollStatus!="VOTING"}
+                onChange={e => {
+                    const voteInput = e;
+                    setVoteInput(voteInput);
+                    sendVote(e);
+                }}
+            />];
     }
 
     let content_left = <div>participants name</div>;
@@ -165,29 +210,14 @@ const VotingLobby = () => {
             for (let i = 0; i < half; i++) {
                 participants_left.push(tempParticipants[i]);
             }
-            console.log(participants_left);
-            console.log(participants_left[1]!="1");
             content_left =
                     participants_left.map(participant => (
                         [   <ParticipantName>
                                 {participant}
                             </ParticipantName>,
-                            <FormField
-                                className = "waiting-lobby participant-container participant-left form"
-                                type = "number"
-                                min = "0"
-                                max = {estimateThreshold}
-                                value = {participant==localStorage.getItem("username")? voteInput : getVote(participant)}
-                                width = "80px"
-                                align = "right"
-                                placeholder = "h"
-                                disabled={participant!=localStorage.getItem("username")&&pollStatus!="VOTING"}
-                                onChange={e => {
-                                    const voteInput = e;
-                                    setVoteInput(voteInput);
-                                    sendVote(e);
-                                }}
-                            />
+                            <div className="voting-lobby participant-container participant-left vote-container">
+                                {getVote(participant)}
+                            </div>
                         ]));
         }
     }
@@ -201,22 +231,9 @@ const VotingLobby = () => {
                 participants_right.push(tempParticipants[i])};
             content_right =
                 participants_right.map(participant => (
-                    [   <FormField
-                            className = "waiting-lobby participant-container participant-left form"
-                            type = "number"
-                            min = "0"
-                            max = {estimateThreshold}
-                            value = {participant==localStorage.getItem("username")? voteInput : getVote(participant)}
-                            width = "80px"
-                            align = "right"
-                            placeholder = "h"
-                            disabled={participant!=localStorage.getItem("username")&&pollStatus!="VOTING"}
-                            onChange={e => {
-                                const voteInput = e;
-                                setVoteInput(voteInput);
-                                sendVote(e);
-                            }}
-                        />,
+                    [   <div className="voting-lobby participant-container participant-right vote-container">
+                        {getVote(participant)}
+                        </div>,
                         <ParticipantName>
                             {participant}
                         </ParticipantName>
@@ -252,6 +269,7 @@ const VotingLobby = () => {
                         <div className="voting-lobby participant-container participant-right">
                             <div className="voting-lobby participant-container participant-right name">
                                 {content_right}
+                                {voter}
                             </div>
                         </div>
                     </div>
