@@ -28,10 +28,10 @@
     }
     &.psm-body {
         width: unset;
-        margin: 4px 8px;
+        margin: 4px 8px 0;
         padding: unset;
         border: unset;
-        gap: 36px;
+        gap: 20px;
         &.psm-section {
             margin: 0 0 4px 0;
             gap: unset;
@@ -41,12 +41,68 @@
                 font-size: 18px;
             }
             p {
-                margin: 4px 7px;
-                font-size: 14px;
                 &.no-session {
+                    margin: 4px 7px;
+                    font-size: 14px;
                     font-style: oblique;
                     font-weight: $fontWeightLight;
                 }
+            }
+        }
+    }
+
+    // Session containers
+    .session-container {
+        background-color: $gray_light;
+        border-radius: $borderRadius;
+        padding: 7px 9px;
+        margin: 0 0 9px 0;
+        h4 {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+        p {
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-top: 7px;
+
+            .menu-button {
+                min-width: 70px;
+                padding: 1px 12px;
+                font-size: 13px;
+                border-width: 1px;
+                font-weight: $fontWeightSemibold;
+                &.default {
+                    font-weight: $fontWeightBold;
+                    border-width: 2px;
+                }
+                &:hover {
+                    border-color: $brown_dark;
+                    background-color: $yellow_light;
+                }
+            }
+
+        }
+        &.invitation {
+            background-color: $task_priority_high;
+            .menu-button {
+                &.default {
+                    font-weight: $fontWeightBold;
+                    color: red;
+                    border-color: red;
+                    border-width: 2px;
+                }
+                &:hover {
+                    background-color: $task_priority_high;
+                }
+
             }
         }
     }

@@ -11,6 +11,7 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
 import React from "react";
+import {Helper} from "../ui/Helper";
 
 
 const MenuSection = props => {
@@ -160,7 +161,7 @@ const Reports = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             fetchData()
-        },5000);
+        },2999);
         return() => clearInterval(interval);
 
     }, [show, sort]);
@@ -193,6 +194,7 @@ const Reports = () => {
                         state={sort}
                         clickAction={setSort}
                     />
+                    <Helper topic="reports" />
                 </div>
             </div>
             <div className="base-container main-frame">

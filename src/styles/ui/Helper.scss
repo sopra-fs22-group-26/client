@@ -1,0 +1,32 @@
+@import "../theme";
+
+.help-dialog {
+  font-family: $fontText;
+}
+
+#scrumblebee-help-title {
+  background-color: $yellow_light;
+  font-family: inherit;
+  font-weight: $fontWeightBold;
+  font-size: 24px;
+  padding: 16px 24px 12px;
+  .brand {
+    font-family: $fontMenu;
+    font-weight: $fontWeightRegular;
+    font-size: 28px;
+    color: $brown_dark;
+  }
+}
+.scrumblebee-help-content {
+  font-family: inherit;
+  font-size: 17px;
+  p.list-title {
+    margin: 0;
+  }
+  ul {
+    margin: 3px 0 24px 0;
+  }
+  li ul {
+    margin: 0 0 4px 0;
+  }
+}

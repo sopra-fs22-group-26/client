@@ -11,6 +11,7 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
 import React from "react";
+import {Helper} from "components/ui/Helper";
 
 
 const MenuSection = props => {
@@ -81,13 +82,6 @@ const Dashboard = () => {
         estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
         estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
         setEstimate(estimates);
-
-        //get number of comments and assign it to task attribute
-        function getLength(aTask){
-          let r_comments = aTask.comments;
-          return r_comments.length;
-        }
-        tasks.forEach(task => task.nofComments = getLength(task));
 
         // Apply filter and sorts
 
@@ -213,6 +207,8 @@ const Dashboard = () => {
                 state={sort}
                 clickAction={setSort}
             />
+            <Helper topic="dashboard" />
+
           </div>
         </div>
         <div className="base-container main-frame">

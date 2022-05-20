@@ -40,12 +40,25 @@
 
   // Header
   .task-header {
-    padding: 5px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 6px 5px 15px;
     font-weight: $fontWeightBold;
     font-size: 22px;
     border-top-left-radius: $borderInnerRadius;
     background-color: $yellow_dark;
     border-top-right-radius: $borderInnerRadius;
+
+    .action-icon {
+      color: $brown_darker;
+      font-size: 30px;
+      cursor: pointer;
+      &:hover {
+        color: $brown_dark;
+      }
+
+    }
   }
 
   // Main content
@@ -60,7 +73,6 @@
       height: unset;
     }
     &.comments {
-      //color: $brown_dark;
       color: black;
       margin: 0;
       padding: 0;
@@ -68,6 +80,60 @@
         font-weight: $fontWeightSemibold;
         font-size: 15px;
         margin: 0;
+      }
+      &.comment-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0 0 12px 0;
+        &.comment {
+          display: unset;
+          background-color: $gray_very_light;
+          border: 1px solid $gray_medium;
+          width: 100%;
+          margin: unset;
+          padding: 7px;
+          &.myComment {
+            background-color: white;
+            border-color: $yellow_dark;
+          }
+        }
+        &.delete-container {
+          width: 40px;
+          justify-content: right;
+          margin: unset;
+          svg {
+            font-size: 32px;
+            cursor: pointer;
+            color: $brown_darker;
+            &:hover {
+              color: $brown_dark;
+            }
+          }
+        }
+      }
+      &.comment-submit-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        margin: 36px 32px 12px 0;
+        textarea {
+          width: 100%;
+          resize: vertical;
+          padding: 5px 7px;
+        }
+        .MuiIconButton-root {
+          color: $brown_darker;
+          svg {
+            font-size: 30px;
+          }
+          &:hover {
+            color: $brown_dark;
+          }
+        }
+        .Mui-disabled {
+          color: $gray_medium;
+        }
       }
     }
     &.bottom-container {

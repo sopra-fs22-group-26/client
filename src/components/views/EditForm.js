@@ -1,11 +1,10 @@
-import {useEffect, useState} from 'react';
+import {React, useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/CreationForm.scss';
-import React from "react";
 import Select from "react-select";
 
 
@@ -20,6 +19,7 @@ const FormField = props => {
                 type = {props.type}
                 className = "creation-form input"
                 placeholder = {props.placeholder}
+                min = {props.min}
                 value = {props.value}
                 onChange = {e => props.onChange(e.target.value)}
                 style={{width: props.width, textAlign: props.align}}
@@ -111,10 +111,10 @@ const EditForm = () => {
     const saveEdit = async () => {
         try {
             const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
-            const editResponse = await api.put(`/tasks/${params["task_id"]}`, requestBody);
+            await api.put(`/tasks/${params["task_id"]}`, requestBody);
 
-            // After succesful edit of a task navigate to /dashboard
-            history.push(`/dashboard`);
+            // After succesful edit of a task, navigate back to where you came from
+            history.goBack();
         } catch (error) {
             alert(`Something went wrong during edit: \n${handleError(error)}`);
         }
@@ -231,6 +231,7 @@ const EditForm = () => {
                             width="80px"
                             align="right"
                             placeholder="h"
+                            min = "0"
                             value={estimate}
                             onChange={e => setEstimate(e)}
                         />
@@ -239,13 +240,14 @@ const EditForm = () => {
                 <div className="creation-form footer">
                     <Button
                         className="menu-button"
-                        onClick={() => history.push(`/dashboard`)}
+                        onClick={() => history.goBack()}
                     >
                         Cancel
                     </Button>
                     <Button
                         className="menu-button default"
-                        disabled={!(title && description && dueDate && estimate !== "")}
+                        disabled={!(title && description && dueDate && estimate !== "")
+                            || (reporter && !assignee) || (estimate < 0) }
                         onClick={() => saveEdit()}
                     >
                         Save

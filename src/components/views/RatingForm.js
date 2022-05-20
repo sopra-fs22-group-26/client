@@ -18,19 +18,20 @@ import Rating from '@mui/lab/Rating';
  * @returns {JSX.Element}
  * @constructor
  */
-const Task = ({props, score, setScore, rateTask, history}) => {
+const Task = ({props, score, comments, setScore, rateTask, history}) => {
     return (
         <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
             <div className="task-header">{props.title}</div>
             <div className="task-content">
                 <div className="task-content top-container">
-                    <div className="task-content task-description">
+                    <div className="task-content task-description" style={{whiteSpace: "pre-wrap"}}>
                         {props.description}
                     </div>
                 </div>
                 <div className="task-content top-container">
                     <div className="task-content comments">
-                        <div className="comments-title">{props.nofComments ? props.nofComments : "No"} comments</div>
+                        <div className="comments-title"> Comments: </div>
+                        <Comments comments={comments}></Comments>
                     </div>
                 </div>
                 <div className="task-content bottom-container">
@@ -57,7 +58,7 @@ const Task = ({props, score, setScore, rateTask, history}) => {
             <div className="creation-form footer">
                 <Button
                     className="menu-button"
-                    onClick={() => history.push(`/reports`)}
+                    onClick={() => history.goBack()}
                 >
                     Cancel
                 </Button>
@@ -73,6 +74,12 @@ const Task = ({props, score, setScore, rateTask, history}) => {
     )
 };
 
+const Comments = ({comments}) => {
+    return comments.map(comment => {
+        return <div className="task-content comments-field">{comment.authorName}: {comment.content}</div>;
+    });
+}
+
 const notDefined = (<span className="not-specified">not specified</span>);
 
 // Output component
@@ -84,6 +91,7 @@ const RateForm = () => {
     const [estimate, setEstimate] = useState(null);
     const [birthDate, setBirthDate] = useState(null);
     const [score, setScore] = useState(0);
+    const [comments, setComments] = useState(null);
 
     const [task, setTask] = useState(null);
 
@@ -91,12 +99,17 @@ const RateForm = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
-                    api.get('/users')]);
+                let [r_task, r_users, r_comments] = await Promise.all([
+                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get('/users'),
+                    api.get(`/comments/${params["task_id"]}`)
+                ]);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
                 let userResponse = r_users.data;
+                let commentsResponse = r_comments.data;
+
 
                 // Get all users and replace assignee and reporter ids with user names
                 let userArray = userResponse.map(user => [user.id, (user.name ? user.name : user.username)]);
@@ -109,6 +122,7 @@ const RateForm = () => {
                 setAssignee(taskResponse.assignee);
                 setReporter(taskResponse.reporter);
                 setEstimate(taskResponse.estimate);
+                setComments(commentsResponse);
 
                 // We also have to store the birthdate of the assignee
                 let r_assignee = await api.get(`/users/${taskResponse.assignee}`);
@@ -157,6 +171,7 @@ const RateForm = () => {
         content = (
             <Task
                 props={task}
+                comments={comments}
                 key={task.id}
                 score={score}
                 setScore={(s) => setScore(s)}

@@ -1,0 +1,131 @@
+@import 'styles/theme';
+
+.voting-lobby {
+  &.container {
+    display: flex;
+    flex-direction: column;
+    min-width: 687px;
+    width: fit-content;
+    justify-content: space-between;
+    padding: 0;
+    margin-bottom: 50px;
+    border-radius: $borderRadius;
+    border: 2px solid $borderColor;
+    //background-color: $background;
+    background-color: white;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+
+    // Background colors according to priority
+    &.task_priority_none {
+      background-color: $task_priority_none;
+    }
+    &.task_priority_low {
+      background-color: $task_priority_low;
+    }
+    &.task_priority_medium {
+      background-color: $task_priority_medium;
+    }
+    &.task_priority_high {
+      background-color: $task_priority_high;
+    }
+
+  }
+
+  &.header1 {
+    padding: 5px 15px;
+    padding-bottom: 10px;
+    border-top-left-radius: $borderInnerRadius;
+    background-color: $yellow_dark;
+    border-top-right-radius: $borderInnerRadius;
+    font-size: 150%;
+    font-weight: bold;
+  }
+
+  &.header2 {
+    padding: 5px 15px;
+    background-color: $yellow_light;
+    border-bottom: 2px solid $brown_dark;
+  }
+
+  &.footer {
+    padding: 7px 15px;
+    display: flex;
+    justify-content: right;
+    gap: 14px;
+    background-color: $yellow_dark;
+    border-bottom-left-radius: $borderInnerRadius;
+    border-bottom-right-radius: $borderInnerRadius;
+    text-align: right;
+    & input {
+      width: 100%;
+      margin-top: 7px;
+      margin-bottom: 7px;
+    }
+  }
+
+  &.midtext {
+    background-color: $yellow_light;
+    padding: 5px;
+    text-align: center;
+  }
+  &.participant-container {
+    padding: 7px 15px;
+    width: 100%;
+    display: flex;
+    column-count: 3;
+    background-color: $yellow_light;
+
+    &.spinner-container {
+      order: 1;
+      &.spinner {
+      }
+    }
+
+    &.averageEstimate-container {
+      background-color: white;
+      border: 2px solid black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 270px;
+      font-family: $fontMenu;
+      font-weight: $fontWeightRegular;
+      font-size: 24px;
+    }
+    .averageEstimate-container p {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &.participant-left {
+      width: 70%;
+      display: flex;
+      order: 0;
+      flex-direction: column;
+      &.name{
+        width: 200px;
+        text-align: center;
+      }
+      &.form{
+      }
+    }
+    &.participant-right {
+      width: 70%;
+      order: 2;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      float: right;
+      &.name{
+        width: 200px;
+        text-align: center;
+      }
+      &.form{
+      }
+    }
+  }
+
+}

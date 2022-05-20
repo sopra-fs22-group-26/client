@@ -7,25 +7,46 @@ import PropTypes from "prop-types";
 import 'styles/views/CreationForm.scss';
 import React from "react";
 import Select from "react-select";
+import moment from "moment";
 
 // Define input text field component
 const FormField = props => {
-  return (
-      <div className="creation-form field">
-        <label className= 'creation-form label'>
-          {props.label}
-        </label>
-        <input
-            type = {props.type}
-            min = {props.min}
-            className = "creation-form input"
-            placeholder = {props.placeholder}
-            value = {props.value}
-            onChange = {e => props.onChange(e.target.value)}
-            style={{width: props.width, textAlign: props.align}}
-        />
-      </div>
-  );
+    if(props.type != "date"){
+        return (
+            <div className="creation-form field">
+                <label className= 'creation-form label'>
+                    {props.label}
+                </label>
+                <input
+                    type = {props.type}
+                    min = {props.min}
+                    className = "creation-form input"
+                    placeholder = {props.placeholder}
+                    value = {props.value}
+                    onChange = {e => props.onChange(e.target.value)}
+                    style={{width: props.width, textAlign: props.align}}
+                />
+            </div>
+        );}
+    else{
+        return (
+            <div className="creation-form field">
+                <label className= 'creation-form label'>
+                    {props.label}
+                </label>
+                <input
+                    type = {props.type}
+                    min = {props.min}
+                    className = "creation-form input"
+                    placeholder = {props.placeholder}
+                    value = {props.value}
+                    onChange = {e => props.onChange(e.target.value)}
+                    style={{width: props.width, textAlign: props.align}}
+                    min={moment().format("YYYY-MM-DD")}
+                />
+            </div>
+        );
+    }
 };
 FormField.propTypes = {
   label: PropTypes.string,
@@ -148,6 +169,24 @@ const CreationForm = () => {
     }
   };
 
+    /**
+     * Save task and get task id
+     * @returns {Promise<void>}
+     */
+    const saveTaskGetTaskId = async () => {
+        try {
+            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
+
+            const response = await api.post('/tasks', requestBody);
+
+            localStorage.setItem("taskId", response.data.taskId)
+
+            history.push('/sessionlobby');
+        } catch (error) {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
+    };
+
   return (
       <BaseContainer>
         <div className="base-container left-frame">
@@ -212,18 +251,25 @@ const CreationForm = () => {
                     value={estimate}
                     onChange={e => setEstimate(e)}
                 />
+                <Button
+                    disabled={!(title && description && dueDate && estimate !== "")
+                        || (reporter && !assignee) || (estimate < 0) }
+                    onClick = { () => saveTaskGetTaskId()}>
+                    Start Estimate Poll Session
+                </Button>
               </div>
             </div>
             <div className="creation-form footer">
               <Button
                   className="menu-button"
-                  onClick={() => history.push(`/dashboard`)}
+                  onClick={() => history.goBack()}
               >
                 Cancel
               </Button>
               <Button
                   className="menu-button default"
-                  disabled={!(title && description && dueDate && estimate !== "")}
+                  disabled={!(title && description && dueDate && estimate !== "")
+                      || (reporter && !assignee) || (estimate < 0) }
                   onClick={() => saveTask()}
               >
                 Save

@@ -8,6 +8,9 @@ import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import IconButton from '@mui/material/IconButton';
+import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
@@ -63,25 +66,23 @@ const EditOrRating = ({props}) => {
     return editOrRating;
 }
 const Comments = ({comments, taskFunctions}) => {
-
-    let id = localStorage.getItem('id');
-
-    const commentslist = comments.map(x => {
-        let val;
-        //if comment.author != id do basic else add delete button
-        if (x.authorId != id) {
-           val = <div className="label">{x.authorId}: {x.content}</div>
-        } else{
-            val = <div>{x.authorId}: {x.content}
-                    <Button
-                        onClick = {() => {taskFunctions.deleteComment(x)}}
-                    >Delete</Button>
-                </div>
+    return comments.map(x => {
+        let deleteContainer;
+        let commentClass = "task-content comments comment-container comment";
+        //if comment.author == id, add delete button
+        if (x.authorId == localStorage.getItem('id')) {
+            commentClass += " myComment";
+            deleteContainer = <DeleteForeverOutlinedIcon onClick = {() => {taskFunctions.deleteComment(x)}}/>;
         }
-        return val;
+        return (
+            <div className="task-content comments comment-container">
+                <div className={commentClass} style={{whiteSpace: "pre-wrap"}}><strong>{x.authorName}:</strong> {x.content}</div>
+                <div className="task-content comments comment-container delete-container">
+                    {deleteContainer}
+                </div>
+            </div>
+        );
     });
-
-    return commentslist;
 }
 
 const WriteComment = ({props, taskFunctions}) => {
@@ -89,17 +90,21 @@ const WriteComment = ({props, taskFunctions}) => {
     const [comment, setComment] = useState(null);
 
     return (
-        <div>
+        <div className="task-content comments comment-submit-container">
              <textarea
-                 rows="1"
+                 className="task-content commenting"
+                 rows="2"
                  value={comment}
                  placeholder="Leave a comment..."
                  onChange = {(e) => {setComment(e.target.value)}}
-                />
-            <Button
-            onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
-            disabled={!comment}
-            >Post</Button>
+             />
+            <IconButton
+                disableRipple
+                disabled={!comment}
+                onClick = {() => {taskFunctions.postComment(comment, props, setComment)}}
+            >
+                <SendIcon />
+            </IconButton>
         </div>
     );
 }
@@ -123,20 +128,23 @@ const TaskFooter = ({props, taskFunctions}) => {
 
 
 const Task = ({props,comments, setComment, taskFunctions}) => {
+    const history = useHistory();
     return (
         <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
-            <div className="task-header">{props.title}</div>
+            <div className="task-header">
+                <div>{props.title}</div>
+                <CloseOutlinedIcon className="action-icon" onClick={() => history.goBack()} />
+            </div>
             <div className="task-content">
                 <div className="task-content top-container">
-                    <div className="task-content task-description">
+                    <div className="task-content task-description" style={{whiteSpace: "pre-wrap"}}>
                         {props.description}
                     </div>
                 </div>
                 <div className="task-content top-container">
                     <div className="task-content comments">
-                        <Comments comments={comments} taskFunctions={taskFunctions}></Comments>
-                        <h4>-----------------</h4>
-                        <WriteComment props={props} taskFunctions={taskFunctions}></WriteComment>
+                        <Comments comments={comments} taskFunctions={taskFunctions} />
+                        <WriteComment props={props} taskFunctions={taskFunctions} />
                     </div>
                 </div>
                 <div className="task-content bottom-container">
@@ -221,13 +229,6 @@ const TaskDetails = () => {
         history.push('/editform/' + task.taskId);
     }
 
-
-    // Export calendar file for a task
-    // => needs to be implemented!
-    function doTaskCalendarExport(task) {
-        alert("Calendar export functionality coming soon...");
-    }
-
     function doCommentPost(comment, task, setComment){
             async function postComment() {
                 try {
@@ -235,8 +236,8 @@ const TaskDetails = () => {
                     let content = comment;
                     let belongingTask = task.taskId;
                     let authorId = localStorage.getItem("id");
-                    const requestBody = JSON.stringify({content, authorId, belongingTask, task});
-                    const response = await api.post(`/comments`, requestBody);
+                    const requestBody = JSON.stringify({content, authorId, belongingTask});
+                    await api.post(`/comments`, requestBody);
 
                     //reset input field via the hook after comment has been posted
                     setComment("");
@@ -279,11 +280,14 @@ const TaskDetails = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users, r_assignedTasks] = await Promise.all([api.get(`/tasks/${params["task_id"]}`),
+                let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
+                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get(`/comments/${params["task_id"]}`),
                     api.get('/users'),
-                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
+                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)
+                ]);
 
-                // Get the returned tasks and update the states.
+                // Get the returned tasks
                 let taskResponse = r_task.data;
 
                 // Get all users and replace assignee and reporter ids with user names
@@ -293,23 +297,23 @@ const TaskDetails = () => {
                 taskResponse.assignee_name = taskResponse.assignee ? userDictionary[taskResponse.assignee] : null;
                 taskResponse.reporter_name = taskResponse.reporter ? userDictionary[taskResponse.reporter] : null;
 
-                let commentsResponse = r_task.data.comments;
-                setComments(commentsResponse);
-                setTask(taskResponse);
+                // Get the returned comments
+                let commentsResponse = r_comments.data;
 
                 // Calculate Total Estimates for current user
                 let estimates = {currentWeek: 0, total: 0};
                 estimates.total = r_assignedTasks.data.reduce((acc, t) => acc + t.estimate, 0);
                 estimates.currentWeek = r_assignedTasks.data.filter(t => isInCurrentWeek(new Date(t.dueDate))).reduce((acc, t) => acc + t.estimate, 0);
+
+                // Set all states
+                setComments(commentsResponse);
+                setTask(taskResponse);
                 setEstimate(estimates);
 
-                // See here to get more data.
-                console.log(r_task);
-                console.log(r_users);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                console.error(`Something went wrong while fetching the task data: \n${handleError(error)}`);
                 console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                alert("Something went wrong while fetching the task data! See the console for details.");
             }
         }
         fetchData();
