@@ -16,6 +16,7 @@
       this.score = null;
       this.nofComments = null;
       this.score = null;
+      this.privateFlag = null;
       Object.assign(this, data);
     }
   }

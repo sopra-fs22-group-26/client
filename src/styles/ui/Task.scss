@@ -16,6 +16,20 @@
 
   &.private {
     border-style: dashed;
+    .task-header {
+      background-color: white;
+      border-bottom: 1px dashed $brown_dark;
+      padding-bottom: 3px;
+      color: $brown_darker;
+      svg {
+        margin: 0 4px -2px 0;
+      }
+    }
+    .task-footer {
+      background-color: white;
+      border-top: 1px dashed $brown_dark;
+      padding-top: 4px;
+    }
   }
 
   // Background colors according to priority

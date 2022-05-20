@@ -100,7 +100,7 @@ const RateForm = () => {
         async function fetchData() {
             try {
                 let [r_task, r_users, r_comments] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`),
                     api.get('/users'),
                     api.get(`/comments/${params["task_id"]}`)
                 ]);

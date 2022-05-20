@@ -9,6 +9,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
@@ -129,10 +130,16 @@ const TaskFooter = ({props, taskFunctions}) => {
 
 const Task = ({props,comments, setComment, taskFunctions}) => {
     const history = useHistory();
+
+    // Define class for task container, depending on status and privateFlag
+    let containerClass = "task-details-container task_priority_"
+        + props.priority.toLowerCase()
+        + (props.privateFlag ? " private" : "");
+
     return (
-        <div className={"task-details-container task_priority_" + props.priority.toLowerCase()}>
+        <div className={containerClass}>
             <div className="task-header">
-                <div>{props.title}</div>
+                <div>{props.privateFlag ? (<LockOutlinedIcon fontSize="inherit" />) : ""}{props.title}</div>
                 <CloseOutlinedIcon className="action-icon" onClick={() => history.goBack()} />
             </div>
             <div className="task-content">
@@ -279,12 +286,13 @@ const TaskDetails = () => {
 
     useEffect(() => {
         async function fetchData() {
+            const id = localStorage.getItem("id");
             try {
                 let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}`),
+                    api.get(`/tasks/${params["task_id"]}?id=${id}`),
                     api.get(`/comments/${params["task_id"]}`),
                     api.get('/users'),
-                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)
+                    api.get(`/tasks/assignee/${id}`)
                 ]);
 
                 // Get the returned tasks

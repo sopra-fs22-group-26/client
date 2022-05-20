@@ -3,6 +3,7 @@ import "styles/ui/Task.scss";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
 import {RatingDisplay} from "components/ui/RatingDisplay";
 import {api, handleError} from "helpers/api";
@@ -131,10 +132,16 @@ const TaskFooter = ({props}) => {
 
 export const Task = ({props}) => {
     const history = useHistory();
+
+    // Define class for task container, depending on status and privateFlag
+    let containerClass = "task-container task_priority_"
+        + props.priority.toLowerCase()
+        + (props.privateFlag ? " private" : "");
+
     return (
-        <div className={"task-container task_priority_" + props.priority.toLowerCase()}
+        <div className={containerClass}
              onClick={() => history.push('/task/' + props.taskId)}>
-            <div className="task-header">{props.title}</div>
+            <div className="task-header">{props.privateFlag ? (<LockOutlinedIcon fontSize="inherit" />) : ""}{props.title}</div>
             <div className="task-content">
                 <div className="task-content top-container">
                     <div className="task-content task-description" style={{whiteSpace: "pre-wrap"}}>
