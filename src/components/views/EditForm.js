@@ -13,7 +13,7 @@ const FormField = props => {
     return (
         <div className="creation-form field">
             <label className= 'creation-form label'>
-                {props.label}
+                {props.label}:
             </label>
             <input
                 type = {props.type}
@@ -42,14 +42,16 @@ const Selection = props => {
     return (
         <div className="creation-form field">
             <label className= 'creation-form label'>
-                {props.label}
+                {props.label}:
             </label>
-            <select value={props.value} onChange={e => props.onChange(e.target.value)}>
-                <option value="NONE">none</option>
-                <option value="LOW">low</option>
-                <option value="MEDIUM">medium</option>
-                <option value="HIGH">high</option>
-            </select>
+            <div className="double-content">
+                <select value={props.value} onChange={e => props.onChange(e.target.value)}>
+                    <option value="NONE">none</option>
+                    <option value="LOW">low</option>
+                    <option value="MEDIUM">medium</option>
+                    <option value="HIGH">high</option>
+                </select>
+            </div>
         </div>
     );
 };
@@ -64,7 +66,7 @@ const ReactSelection = (props) => {
     return (
         <div className="creation-form field">
             <label className='creation-form label react-select'>
-                {props.label}
+                {props.label}:
             </label>
             <Select
                 isClearable
@@ -211,34 +213,34 @@ const EditForm = () => {
                 <div className="creation-form attributes-container">
                     <div className="creation-form attributes-container attributes-column">
                         <FormField
-                            label="Due date:"
+                            label="Due date"
                             type="date"
                             placeholder="Select date"
                             value={dueDate}
                             onChange={dd => setDueDate(dd)}
                         />
                         <ReactSelection
-                            label="Assignee:"
+                            label="Assignee"
                             defaultValue={firstAssignee}
                             options={users}
                             isDisabled={task.privateFlag}
                             onChange={a => setAssignee(a)}
                         />
                         <ReactSelection
-                            label="Reporter:"
+                            label="Reporter"
                             defaultValue={firstReporter}
                             options={users}
                             isDisabled={task.privateFlag}
                             onChange={r => setReporter(r)}
                         />
                         <Selection
-                            label="Priority:"
+                            label="Priority"
                             value={priority}
                             onChange={p => {setPriority(p);
                                 changePriorityClass(task, p)}}
                         />
                         <FormField
-                            label="Location:"
+                            label="Location"
                             placeholder="Set location..."
                             value={location}
                             onChange={l => setLocation(l)}
@@ -246,7 +248,7 @@ const EditForm = () => {
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">
                         <FormField
-                            label="Estimate (h):"
+                            label="Estimate (h)"
                             type="number"
                             width="80px"
                             align="right"

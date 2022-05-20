@@ -33,10 +33,12 @@
             .header {
                 background-color: white;
                 border-bottom: 2px dashed $brown_dark;
+                padding: 5px 15px 3px;
             }
             .footer {
                 background-color: white;
                 border-top: 2px dashed $brown_dark;
+                padding: 5px 15px 7px;
             }
         }
     }
@@ -92,7 +94,8 @@
             width: fit-content;
             flex-direction: column;
             &.rightalign {
-                margin: 0 0 0 auto;
+                margin-left: auto;
+                margin-right: 0;
             }
         }
     }
@@ -120,10 +123,16 @@
         background: transparentize(white, 0);
         color: $textColor;
     }
-    & select {
+    .double-content {
         height: 34px;
+        width: 316px;
+        margin: 0 7px 20px auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    & select {
         width: 100px;
-        margin: 0 223px 20px auto;
         padding: 0 8px;
         font-family: $fontText;
         font-size: 14px;
@@ -144,4 +153,24 @@
 }
 .react-select__menu {
     border: 1px solid $brown_dark;
+}
+
+.MuiSwitch-root {
+    padding: 0;
+    .MuiSwitch-switchBase {
+        color: $gray_very_light;
+        &.Mui-checked {
+            color: $brown_dark;
+            & + .MuiSwitch-track {
+                background-color: $brown_dark;
+            }
+        }
+    }
+}
+
+.MuiFormControlLabel-root {
+    .MuiFormControlLabel-label {
+        font-family: $fontText;
+        font-weight: $fontWeightSemibold;
+    }
 }
