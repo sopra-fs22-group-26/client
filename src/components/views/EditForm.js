@@ -72,6 +72,7 @@ const ReactSelection = (props) => {
                 classNamePrefix="react-select"
                 options={props.options}
                 defaultValue={props.defaultValue}
+                isDisabled={props.isDisabled}
                 onChange={e => props.onChange(e ? e.value : null)}
                 getOptionValue={(option) => option.value}
                 theme={(theme) => ({
@@ -86,7 +87,8 @@ ReactSelection.propTypes = {
     label: PropTypes.string,
     options: PropTypes.array,
     onChange: PropTypes.func,
-    defaultValue: PropTypes.object
+    defaultValue: PropTypes.object,
+    isDisabled: PropTypes.bool
 };
 
 // Define class for task container, depending on priority and privateFlag
@@ -219,12 +221,14 @@ const EditForm = () => {
                             label="Assignee:"
                             defaultValue={firstAssignee}
                             options={users}
+                            isDisabled={task.privateFlag}
                             onChange={a => setAssignee(a)}
                         />
                         <ReactSelection
                             label="Reporter:"
                             defaultValue={firstReporter}
                             options={users}
+                            isDisabled={task.privateFlag}
                             onChange={r => setReporter(r)}
                         />
                         <Selection
