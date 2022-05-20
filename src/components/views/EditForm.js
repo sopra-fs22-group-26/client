@@ -13,7 +13,7 @@ const FormField = props => {
     return (
         <div className="creation-form field">
             <label className= 'creation-form label'>
-                {props.label}
+                {props.label}:
             </label>
             <input
                 type = {props.type}
@@ -42,14 +42,16 @@ const Selection = props => {
     return (
         <div className="creation-form field">
             <label className= 'creation-form label'>
-                {props.label}
+                {props.label}:
             </label>
-            <select value={props.value} onChange={e => props.onChange(e.target.value)}>
-                <option value="NONE">none</option>
-                <option value="LOW">low</option>
-                <option value="MEDIUM">medium</option>
-                <option value="HIGH">high</option>
-            </select>
+            <div className="double-content">
+                <select value={props.value} onChange={e => props.onChange(e.target.value)}>
+                    <option value="NONE">none</option>
+                    <option value="LOW">low</option>
+                    <option value="MEDIUM">medium</option>
+                    <option value="HIGH">high</option>
+                </select>
+            </div>
         </div>
     );
 };
@@ -64,7 +66,7 @@ const ReactSelection = (props) => {
     return (
         <div className="creation-form field">
             <label className='creation-form label react-select'>
-                {props.label}
+                {props.label}:
             </label>
             <Select
                 isClearable
@@ -72,6 +74,7 @@ const ReactSelection = (props) => {
                 classNamePrefix="react-select"
                 options={props.options}
                 defaultValue={props.defaultValue}
+                isDisabled={props.isDisabled}
                 onChange={e => props.onChange(e ? e.value : null)}
                 getOptionValue={(option) => option.value}
                 theme={(theme) => ({
@@ -86,8 +89,22 @@ ReactSelection.propTypes = {
     label: PropTypes.string,
     options: PropTypes.array,
     onChange: PropTypes.func,
-    defaultValue: PropTypes.object
+    defaultValue: PropTypes.object,
+    isDisabled: PropTypes.bool
 };
+
+// Define class for task container, depending on priority and privateFlag
+function getPriorityClass(task) {
+    return "creation-form container task_priority_"
+        + task.priority.toLowerCase()
+        + (task.privateFlag ? " private" : "");
+}
+function changePriorityClass(task, priority) {
+    document.getElementById("form-container").className =
+        "creation-form container task_priority_"
+        + priority.toLowerCase()
+        + (task.privateFlag ? " private" : "");
+}
 
 // Output form
 const EditForm = () => {
@@ -123,7 +140,10 @@ const EditForm = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let [r_task, r_users] = await Promise.all([api.get(`/tasks/${params["task_id"]}`), api.get('/users')]);
+                let [r_task, r_users] = await Promise.all([
+                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`),
+                    api.get('/users')
+                ]);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
@@ -173,7 +193,7 @@ const EditForm = () => {
 
     if(task && users) {
         content =
-            <div id="form-container" className={"creation-form container task_priority_" + task.priority.toLowerCase()}>
+            <div id="form-container" className={getPriorityClass(task)}>
                 <div className="creation-form header">
                     <input
                         className="creation-form input"
@@ -193,32 +213,34 @@ const EditForm = () => {
                 <div className="creation-form attributes-container">
                     <div className="creation-form attributes-container attributes-column">
                         <FormField
-                            label="Due date:"
+                            label="Due date"
                             type="date"
                             placeholder="Select date"
                             value={dueDate}
                             onChange={dd => setDueDate(dd)}
                         />
                         <ReactSelection
-                            label="Assignee:"
+                            label="Assignee"
                             defaultValue={firstAssignee}
                             options={users}
+                            isDisabled={task.privateFlag}
                             onChange={a => setAssignee(a)}
                         />
                         <ReactSelection
-                            label="Reporter:"
+                            label="Reporter"
                             defaultValue={firstReporter}
                             options={users}
+                            isDisabled={task.privateFlag}
                             onChange={r => setReporter(r)}
                         />
                         <Selection
-                            label="Priority:"
+                            label="Priority"
                             value={priority}
                             onChange={p => {setPriority(p);
-                                document.getElementById("form-container").className = "creation-form container task_priority_" + p.toLowerCase()}}
+                                changePriorityClass(task, p)}}
                         />
                         <FormField
-                            label="Location:"
+                            label="Location"
                             placeholder="Set location..."
                             value={location}
                             onChange={l => setLocation(l)}
@@ -226,7 +248,7 @@ const EditForm = () => {
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">
                         <FormField
-                            label="Estimate (h):"
+                            label="Estimate (h)"
                             type="number"
                             width="80px"
                             align="right"

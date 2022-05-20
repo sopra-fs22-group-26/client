@@ -52,19 +52,22 @@ const Dashboard = () => {
 
     async function fetchData() {
 
+      // Create task request url with userId
+      let url = "/tasks?id=" + localStorage.getItem('id');
+
       // Apply show filter to fetch active or completed tasks
-      let url = '/tasks';
       if (show === LeftMenuItems.TaskShow.Active) {
-        url += '?show=active';
+        url += '&show=active';
       }
       else if (show === LeftMenuItems.TaskShow.Completed) {
-        url += '?show=completed';
+        url += '&show=completed';
       }
 
       try {
         // Get all tasks and users and store them temporarily
         let [r_tasks, r_users, r_assignedTasks] =
-            await Promise.all([api.get(url),
+            await Promise.all([
+              api.get(url),
               api.get('/users'),
               api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
 

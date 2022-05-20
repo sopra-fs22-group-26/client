@@ -50,15 +50,15 @@ const Reports = () => {
         const prioritySortOrder = ["HIGH", "MEDIUM", "LOW", "NONE"];
 
         async function fetchData() {
-
+            const id = localStorage.getItem("id");
             try {
                 // Get all users and relevant tasks and store them temporarily.
                 // We only need tasks related to the current user.
                 let [r_tasks, r_users, r_assignedTasks] =
                     await Promise.all([
-                        api.get(`/tasks/reporter/${localStorage.getItem("id")}`),
+                        api.get(`/tasks/reporter/${id}`),
                         api.get('/users'),
-                        api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
+                        api.get(`/tasks/assignee/${id}`)]);
 
                 // Replace all assignee and reporter ids with users' names or usernames
                 let users = r_users.data;
