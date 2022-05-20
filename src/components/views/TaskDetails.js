@@ -9,6 +9,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from "@mui/icons-material/Send";
 import {ScrumbleButton} from "components/ui/ScrumbleButton";
@@ -138,7 +139,7 @@ const Task = ({props,comments, setComment, taskFunctions}) => {
     return (
         <div className={containerClass}>
             <div className="task-header">
-                <div>{props.title}</div>
+                <div>{props.privateFlag ? (<LockOutlinedIcon fontSize="inherit" />) : ""}{props.title}</div>
                 <CloseOutlinedIcon className="action-icon" onClick={() => history.goBack()} />
             </div>
             <div className="task-content">

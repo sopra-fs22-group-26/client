@@ -89,6 +89,19 @@ ReactSelection.propTypes = {
     defaultValue: PropTypes.object
 };
 
+// Define class for task container, depending on priority and privateFlag
+function getPriorityClass(task) {
+    return "creation-form container task_priority_"
+        + task.priority.toLowerCase()
+        + (task.privateFlag ? " private" : "");
+}
+function changePriorityClass(task, priority) {
+    document.getElementById("form-container").className =
+        "creation-form container task_priority_"
+        + priority.toLowerCase()
+        + (task.privateFlag ? " private" : "");
+}
+
 // Output form
 const EditForm = () => {
     const history = useHistory();
@@ -175,14 +188,8 @@ const EditForm = () => {
     let content = <div className="nothing"> loading task info</div>;
 
     if(task && users) {
-
-        // Define class for task container, depending on status and privateFlag
-        let containerClass = "creation-form container task_priority_"
-            + task.priority.toLowerCase()
-            + (task.privateFlag ? " private" : "");
-
         content =
-            <div id="form-container" className={containerClass}>
+            <div id="form-container" className={getPriorityClass(task)}>
                 <div className="creation-form header">
                     <input
                         className="creation-form input"
@@ -224,7 +231,7 @@ const EditForm = () => {
                             label="Priority:"
                             value={priority}
                             onChange={p => {setPriority(p);
-                                document.getElementById("form-container").className = "creation-form container task_priority_" + p.toLowerCase()}}
+                                changePriorityClass(task, p)}}
                         />
                         <FormField
                             label="Location:"
