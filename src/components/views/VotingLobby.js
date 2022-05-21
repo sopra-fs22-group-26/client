@@ -55,52 +55,54 @@ const VotingLobby = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const meetingId = params["meetingId"];
-                setMeetingId(meetingId);
-                const response = await api.get(`/poll-meetings/${meetingId}`);
+                setMeetingId(params["meetingId"]);
+                const response = await api.get(`/poll-meetings/${params["meetingId"]}`);
 
-                const estimateThreshold = response.data.estimateThreshold;
-                setEstimateThreshold(estimateThreshold);
-                const participants = response.data.participants;
-                setParticipants(participants);
+                setEstimateThreshold(response.data.estimateThreshold);
 
-                const userId = localStorage.getItem("id");
-                setUserId(userId);
-                const creatorId = response.data.creatorId;
-                setCreatorId(creatorId);
-                const pollStatus = response.data.status;
-                setPollStatus(pollStatus);
-                const averageEstimate = response.data.averageEstimate;
-                setAverageEstimate(averageEstimate);
+                const participantsData = response.data.participants;
+                setParticipants(participantsData);
 
-                let participantMe = participants.filter(participant => {
+                setUserId(localStorage.getItem("id"));
+
+                const responseCreatorId = response.data.creatorId;
+                setCreatorId(responseCreatorId);
+
+                const responsePollStatus = response.data.status;
+                setPollStatus(responsePollStatus);
+
+                setAverageEstimate(response.data.averageEstimate);
+
+                let participantMe = participantsData.filter(participant => {
                     let id = participant.user.id;
                     if(String(id) === localStorage.getItem("id")){
                         return participant;
                     }
                 });
                 console.log(participantMe);
-                // setParticipantMe(participantMe);
-                let participantMeName = participantMe.map(participant => {
+
+                let meName = participantMe.map(participant => {
                     return participant.user.username;
                 })
-                console.log(participantMeName);
-                setParticipantMeName(participantMeName);
-                let tempParticipantsFiltered = participants.filter(participant => {
+                console.log(meName);
+                setParticipantMeName(meName);
+
+                let tempParticipantsFiltered = participantsData.filter(participant => {
                     let id = participant.user.id;
                     if(String(id) !== localStorage.getItem("id")){
                         return participant;
                     }
                 });
                 console.log("filtered",tempParticipantsFiltered);
-                let tempParticipants = tempParticipantsFiltered.map(participant => {
+
+                let tempParts = tempParticipantsFiltered.map(participant => {
                     return participant.user.username;
                     });
 
-                console.log(tempParticipants);
-                setTempParticipants(tempParticipants);
+                console.log(tempParts);
+                setTempParticipants(tempParts);
 
-                if(pollStatus=="ENDED" && localStorage.getItem("id")!=creatorId){
+                if(responsePollStatus === "ENDED" && localStorage.getItem("id") != responseCreatorId){
                     history.push("/dashboard");
                 }
             }
@@ -183,15 +185,14 @@ const VotingLobby = () => {
                 type = "number"
                 min = "0"
                 max = {estimateThreshold}
-                value = {participantMeName==localStorage.getItem("username")? voteInput : getVote(participantMeName)}
+                value = {participantMeName == localStorage.getItem("username") ? voteInput : getVote(participantMeName)}
                 width = "65px"
                 align = "right"
                 placeholder = "h"
                 padding = "0.5px"
-                disabled={participantMeName!=localStorage.getItem("username")&&pollStatus!="VOTING"}
+                disabled={participantMeName != localStorage.getItem("username") && pollStatus != "VOTING"}
                 onChange={e => {
-                    const voteInput = e;
-                    setVoteInput(voteInput);
+                    setVoteInput(e);
                     sendVote(e);
                 }}
             />];
@@ -248,7 +249,7 @@ const VotingLobby = () => {
                     </div>
                     <div className="voting-lobby header2">
                         Give your estimate. You have 60 seconds to enter a number between 0 to {estimateThreshold} hours.
-                        <br></br> Then the poll will close.
+                        <br/> Then the poll will close.
                     </div>
                     <div className="voting-lobby midtext">
                         The average is ...
