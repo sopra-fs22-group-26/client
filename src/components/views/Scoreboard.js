@@ -8,6 +8,7 @@ import React from "react";
 import {EstimateTotals} from "../ui/EstimateTotals";
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
+import {AuthUtil} from "../../helpers/authUtil";
 
 
 const Scoreboard = () => {
@@ -19,13 +20,23 @@ const Scoreboard = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await api.get(`/users`);
+        const response = await api.get(`/users`, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')}
+        });
 
         const id = localStorage.getItem("id");
         let [r_users, r_assignedTasks] =
             await Promise.all([
-              api.get(`/users/`),
-              api.get(`/tasks/assignee/${id}`)]);
+              api.get(`/users/`,{
+                headers: {
+                  Authorization: 'Bearer ' + localStorage.getItem('token')}
+              }),
+              api.get(`/tasks/assignee/${id}`, {
+                headers: {
+                  Authorization: 'Bearer ' + localStorage.getItem('token')}
+              })
+            ]);
 
         let tempUsers = r_users.data;
 
@@ -41,9 +52,13 @@ const Scoreboard = () => {
         setEstimate(estimates);
       }
       catch (error) {
-        console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        console.error("Details:", error);
-        alert("Something went wrong while fetching the users! See the console for details.");
+        if (error.response.status === 401) {
+          await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+        } else {
+          console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+          console.error("Details:", error);
+          alert("Something went wrong while fetching the users! See the console for details.");
+        }
       }
     }
     fetchData();

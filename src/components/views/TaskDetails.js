@@ -19,6 +19,7 @@ import 'styles/ui/TaskDetails.scss';
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
 import {icsExport} from "helpers/icsExport";
+import {AuthUtil} from "../../helpers/authUtil";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -188,13 +189,20 @@ const TaskDetails = () => {
         if (window.confirm(`Do you really want to delete the task \"${task.title}\"?`)) {
             async function deleteTask() {
                 try {
-                    const response = await api.delete(`/tasks/${task.taskId}`);
+                    const response = await api.delete(`/tasks/${task.taskId}`, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    });
                     console.log(response);
                     history.push('/dashboard')
                 } catch (error) {
-                    console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
-                    console.error("Details:", error);
-                    alert("Something went wrong while deleting the task! See the console for details.");
+                    if (error.response.status === 401) {
+                        await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    } else {
+                        console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
+                        console.error("Details:", error);
+                        alert("Something went wrong while deleting the task! See the console for details.");
+                    }
                 }
             }
             deleteTask();
@@ -211,13 +219,20 @@ const TaskDetails = () => {
                         reporter: task.reporter,
                         estimate: task.estimate
                     });
-                    const response = await api.put(`/tasks/${task.taskId}`, requestBody);
+                    const response = await api.put(`/tasks/${task.taskId}`, requestBody, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    });
                     console.log(response);
                     history.push('/dashboard')
                 } catch (error) {
-                    console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
-                    console.error("Details:", error);
-                    alert("Something went wrong while updating the task! See the console for details.");
+                    if (error.response.status === 401) {
+                        await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    } else {
+                        console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
+                        console.error("Details:", error);
+                        alert("Something went wrong while updating the task! See the console for details.");
+                    }
                 }
             }
             completeTask();
@@ -237,15 +252,22 @@ const TaskDetails = () => {
                     let belongingTask = task.taskId;
                     let authorId = localStorage.getItem("id");
                     const requestBody = JSON.stringify({content, authorId, belongingTask});
-                    await api.post(`/comments`, requestBody);
+                    await api.post(`/comments`, requestBody, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    });
 
                     //reset input field via the hook after comment has been posted
                     setComment("");
 
                 } catch (error) {
-                    console.error(`Something went wrong while posting the comment: \n${handleError(error)}`);
-                    console.error("Details:", error);
-                    alert("Something went wrong while commenting the task! See the console for details.");
+                    if (error.response.status === 401) {
+                        await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    } else {
+                        console.error(`Something went wrong while posting the comment: \n${handleError(error)}`);
+                        console.error("Details:", error);
+                        alert("Something went wrong while commenting the task! See the console for details.");
+                    }
                 }
             }
             postComment();
@@ -254,13 +276,20 @@ const TaskDetails = () => {
     function doCommentDelete(comment){
         async function deleteComment() {
             try {
-                const response = await api.delete(`/comments/${comment.commentId}`);
+                const response = await api.delete(`/comments/${comment.commentId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')}
+                });
                 console.log(response);
 
             } catch(error){
-                console.error(`Something went wrong while deleting the comment: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while deleting the comment! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while deleting the comment: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while deleting the comment! See the console for details.");
+                }
             }
         }
         deleteComment();
@@ -281,10 +310,22 @@ const TaskDetails = () => {
         async function fetchData() {
             try {
                 let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}`),
-                    api.get(`/comments/${params["task_id"]}`),
-                    api.get('/users'),
-                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`)
+                    api.get(`/tasks/${params["task_id"]}`, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    }),
+                    api.get(`/comments/${params["task_id"]}`, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    }),
+                    api.get('/users', {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    }),
+                    api.get(`/tasks/assignee/${localStorage.getItem("id")}`, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    })
                 ]);
 
                 // Get the returned tasks
@@ -311,9 +352,13 @@ const TaskDetails = () => {
                 setEstimate(estimates);
 
             } catch (error) {
-                console.error(`Something went wrong while fetching the task data: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the task data! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the task data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the task data! See the console for details.");
+                }
             }
         }
         fetchData();

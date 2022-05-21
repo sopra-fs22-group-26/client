@@ -9,6 +9,7 @@ import 'styles/views/VotingLobby.scss';
 import React from "react";
 import Select from "react-select";
 import {Button} from "../ui/Button";
+import {AuthUtil} from "../../helpers/authUtil";
 
 // Define input text field component
 const FormField = props => {
@@ -59,7 +60,10 @@ const VotingLobby = () => {
             try {
                 const meetingId = params["meetingId"];
                 setMeetingId(meetingId);
-                const response = await api.get(`/poll-meetings/${meetingId}`);
+                const response = await api.get(`/poll-meetings/${meetingId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')}
+                });
                 console.log(response.data);
                 const estimateThreshold = response.data.estimateThreshold;
                 setEstimateThreshold(estimateThreshold);
@@ -89,9 +93,13 @@ const VotingLobby = () => {
                 }
             }
             catch (error) {
-                console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the users! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the users! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -108,10 +116,17 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({userId, vote});
 
-            const response = await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody);
+            const response = await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')}
+            });
 
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -119,10 +134,17 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({status: "VOTING"});
 
-            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')}
+            });
 
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -130,20 +152,34 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({status: "ENDED"});
 
-            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')}
+            });
 
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
     const leave = async () => {
         try {
-            const response = await api.delete(`/poll-meetings/${meetingId}`);
+            const response = await api.delete(`/poll-meetings/${meetingId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')}
+            });
 
             history.push("/dashboard");
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 

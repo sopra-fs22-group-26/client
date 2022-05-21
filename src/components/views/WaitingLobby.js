@@ -8,6 +8,7 @@ import Task from 'models/Task';
 import 'styles/views/WaitingLobby.scss';
 import React from "react";
 import Select from "react-select";
+import {AuthUtil} from "../../helpers/authUtil";
 
 const WaitingLobby = () => {
 
@@ -23,7 +24,10 @@ const WaitingLobby = () => {
         async function fetchData() {
             try {
                 const meetingId = params["meetingId"];
-                const response = await api.get(`/poll-meetings/${meetingId}`);
+                const response = await api.get(`/poll-meetings/${meetingId}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')}
+                });
                 console.log(response.data);
                 const estimateThreshold = response.data.estimateThreshold;
                 setEstimateThreshold(estimateThreshold);
@@ -43,9 +47,13 @@ const WaitingLobby = () => {
                 }
             }
             catch (error) {
-                console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the users! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the users! See the console for details.");
+                }
             }
         }
         fetchData();

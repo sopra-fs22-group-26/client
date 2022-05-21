@@ -12,6 +12,7 @@ import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
 import React from "react";
 import {Helper} from "../ui/Helper";
+import {AuthUtil} from "../../helpers/authUtil";
 
 
 const MenuSection = props => {
@@ -56,9 +57,19 @@ const Reports = () => {
                 // We only need tasks related to the current user.
                 let [r_tasks, r_users, r_assignedTasks] =
                     await Promise.all([
-                        api.get(`/tasks/reporter/${localStorage.getItem("id")}`),
-                        api.get('/users'),
-                        api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
+                        api.get(`/tasks/reporter/${localStorage.getItem("id")}`, {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('token')}
+                        }),
+                        api.get('/users', {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('token')}
+                        }),
+                        api.get(`/tasks/assignee/${localStorage.getItem("id")}`, {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('token')}
+                        })
+                    ]);
 
                 // Replace all assignee and reporter ids with users' names or usernames
                 let users = r_users.data;
@@ -151,9 +162,13 @@ const Reports = () => {
                 console.log(r_tasks);
                 console.log(r_users);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the tasks! See the console for details.");
+                }
             }
         }
         fetchData();

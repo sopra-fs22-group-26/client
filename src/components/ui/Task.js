@@ -8,6 +8,7 @@ import {RatingDisplay} from "components/ui/RatingDisplay";
 import {api, handleError} from "helpers/api";
 import {useHistory} from "react-router-dom";
 import {icsExport} from "helpers/icsExport";
+import {AuthUtil} from "../../helpers/authUtil";
 
 /**
  * Functions to manipulate tasks:
@@ -24,12 +25,20 @@ function doTaskComplete(task) {
                     reporter: task.reporter,
                     estimate: task.estimate
                 });
-                const response = await api.put(`/tasks/${task.taskId}`, requestBody);
+                const response = await api.put(`/tasks/${task.taskId}`, requestBody, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')}
+                });
                 console.log(response);
             } catch (error) {
-                console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while updating the task! See the console for details.");
+
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while updating the task! See the console for details.");
+                }
             }
         }
         completeTask();
@@ -41,12 +50,20 @@ function doTaskDelete(task) {
     if (window.confirm(`Do you really want to delete the task \"${task.title}\"?`)) {
         async function deleteTask() {
             try {
-                const response = await api.delete(`/tasks/${task.taskId}`);
+                const response = await api.delete(`/tasks/${task.taskId}`,
+                    {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')}
+                    });
                 console.log(response);
             } catch (error) {
-                console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while deleting the task! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while deleting the task! See the console for details.");
+                }
             }
         }
         deleteTask();

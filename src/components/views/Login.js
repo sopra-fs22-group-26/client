@@ -6,6 +6,7 @@ import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import {AuthUtil} from "../../helpers/authUtil";
 
 
 // Define component for login form
@@ -53,6 +54,7 @@ const Login = props => {
 
       // Store user info the local storage.
       localStorage.setItem('token', user.token);
+      localStorage.setItem('refreshToken', user.refreshToken);
       localStorage.setItem('id', user.id);
       localStorage.setItem('username', user.username);
       if(user.name){
@@ -62,7 +64,11 @@ const Login = props => {
       // Login successfully worked --> navigate to the dashboard
       history.push(`/dashboard`);
     } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
+      if (error.response.status === 401) {
+        await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+      } else {
+        alert(`Something went wrong during the login: \n${handleError(error)}`);
+      }
     }
   };
 

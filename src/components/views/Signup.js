@@ -73,6 +73,7 @@ const Signup = props => {
 
       // Store user info the local storage.
       localStorage.setItem('token', user.token);
+      localStorage.setItem('refreshToken', user.refreshToken);
       localStorage.setItem('id', user.id);
       localStorage.setItem('username', user.username);
       if(user.name){

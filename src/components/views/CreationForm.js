@@ -8,6 +8,7 @@ import 'styles/views/CreationForm.scss';
 import React from "react";
 import Select from "react-select";
 import moment from "moment";
+import {AuthUtil} from "../../helpers/authUtil";
 
 // Define input text field component
 const FormField = props => {
@@ -127,7 +128,11 @@ const CreationForm = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await api.get(`/users`);
+        const response = await api.get(`/users`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')}
+            });
 
         let tempUsers = response.data.map(user => {
           let userOption = {};
@@ -142,9 +147,13 @@ const CreationForm = () => {
         console.log('User list:', tempUsers);
       }
       catch (error) {
-        console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        console.error("Details:", error);
-        alert("Something went wrong while fetching the users! See the console for details.");
+          if (error.response.status === 401) {
+              await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+          } else {
+              console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+              console.error("Details:", error);
+              alert("Something went wrong while fetching the users! See the console for details.");
+          }
       }
     }
     fetchData();
@@ -159,13 +168,21 @@ const CreationForm = () => {
     try {
       const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
 
-      const response = await api.post('/tasks', requestBody);
+      const response = await api.post('/tasks', requestBody,
+          {
+              headers: {
+                  Authorization: 'Bearer ' + localStorage.getItem('token')}
+          });
 
       // After succesful creation of a new task navigate to /dashboard
       history.push(`/dashboard`);
 
     } catch (error) {
-      alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        if (error.response.status === 401) {
+            await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+        } else {
+            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+        }
     }
   };
 
@@ -177,13 +194,21 @@ const CreationForm = () => {
         try {
             const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
 
-            const response = await api.post('/tasks', requestBody);
+            const response = await api.post('/tasks', requestBody,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')}
+                });
 
             localStorage.setItem("taskId", response.data.taskId)
 
             history.push('/sessionlobby');
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     };
 
