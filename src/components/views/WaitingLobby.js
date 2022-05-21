@@ -1,13 +1,9 @@
-import {useState, useEffect} from 'react';
+import {React, useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {ParticipantName} from 'components/ui/ParticipantName';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import Task from 'models/Task';
 import 'styles/views/WaitingLobby.scss';
-import React from "react";
-import Select from "react-select";
 
 const WaitingLobby = () => {
 
@@ -15,7 +11,6 @@ const WaitingLobby = () => {
     const history = useHistory();
     const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
-    const [participants, setParticipants] = useState(null);
     const [tempParticipants,setTempParticipants] = useState(null);
 
     // Get all users to define options for invitees
@@ -25,20 +20,20 @@ const WaitingLobby = () => {
                 const meetingId = params["meetingId"];
                 const response = await api.get(`/poll-meetings/${meetingId}`);
                 console.log(response.data);
-                const estimateThreshold = response.data.estimateThreshold;
-                setEstimateThreshold(estimateThreshold);
+
+                setEstimateThreshold(response.data.estimateThreshold);
+
                 const participants = response.data.participants;
-                setParticipants(participants);
                 console.log(typeof participants);
-                let tempParticipants = participants.map(participant => {
-                        const participantName = participant.user.username;
-                        return participantName;
-                    });
-                console.log(typeof tempParticipants);
-                console.log(tempParticipants);
-                setTempParticipants(tempParticipants);
+                let tempParts = participants.map(participant => {
+                    return participant.user.username;
+                });
+                console.log(typeof tempParts);
+                console.log(tempParts);
+                setTempParticipants(tempParts);
+
                 const pollStatus = response.data.status;
-                if(pollStatus=="VOTING"){
+                if(pollStatus==="VOTING"){
                     history.push(`/votinglobby/${meetingId}`);
                 }
             }
@@ -80,7 +75,8 @@ const WaitingLobby = () => {
             const half = Math.ceil(tempParticipants.length / 2)
             const participants_right = [];
             for (let i = half; i<tempParticipants.length; i++){
-                participants_right.push(tempParticipants[i])};
+                participants_right.push(tempParticipants[i])
+            }
             content_right = participants_right.map(participant => (
                 <ParticipantName>
                     {participant}
@@ -99,7 +95,7 @@ const WaitingLobby = () => {
                     </div>
                     <div className="waiting-lobby header2">
                         Give your estimate. After the host started the poll, you have 60 seconds to
-                         enter a number<br></br> between 0 to {estimateThreshold} hours. Then the poll will close.
+                         enter a number<br/> between 0 to {estimateThreshold} hours. Then the poll will close.
                     </div>
                     <div className="waiting-lobby midtext">
                         Waiting for start
