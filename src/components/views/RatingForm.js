@@ -1,10 +1,9 @@
-import {useState, useEffect} from 'react';
+import {React, useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import 'styles/ui/TaskDetails.scss';
-import React from "react";
 
 import Rating from '@mui/lab/Rating';
 
@@ -31,7 +30,7 @@ const Task = ({props, score, comments, setScore, rateTask, history}) => {
                 <div className="task-content top-container">
                     <div className="task-content comments">
                         <div className="comments-title"> Comments: </div>
-                        <Comments comments={comments}></Comments>
+                        <Comments comments={comments} />
                     </div>
                 </div>
                 <div className="task-content bottom-container">
@@ -83,7 +82,7 @@ const Comments = ({comments}) => {
 const notDefined = (<span className="not-specified">not specified</span>);
 
 // Output component
-const RateForm = () => {
+const RatingForm = () => {
     const params = useParams();
     const history = useHistory();
     const [assignee, setAssignee] = useState(null);
@@ -195,4 +194,4 @@ const RateForm = () => {
     );
 }
 
-export default RateForm;
+export default RatingForm;

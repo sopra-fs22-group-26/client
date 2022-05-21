@@ -41,7 +41,7 @@ FormField.propTypes = {
  * @param props
  * @returns {JSX.Element}
  */
-const Signup = props => {
+const Signup = () => {
   const history = useHistory();
   const [name, setName] = useState(null);
   const [username, setUsername] = useState(null);
@@ -54,7 +54,7 @@ const Signup = props => {
   const doRegister = async () => {
     try {
       const requestBody = JSON.stringify({name, username, emailAddress, password});
-      const response = await api.post('/register', requestBody);
+      await api.post('/register', requestBody);
       // Registration successfully worked --> do auto-login
       doAutoLogin();
     } catch (error) {

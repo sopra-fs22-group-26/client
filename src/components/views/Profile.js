@@ -6,7 +6,6 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import {Button} from "components/ui/Button";
 import 'styles/views/Dashboard.scss';
 import 'styles/views/Login.scss';
-import User from "models/User";
 import editIcon from "images/task_edit_icon.svg";
 import {EstimateTotals} from "../ui/EstimateTotals";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";

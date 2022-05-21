@@ -1,11 +1,10 @@
-import {useState, useEffect} from 'react';
+import {React, useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/SessionLobby.scss';
-import React from "react";
 import Select from "react-select";
 
 // Define input text field component
@@ -44,9 +43,9 @@ const SessionLobby = () => {
     const [invitees, setInvitees] = useState(null);
     const [estimateThreshold, setThreshold] = useState(null);
 
-    const handleChange = (invitees) => {
+    const handleChange = (inv) => {
         let inviteesId = [];
-        invitees.map(p => inviteesId.push(p.value));
+        inv.map(p => inviteesId.push(p.value));
         setInvitees(inviteesId);
     }
 
@@ -89,7 +88,6 @@ const SessionLobby = () => {
             const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, invitees});
             console.log(requestBody)
             const response = await api.post('/poll-meetings', requestBody);
-            // console.log(response.data);
             const meetingId = response.data.meetingId;
             // After successful creation of a new poll navigate to /waitinglobby
             history.push(`/votinglobby/${meetingId}`);

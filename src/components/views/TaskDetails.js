@@ -1,9 +1,8 @@
-import {useEffect, useState} from 'react';
+import {React, useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import {EstimateTotals} from "components/ui/EstimateTotals";
-import React from "react";
 import editIcon from "../../images/task_edit_icon.svg";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -128,7 +127,7 @@ const TaskFooter = ({props, taskFunctions}) => {
 }
 
 
-const Task = ({props,comments, setComment, taskFunctions}) => {
+const Task = ({props,comments, taskFunctions}) => {
     const history = useHistory();
 
     // Define class for task container, depending on status and privateFlag
@@ -191,11 +190,11 @@ const TaskDetails = () => {
      */
 
     // Delete task
-    function doTaskDelete(task) {
-        if (window.confirm(`Do you really want to delete the task \"${task.title}\"?`)) {
+    function doTaskDelete(taskToDelete) {
+        if (window.confirm(`Do you really want to delete the task \"${taskToDelete.title}\"?`)) {
             async function deleteTask() {
                 try {
-                    const response = await api.delete(`/tasks/${task.taskId}`);
+                    const response = await api.delete(`/tasks/${taskToDelete.taskId}`);
                     console.log(response);
                     history.push('/dashboard')
                 } catch (error) {
@@ -208,17 +207,17 @@ const TaskDetails = () => {
         }
     }
 
-    function doTaskComplete(task) {
-        if (window.confirm(`Do you really want to complete the task \"${task.title}\"?`)) {
+    function doTaskComplete(taskToComplete) {
+        if (window.confirm(`Do you really want to complete the task \"${taskToComplete.title}\"?`)) {
             async function completeTask() {
                 try {
                     const requestBody = JSON.stringify({
                         status: "COMPLETED",
-                        assignee: task.assignee,
-                        reporter: task.reporter,
-                        estimate: task.estimate
+                        assignee: taskToComplete.assignee,
+                        reporter: taskToComplete.reporter,
+                        estimate: taskToComplete.estimate
                     });
-                    const response = await api.put(`/tasks/${task.taskId}`, requestBody);
+                    const response = await api.put(`/tasks/${taskToComplete.taskId}`, requestBody);
                     console.log(response);
                     history.push('/dashboard')
                 } catch (error) {
@@ -232,18 +231,17 @@ const TaskDetails = () => {
     }
 
     // Edit task
-    function doTaskEdit(task) {
-        history.push('/editform/' + task.taskId);
+    function doTaskEdit(taskToEdit) {
+        history.push('/editform/' + taskToEdit.taskId);
     }
 
-    function doCommentPost(comment, task, setComment){
+    function doCommentPost(comment, taskToComment, setComment){
             async function postComment() {
                 try {
                     //prepare comment to post
-                    let content = comment;
-                    let belongingTask = task.taskId;
+                    let belongingTask = taskToComment.taskId;
                     let authorId = localStorage.getItem("id");
-                    const requestBody = JSON.stringify({content, authorId, belongingTask});
+                    const requestBody = JSON.stringify({comment, authorId, belongingTask});
                     await api.post(`/comments`, requestBody);
 
                     //reset input field via the hook after comment has been posted

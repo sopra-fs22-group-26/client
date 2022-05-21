@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import User from 'models/User';
 import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
@@ -54,10 +53,9 @@ FormField.propTypes = {
     type: PropTypes.string,
     onChange: PropTypes.func
 };
-const EditProfile = props => {
+const EditProfile = () => {
 
     const history = useHistory();
-    const [user, setUser] = useState(null);
     const [username, setUsername] = useState(null);
     const [emailAddress, setEmailAddress] = useState(null);
     const [name, setName] = useState(null);
@@ -74,11 +72,7 @@ const EditProfile = props => {
                 const id = localStorage.getItem("id");
                 const response = await api.get(`/users/${id}`);
 
-                // Get the returned user and update a new object.
-                const user = new User(response.data);
-
                 // Get the returned user and update the state.
-                setUser(user);
                 setName(response.data.name);
                 setUsername(response.data.username);
                 setEmailAddress(response.data.emailAddress);
@@ -99,7 +93,7 @@ const EditProfile = props => {
         try {
             const id = localStorage.getItem('id');
             const requestBody = JSON.stringify({id, name, username, emailAddress, birthDate, password, newPassword});
-            const response = await api.put(`/users/${id}`, requestBody);
+            await api.put(`/users/${id}`, requestBody);
 
             localStorage.setItem('username', username);
             if (name) {
@@ -115,9 +109,6 @@ const EditProfile = props => {
             alert(`Something went wrong during edit: \n${handleError(error)}`);
         }
     };
-
-    let current_name = localStorage.getItem("name") ? localStorage.getItem("name") : localStorage.getItem("username");
-
 
     return (
         <BaseContainer className="single-frame">
