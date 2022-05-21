@@ -1,13 +1,10 @@
-import {useState, useEffect} from 'react';
+import {React, useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {ParticipantName} from 'components/ui/ParticipantName';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import Task from 'models/Task';
 import 'styles/views/VotingLobby.scss';
-import React from "react";
-import Select from "react-select";
 import {Button} from "../ui/Button";
 
 // Define input text field component
@@ -85,8 +82,7 @@ const VotingLobby = () => {
                 console.log(participantMe);
                 // setParticipantMe(participantMe);
                 let participantMeName = participantMe.map(participant => {
-                    const participantMeName = participant.user.username;
-                    return participantMeName;
+                    return participant.user.username;
                 })
                 console.log(participantMeName);
                 setParticipantMeName(participantMeName);
@@ -98,8 +94,7 @@ const VotingLobby = () => {
                 });
                 console.log("filtered",tempParticipantsFiltered);
                 let tempParticipants = tempParticipantsFiltered.map(participant => {
-                        const participantName = participant.user.username;
-                        return participantName;
+                    return participant.user.username;
                     });
 
                 console.log(tempParticipants);
@@ -129,7 +124,7 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({userId, vote});
 
-            const response = await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody);
+            await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody);
 
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);
@@ -140,7 +135,7 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({status: "VOTING"});
 
-            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+            await api.put(`/poll-meetings/${meetingId}`, requestBody);
 
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);
@@ -151,7 +146,7 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({status: "ENDED"});
 
-            const response = await api.put(`/poll-meetings/${meetingId}`, requestBody);
+            await api.put(`/poll-meetings/${meetingId}`, requestBody);
 
         } catch (error) {
             alert(`Something went wrong during the creation: \n${handleError(error)}`);
@@ -160,7 +155,7 @@ const VotingLobby = () => {
 
     const leave = async () => {
         try {
-            const response = await api.delete(`/poll-meetings/${meetingId}`);
+            await api.delete(`/poll-meetings/${meetingId}`);
 
             history.push("/dashboard");
         } catch (error) {
@@ -169,9 +164,9 @@ const VotingLobby = () => {
     }
 
     function getVote(participant){
-        for(let i=0;i< participants.length;i++){
-            if(participants[i]["user"].name==participant || participants[i]["user"].username==participant){
-                return participants[i]["vote"];
+        for(const p of participants) {
+            if (p["user"].name === participant || p["user"].username === participant) {
+                return p["vote"];
             }
         }
     }
@@ -228,7 +223,8 @@ const VotingLobby = () => {
             const half = Math.ceil(tempParticipants.length / 2)
             const participants_right = [];
             for (let i = half; i<tempParticipants.length; i++){
-                participants_right.push(tempParticipants[i])};
+                participants_right.push(tempParticipants[i])
+            }
             content_right =
                 participants_right.map(participant => (
                     [   <div className="voting-lobby participant-container participant-right vote-container">

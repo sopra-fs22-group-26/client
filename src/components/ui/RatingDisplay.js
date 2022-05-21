@@ -20,7 +20,9 @@ export const RatingDisplay = props => {
 
     // Assign score and check for boundaries
     let score = props.score ? props.score : 0;
-    score = (score < 0 ? 0 : (score > 5 ? 5 : score));    // score must be in range [0..5]
+    // score must be in range [0..5]
+    score = score < 0 ? 0 : score;
+    score = score > 5 ? 5 : score;
 
     return (
         <div className="ratingDisplay">

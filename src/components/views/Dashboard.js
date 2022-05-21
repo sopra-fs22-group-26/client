@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {React, useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {isInCurrentWeek} from 'helpers/dateFuncs';
 import {useHistory} from 'react-router-dom';
@@ -10,7 +10,6 @@ import {LeftMenuItems} from "models/LeftMenuItems";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
-import React from "react";
 import {Helper} from "components/ui/Helper";
 
 
@@ -72,13 +71,13 @@ const Dashboard = () => {
               api.get(`/tasks/assignee/${localStorage.getItem("id")}`)]);
 
         // Replace all assignee and reporter ids with users' names or usernames
-        let users = r_users.data;
-        let userArray = users.map(user => [user.id, (user.name ? user.name : user.username)]);
+        let usersData = r_users.data;
+        let userArray = usersData.map(user => [user.id, (user.name ? user.name : user.username)]);
         const userDictionary = Object.fromEntries(userArray);
 
-        let tasks = r_tasks.data;
-        tasks.forEach(task => task.assignee_name = task.assignee ? userDictionary[task.assignee] : null);
-        tasks.forEach(task => task.reporter_name = task.reporter ? userDictionary[task.reporter] : null);
+        let tasksData = r_tasks.data;
+        tasksData.forEach(task => task.assignee_name = task.assignee ? userDictionary[task.assignee] : null);
+        tasksData.forEach(task => task.reporter_name = task.reporter ? userDictionary[task.reporter] : null);
 
         // Calculate Total Estimates for current user
         let estimates = {currentWeek: 0, total: 0};
@@ -90,7 +89,7 @@ const Dashboard = () => {
 
         // Filter tasks according to the current filter state
         if (filter === LeftMenuItems.TaskFilter.MyTasks) {
-          tasks = tasks.filter(a => a.assignee === parseInt(localStorage.getItem("id")));
+          tasksData = tasksData.filter(a => a.assignee === parseInt(localStorage.getItem("id")));
         }
 
         /**
@@ -99,7 +98,7 @@ const Dashboard = () => {
         switch (sort) {
             // Sort by DueDate
           case LeftMenuItems.TaskSort.DueDate:
-            tasks = tasks.sort((a, b) => {
+            tasksData = tasksData.sort((a, b) => {
               if (a.dueDate === b.dueDate) {
                 return prioritySortOrder.indexOf(a.priority) - prioritySortOrder.indexOf(b.priority);
               }
@@ -111,7 +110,7 @@ const Dashboard = () => {
 
             // Sort by Priority
           case LeftMenuItems.TaskSort.Priority:
-            tasks = tasks.sort((a, b) => {
+            tasksData = tasksData.sort((a, b) => {
               if (a.priority === b.priority) {
                 return a.dueDate > b.dueDate ? 1 : -1;
               }
@@ -123,12 +122,12 @@ const Dashboard = () => {
 
             // Sort by Title
           case LeftMenuItems.TaskSort.Title:
-            tasks = tasks.sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1);
+            tasksData = tasksData.sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1);
             break;
 
             // Sort by Assignee
           case LeftMenuItems.TaskSort.Assignee:
-            tasks = tasks.sort((a, b) => {
+            tasksData = tasksData.sort((a, b) => {
               if (a.assignee_name) {
                 return (b.assignee_name && a.assignee_name.toLowerCase() > b.assignee_name.toLowerCase()) ? 1 : -1;
               }
@@ -140,7 +139,7 @@ const Dashboard = () => {
 
             // Sort by Reporter
           case LeftMenuItems.TaskSort.Reporter:
-            tasks = tasks.sort((a, b) => {
+            tasksData = tasksData.sort((a, b) => {
               if (a.reporter_name) {
                 return (b.reporter_name && a.reporter_name.toLowerCase() > b.reporter_name.toLowerCase()) ? 1 : -1;
               }
@@ -154,8 +153,8 @@ const Dashboard = () => {
         }
 
         // Get the returned tasks and update the state.
-        setTasks(tasks);
-        setUsers(users);
+        setTasks(tasksData);
+        setUsers(usersData);
 
         // See here to get more data.
         console.log(r_tasks);

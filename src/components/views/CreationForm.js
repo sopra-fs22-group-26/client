@@ -1,11 +1,10 @@
-import {useState, useEffect} from 'react';
+import {React, useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/CreationForm.scss';
-import React from "react";
 import Select from "react-select";
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,42 +12,22 @@ import moment from "moment";
 
 // Define input text field component
 const FormField = props => {
-    if(props.type != "date"){
-        return (
-            <div className="creation-form field">
-                <label className= 'creation-form label'>
-                    {props.label}
-                </label>
-                <input
-                    type = {props.type}
-                    min = {props.min}
-                    className = "creation-form input"
-                    placeholder = {props.placeholder}
-                    value = {props.value}
-                    onChange = {e => props.onChange(e.target.value)}
-                    style={{width: props.width, textAlign: props.align}}
-                />
-            </div>
-        );}
-    else{
-        return (
-            <div className="creation-form field">
-                <label className= 'creation-form label'>
-                    {props.label}
-                </label>
-                <input
-                    type = {props.type}
-                    min = {props.min}
-                    className = "creation-form input"
-                    placeholder = {props.placeholder}
-                    value = {props.value}
-                    onChange = {e => props.onChange(e.target.value)}
-                    style={{width: props.width, textAlign: props.align}}
-                    min={moment().format("YYYY-MM-DD")}
-                />
-            </div>
-        );
-    }
+    return (
+        <div className="creation-form field">
+            <label className= 'creation-form label'>
+                {props.label}
+            </label>
+            <input
+                type = {props.type}
+                min = {props.min}
+                className = "creation-form input"
+                placeholder = {props.placeholder}
+                value = {props.value}
+                onChange = {e => props.onChange(e.target.value)}
+                style={{width: props.width, textAlign: props.align}}
+            />
+        </div>
+    );
 };
 FormField.propTypes = {
     label: PropTypes.string,
@@ -126,7 +105,6 @@ ReactSelection.propTypes = {
 // Output form
 const CreationForm = () => {
     const history = useHistory();
-    const [creatorId, setCreatorId] = useState(localStorage.getItem("id"));
     const [title, setTitle] = useState(null);
     const [description, setDescription] = useState(null);
     const [priority, setPriority] = useState("NONE");
@@ -203,6 +181,7 @@ const CreationForm = () => {
      */
     const saveTask = async () => {
         try {
+            const creatorId = localStorage.getItem("id");
             const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate, location,
                 estimate, assignee, reporter, privateFlag});
 
@@ -262,6 +241,7 @@ const CreationForm = () => {
                                 type = "date"
                                 placeholder = "Select date"
                                 value = {dueDate}
+                                min={moment().format("YYYY-MM-DD")}
                                 onChange = {dd => setDueDate(dd)}
                             />
                             <ReactSelection

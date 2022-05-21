@@ -1,10 +1,9 @@
-import {useState, useEffect} from 'react';
+import {React, useState, useEffect} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Scoreboard.scss';
-import React from "react";
 import {EstimateTotals} from "../ui/EstimateTotals";
 import {Button} from "../ui/Button";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
@@ -19,7 +18,7 @@ const Scoreboard = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await api.get(`/users`);
+        await api.get(`/users`);
 
         const id = localStorage.getItem("id");
         let [r_users, r_assignedTasks] =
@@ -58,7 +57,7 @@ const Scoreboard = () => {
 
   let numbering = [];
   let rank = 0;
-  for(let i = 0; i < users.length; i++) {
+  for(const element of users) {
     rank++;
     numbering.push(rank);
   }
@@ -77,7 +76,7 @@ const Scoreboard = () => {
 
   return (
       <BaseContainer>
-        <div className="base-container left-frame"></div>
+        <div className="base-container left-frame"/>
         <div className="base-container main-frame centered">
           <div className="score-board container">
             <div className="score-board header">

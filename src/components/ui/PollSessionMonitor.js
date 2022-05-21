@@ -98,12 +98,10 @@ async function declineInvitation(meetingId) {
 /**
  * Fetch data for all running sessions
  */
-export const PollSessionMonitor = props => {
+export const PollSessionMonitor = () => {
 
     const [invitations, setInvitations] = useState(null);
     const [sessions, setSessions] = useState(null);
-
-    const history = useHistory();
 
     useEffect(() => {
 
