@@ -111,10 +111,10 @@ const SessionLobby = () => {
                     <div className="session-lobby header2">
                         Invite people with whom you want to play a fun round of "Estimate the Duration"!
                     </div>
-                    <div id="form-container" className="creation-form container">
-                        <div className="creation-form attributes-container attributes-column">
-                            <div className="creation-form field">
-                                <label className='creation-form label react-select'>
+                    <div id="form-container" className="session-lobby container">
+                        <div className="session-lobby attributes-container attributes-column">
+                            <div className="session-lobby field">
+                                <label className='session-lobby label react-select'>
                                     Search:
                                 </label>
                                 <Select
@@ -133,7 +133,7 @@ const SessionLobby = () => {
                                 />
                             </div>
                         </div>
-                        <div className="creation-form attributes-container attributes-column rightalign">
+                        <div className="session-lobby attributes-container attributes-column rightalign">
                             <FormField
                                 label = "Set Threshold (h):"
                                 type = "number"
