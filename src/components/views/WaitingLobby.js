@@ -4,6 +4,7 @@ import {ParticipantName} from 'components/ui/ParticipantName';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import 'styles/views/WaitingLobby.scss';
+import {Default} from 'react-spinners-css';
 import {AuthUtil} from "helpers/authUtil";
 
 
@@ -49,7 +50,7 @@ const WaitingLobby = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             fetchData()
-        },3000);
+        },1700);
         return() => clearInterval(interval);
     }, [setTempParticipants]);
 
@@ -101,14 +102,13 @@ const WaitingLobby = () => {
                     </div>
                     <div className="waiting-lobby participant-container">
                         <div className="waiting-lobby participant-container participant-left">
-                            <div className="waiting-lobby participant-container participant-left name">
-                                {content_left}
-                            </div>
+                            {content_left}
+                        </div>
+                        <div className="waiting-lobby participant-container spinner">
+                            <Default color="black"/>
                         </div>
                         <div className="waiting-lobby participant-container participant-right">
-                            <div className="waiting-lobby participant-container participant-right name">
-                                {content_right}
-                            </div>
+                            {content_right}
                         </div>
                     </div>
                     <div className="waiting-lobby footer"/>

@@ -69,9 +69,15 @@ async function joinSession(meetingId, history) {
         const response = await api.put(`/poll-meetings/${meetingId}?action=join`, requestBody,
             { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
-        if(response != null){
-            // navigate to WaitingLobby
-            history.push(`/waitinglobby/${meetingId}`);
+        if (response != null) {
+            if (String(response.data.creatorId) === localStorage.getItem("id")) {
+                // navigate to Voting Lobby
+                history.push(`/votinglobby/${meetingId}`);
+            }
+            else {
+                // navigate to Waiting Lobby
+                history.push(`/waitinglobby/${meetingId}`);
+            }
         }
     } catch (error) {
         if (error.response.status === 401) {
@@ -159,7 +165,7 @@ export const PollSessionMonitor = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             getPollSessions()
-        },3700);
+        },2900);
         return() => clearInterval(interval);
 
 

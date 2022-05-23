@@ -11,17 +11,15 @@ import {AuthUtil} from "helpers/authUtil";
 // Define input text field component
 const FormField = props => {
     return (
-        <div className="creation-form field">
-            <label className= 'creation-form label'>
-                {props.label}
-            </label>
+        <div className="voting-lobby field">
             <input
                 type = {props.type}
                 min = {props.min}
                 max = {props.max}
-                className = "creation-form input"
+                className = "voting-lobby input"
                 placeholder = {props.placeholder}
                 value = {props.value}
+                padding = {props.padding}
                 onChange = {e => props.onChange(e.target.value)}
                 style={{width: props.width, textAlign: props.align}}
             />
@@ -35,7 +33,8 @@ FormField.propTypes = {
     value: PropTypes.string,
     width: PropTypes.string,
     align: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    padding: PropTypes.string
 };
 
 const VotingLobby = () => {
@@ -195,25 +194,28 @@ const VotingLobby = () => {
     let voter = <div>me</div>;
     if(participantMeName !== null){
         voter =
-        [<ParticipantName>
-            {participantMeName}
-        </ParticipantName>,
-            <FormField
-                className = "voting-lobby participant-container participant-right vote-container"
-                type = "number"
-                min = "0"
-                max = {estimateThreshold}
-                value = {participantMeName == localStorage.getItem("username") ? voteInput : getVote(participantMeName)}
-                width = "65px"
-                align = "right"
-                placeholder = "h"
-                padding = "0.5px"
-                disabled={participantMeName != localStorage.getItem("username") && pollStatus != "VOTING"}
-                onChange={e => {
-                    setVoteInput(e);
-                    sendVote(e);
-                }}
-            />];
+            [<div className="voting-lobby participant-container participant-right name-vote">
+                <ParticipantName>
+                    {participantMeName}
+                </ParticipantName>
+                <div className="voting-lobby participant-container participant-right input-container">
+                    <FormField
+                        className = "voting-lobby input"
+                        type = "number"
+                        min = "0"
+                        max = {estimateThreshold}
+                        value = {participantMeName == localStorage.getItem("username")? voteInput : getVote(participantMeName)}
+                        width = "100%"
+                        align = "right"
+                        placeholder = "h"
+                        onChange={e => {
+                            setVoteInput(e);
+                            sendVote(e);
+                        }}
+                    />
+                </div>
+            </div>
+            ];
     }
 
     let content_left = <div>participants name</div>;
@@ -226,11 +228,13 @@ const VotingLobby = () => {
             }
             content_left =
                     participants_left.map(participant => (
-                        [   <ParticipantName>
-                                {participant}
-                            </ParticipantName>,
-                            <div className="voting-lobby participant-container participant-left vote-container">
-                                {getVote(participant)}
+                        [   <div className="voting-lobby participant-container participant-left name-vote">
+                                <ParticipantName>
+                                    {participant}
+                                </ParticipantName>
+                                <div className="voting-lobby participant-container participant-left vote-container">
+                                    {getVote(participant)}
+                                </div>
                             </div>
                         ]));
         }
@@ -241,17 +245,19 @@ const VotingLobby = () => {
         if(tempParticipants.length > 0) {
             const half = Math.ceil(tempParticipants.length / 2)
             const participants_right = [];
-            for (let i = half; i<tempParticipants.length; i++){
+            for (let i = half; i<tempParticipants.length; i++) {
                 participants_right.push(tempParticipants[i])
             }
             content_right =
                 participants_right.map(participant => (
-                    [   <div className="voting-lobby participant-container participant-right vote-container">
-                        {getVote(participant)}
-                        </div>,
+                    [   <div className="voting-lobby participant-container participant-right name-vote">
                         <ParticipantName>
                             {participant}
                         </ParticipantName>
+                        <div className="voting-lobby participant-container participant-right vote-container">
+                            {getVote(participant)}
+                        </div>
+                    </div>
                     ]));
         }
     }
@@ -266,41 +272,37 @@ const VotingLobby = () => {
                         Estimate Poll Session
                     </div>
                     <div className="voting-lobby header2">
-                        Give your estimate. You have 60 seconds to enter a number between 0 to {estimateThreshold} hours.
-                        <br/> Then the poll will close.
+                        Give your estimate. You have 60 seconds to enter a number between 0 to {estimateThreshold} hours.<br/>
+                        Then the poll will close.
                     </div>
                     <div className="voting-lobby midtext">
                         The average is ...
                     </div>
                     <div className="voting-lobby participant-container">
                         <div className="voting-lobby participant-container participant-left">
-                            <div className="voting-lobby participant-container participant-left name">
-                                {content_left}
-                            </div>
+                            {content_left}
                         </div>
                         <div className="voting-lobby participant-container averageEstimate-container">
                             {averageEstimate}
                         </div>
                         <div className="voting-lobby participant-container participant-right">
-                            <div className="voting-lobby participant-container participant-right name">
-                                {content_right}
-                                {voter}
-                            </div>
+                            {content_right}
+                            {voter}
                         </div>
                     </div>
                     <div className="voting-lobby footer">
                         <Button
-                            disabled={localStorage.getItem("id")!=creatorId || pollStatus != "OPEN"}
+                            disabled={localStorage.getItem("id") != creatorId || pollStatus != "OPEN"}
                             onClick = { () => startPoll()}>
                             Start voting
                         </Button>
                         <Button
-                            disabled={localStorage.getItem("id")!=creatorId || pollStatus=="ENDED"}
+                            disabled={localStorage.getItem("id") != creatorId || pollStatus == "ENDED"}
                             onClick = { () => endPoll()}>
                             End and confirm estimate
                         </Button>
                         <Button
-                            disabled={localStorage.getItem("id")!=creatorId || pollStatus!="ENDED"}
+                            disabled={localStorage.getItem("id") != creatorId || pollStatus != "ENDED"}
                             onClick = { () => leave()}>
                             Leave the session
                         </Button>

@@ -69,7 +69,6 @@
     text-align: center;
   }
   &.participant-container {
-    padding: 3px 6px;
     width: 100%;
     display: flex;
     column-count: 3;
@@ -83,7 +82,7 @@
       justify-content: center;
       align-items: center;
       min-height: 270px;
-      width: 15%;
+      width: 25%;
       font-family: $fontMenu;
       font-weight: $fontWeightRegular;
       font-size: 24px;
@@ -97,55 +96,83 @@
     }
 
     &.participant-left {
-      width: 40%;
+      padding-left: 10px;
       display: flex;
       order: 0;
-      flex-direction: row;
-      column-count: 2;
+      flex-direction: column;
       height: 100px;
-      &.name{
-        order: 0;
-        width: 250px;
-        text-align: center;
-        padding: 0.5px;
+      width: 90%;
+      text-align: center;
+
+
+      &.name-vote {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
       }
+
       &.vote-container {
         order: 1;
         background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 80px;
+        width: 20%;
         height: 35px;
         border: 1px solid $brown_dark;
         padding: 0.5px;
       }
     }
     &.participant-right {
-      width: 40%;
+      padding-left: 10px;
       display: flex;
       order: 2;
-      flex-direction: row;
-      column-count: 2;
+      flex-direction: column;
       height: 100px;
-      &.name{
-        order: 1;
-        width: 250px;
-        text-align: center;
-        padding: 0.5px;
+      width: 90%;
+      text-align: center;
+
+      &.name-vote {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
       }
+
       &.vote-container {
         order: 0;
         background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 80px;
+        width: 20%;
         height: 35px;
         border: 1px solid $brown_dark;
+        padding: 0.5px;
+      }
+
+      &.input-container {
+        order: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 20%;
+        height: 35px;
         padding: 0.5px;
       }
     }
   }
 
+  &.field {
+    display: flex;
+    padding: 0;
+  }
+
+  &.input {
+    font-weight: $fontWeightRegular;
+    height: 35px;
+    border: 1px solid $borderColor;
+    border-radius: 0;
+    background: transparentize(white, 0);
+    color: $textColor;
+  }
 }
