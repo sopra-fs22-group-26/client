@@ -268,7 +268,7 @@ const EditForm = () => {
                     </Button>
                     <Button
                         className="menu-button default"
-                        disabled={!(title && description && dueDate && estimate !== "")
+                        disabled={!(title && dueDate && estimate !== "")
                             || (reporter && !assignee) || (estimate < 0) }
                         onClick={() => saveEdit()}
                     >
