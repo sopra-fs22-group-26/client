@@ -13,17 +13,15 @@ import {Button} from "../ui/Button";
 // Define input text field component
 const FormField = props => {
     return (
-        <div className="creation-form field">
-            <label className= 'creation-form label'>
-                {props.label}
-            </label>
+        <div className="voting-lobby field">
             <input
                 type = {props.type}
                 min = {props.min}
                 max = {props.max}
-                className = "creation-form input"
+                className = "voting-lobby input"
                 placeholder = {props.placeholder}
                 value = {props.value}
+                padding = {props.padding}
                 onChange = {e => props.onChange(e.target.value)}
                 style={{width: props.width, textAlign: props.align}}
             />
@@ -37,7 +35,8 @@ FormField.propTypes = {
     value: PropTypes.string,
     width: PropTypes.string,
     align: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    padding: PropTypes.string
 };
 
 const VotingLobby = () => {
@@ -180,26 +179,29 @@ const VotingLobby = () => {
     if(participantMeName!==null){
         console.log(participantMeName);
         voter =
-        [<ParticipantName>
-            {participantMeName}
-        </ParticipantName>,
-            <FormField
-                className = "voting-lobby participant-container participant-right vote-container"
-                type = "number"
-                min = "0"
-                max = {estimateThreshold}
-                value = {participantMeName==localStorage.getItem("username")? voteInput : getVote(participantMeName)}
-                width = "65px"
-                align = "right"
-                placeholder = "h"
-                padding = "0.5px"
-                disabled={participantMeName!=localStorage.getItem("username")&&pollStatus!="VOTING"}
-                onChange={e => {
-                    const voteInput = e;
-                    setVoteInput(voteInput);
-                    sendVote(e);
-                }}
-            />];
+            [<div className="voting-lobby participant-container participant-right name-vote">
+                <ParticipantName>
+                    {participantMeName}
+                </ParticipantName>
+                <div className="voting-lobby participant-container participant-right input-container">
+                    <FormField
+                        className = "voting-lobby input"
+                        type = "number"
+                        min = "0"
+                        max = {estimateThreshold}
+                        value = {participantMeName==localStorage.getItem("username")? voteInput : getVote(participantMeName)}
+                        width = "100%"
+                        align = "right"
+                        placeholder = "h"
+                        onChange={e => {
+                            const voteInput = e;
+                            setVoteInput(voteInput);
+                            sendVote(e);
+                        }}
+                    />
+                </div>
+            </div>
+            ];
     }
 
     let content_left = <div>participants name</div>;
@@ -212,11 +214,13 @@ const VotingLobby = () => {
             }
             content_left =
                     participants_left.map(participant => (
-                        [   <ParticipantName>
-                                {participant}
-                            </ParticipantName>,
-                            <div className="voting-lobby participant-container participant-left vote-container">
-                                {getVote(participant)}
+                        [   <div className="voting-lobby participant-container participant-left name-vote">
+                                <ParticipantName>
+                                    {participant}
+                                </ParticipantName>
+                                <div className="voting-lobby participant-container participant-left vote-container">
+                                    {getVote(participant)}
+                                </div>
                             </div>
                         ]));
         }
@@ -231,12 +235,14 @@ const VotingLobby = () => {
                 participants_right.push(tempParticipants[i])};
             content_right =
                 participants_right.map(participant => (
-                    [   <div className="voting-lobby participant-container participant-right vote-container">
-                        {getVote(participant)}
-                        </div>,
+                    [   <div className="voting-lobby participant-container participant-right name-vote">
                         <ParticipantName>
                             {participant}
                         </ParticipantName>
+                        <div className="voting-lobby participant-container participant-right vote-container">
+                            {getVote(participant)}
+                        </div>
+                    </div>
                     ]));
         }
     }
@@ -259,18 +265,14 @@ const VotingLobby = () => {
                     </div>
                     <div className="voting-lobby participant-container">
                         <div className="voting-lobby participant-container participant-left">
-                            <div className="voting-lobby participant-container participant-left name">
-                                {content_left}
-                            </div>
+                            {content_left}
                         </div>
                         <div className="voting-lobby participant-container averageEstimate-container">
                             {averageEstimate}
                         </div>
                         <div className="voting-lobby participant-container participant-right">
-                            <div className="voting-lobby participant-container participant-right name">
-                                {content_right}
-                                {voter}
-                            </div>
+                            {content_right}
+                            {voter}
                         </div>
                     </div>
                     <div className="voting-lobby footer">
