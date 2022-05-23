@@ -4,10 +4,11 @@ import {ParticipantName} from 'components/ui/ParticipantName';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import 'styles/views/WaitingLobby.scss';
+import {Default} from 'react-spinners-css';
+import {AuthUtil} from "helpers/authUtil";
+
 
 const WaitingLobby = () => {
-
-
     const history = useHistory();
     const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
@@ -18,18 +19,15 @@ const WaitingLobby = () => {
         async function fetchData() {
             try {
                 const meetingId = params["meetingId"];
-                const response = await api.get(`/poll-meetings/${meetingId}`);
-                console.log(response.data);
+                const response = await api.get(`/poll-meetings/${meetingId}`,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
                 setEstimateThreshold(response.data.estimateThreshold);
 
                 const participants = response.data.participants;
-                console.log(typeof participants);
                 let tempParts = participants.map(participant => {
                     return participant.user.username;
                 });
-                console.log(typeof tempParts);
-                console.log(tempParts);
                 setTempParticipants(tempParts);
 
                 const pollStatus = response.data.status;
@@ -38,9 +36,13 @@ const WaitingLobby = () => {
                 }
             }
             catch (error) {
-                console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the users! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the users! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -48,7 +50,7 @@ const WaitingLobby = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             fetchData()
-        },3000);
+        },1700);
         return() => clearInterval(interval);
     }, [setTempParticipants]);
 
@@ -60,8 +62,6 @@ const WaitingLobby = () => {
             for (let i = 0; i < half; i++) {
                 participants_left.push(tempParticipants[i]);
             }
-            console.log(participants_left);
-            console.log(typeof participants_left);
             content_left = participants_left.map(participant => (
                 <ParticipantName>
                     {participant}
@@ -102,14 +102,13 @@ const WaitingLobby = () => {
                     </div>
                     <div className="waiting-lobby participant-container">
                         <div className="waiting-lobby participant-container participant-left">
-                            <div className="waiting-lobby participant-container participant-left name">
-                                {content_left}
-                            </div>
+                            {content_left}
+                        </div>
+                        <div className="waiting-lobby participant-container spinner">
+                            <Default color="black"/>
                         </div>
                         <div className="waiting-lobby participant-container participant-right">
-                            <div className="waiting-lobby participant-container participant-right name">
-                                {content_right}
-                            </div>
+                            {content_right}
                         </div>
                     </div>
                     <div className="waiting-lobby footer"/>

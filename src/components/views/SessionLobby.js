@@ -6,6 +6,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/SessionLobby.scss';
 import Select from "react-select";
+import {AuthUtil} from "helpers/authUtil";
 
 // Define input text field component
 const FormField = props => {
@@ -53,7 +54,8 @@ const SessionLobby = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await api.get(`/users`);
+                const response = await api.get(`/users`,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
                 let tempUsersO = response.data.map(user => {
                     let userOption = {};
@@ -64,17 +66,19 @@ const SessionLobby = () => {
 
                 let tempUsers = tempUsersO.filter(user =>
                     user.value != localStorage.getItem('id'));
-                console.log(tempUsers);
 
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
                 setUsers(tempUsers);
-                console.log('User list:', tempUsers);
             }
             catch (error) {
-                console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the users! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the users! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -86,14 +90,18 @@ const SessionLobby = () => {
             const creatorId = localStorage.getItem("id");
             const taskId = localStorage.getItem("taskId");
             const requestBody = JSON.stringify({creatorId, taskId, estimateThreshold, invitees});
-            console.log(requestBody)
-            const response = await api.post('/poll-meetings', requestBody);
+            const response = await api.post('/poll-meetings', requestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
             const meetingId = response.data.meetingId;
             // After successful creation of a new poll navigate to /waitinglobby
             history.push(`/votinglobby/${meetingId}`);
 
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 

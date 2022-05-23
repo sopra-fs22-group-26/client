@@ -1,5 +1,3 @@
-
-
 import {ReactComponent as Rating_0} from "images/ratings/rating-0.svg";
 import {ReactComponent as Rating_1} from "images/ratings/rating-1.svg";
 import {ReactComponent as Rating_2} from "images/ratings/rating-2.svg";

@@ -57,6 +57,8 @@ export const UserMenu = () => {
 
                 // Clear local cache and navigate to login page
                 localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken')
+                localStorage.removeItem("isRefreshing")
                 localStorage.removeItem('id');
                 localStorage.removeItem('name');
                 localStorage.removeItem('username');

@@ -3,7 +3,8 @@ import {React, useState, useEffect} from 'react';
 import PropTypes from "prop-types";
 import "styles/ui/MainMenu.scss";
 import {ReactComponent as MenuAttention} from "images/mainmenu_attention.svg";
-import {api, handleError} from "../../helpers/api";
+import {api, handleError} from "helpers/api";
+import {AuthUtil} from "helpers/authUtil";
 
 export const MainMenu = (props) => {
 
@@ -21,18 +22,25 @@ export const MainMenu = (props) => {
 
     useEffect(() => {
         async function fetchData() {
-            try {
-                // Get all tasks the current user has to report
-                let response = await api.get(`/tasks/reporter/${localStorage.getItem("id")}`);
-                let tasks = response.data.filter(task => task.status === "COMPLETED");
-                if (tasks && tasks.length > 0) {
-                    setActionLabel(<div className="attentionLabel"><MenuAttention/></div>);
+            if (localStorage.getItem("token") && localStorage.getItem("id")) {
+
+                try {
+                    // Get all tasks the current user has to report
+                    let response = await api.get(`/tasks/reporter/${localStorage.getItem("id")}`,
+                        { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
+                    let tasks = response.data.filter(task => task.status === "COMPLETED");
+                    if (tasks && tasks.length > 0) {
+                        setActionLabel(<div className="attentionLabel"><MenuAttention/></div>);
+                    } else {
+                        setActionLabel(null);
+                    }
+                } catch (error) {
+                    if (error.response.status === 401) {
+                        await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    } else {
+                        console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                    }
                 }
-                else {
-                    setActionLabel(null);
-                }
-            } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
             }
         }
         fetchData();
@@ -40,7 +48,7 @@ export const MainMenu = (props) => {
     // Check data regularly if user is logged in
         const interval = setInterval(()=>{
             fetchData();
-        },5000);
+        },4400);
         return() => clearInterval(interval);
     },[]);
 

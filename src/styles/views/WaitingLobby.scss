@@ -69,37 +69,44 @@
     text-align: center;
   }
   &.participant-container {
-    padding: 7px 15px;
     width: 100%;
     display: flex;
+    min-height: 300px;
     column-count: 3;
     background-color: $yellow_light;
-
-    &.spinner-container {
-      order: 1;
-      &.spinner {
-        // needs implementation
-      }
-    }
+    justify-content: space-between;
+    column-gap: 50px;
+    row-gap: 10px;
 
     &.participant-left {
-      width: 70%;
+      padding-left: 30px;
       display: flex;
       order: 0;
       flex-direction: column;
-      &.name{
-        text-align: center;
-      }
+      height: 100px;
+      width: 90%;
+      text-align: center;
+      justify-content: left;
+      align-items: center;
     }
+
+    &.spinner {
+      padding-top: 20px;
+      width: 100%;
+      justify-content: center;
+      flex-basis: content;
+    }
+
     &.participant-right {
-      width: 70%;
-      order: 2;
+      padding-right: 10px;
       display: flex;
       flex-direction: column;
-      &.name{
-        text-align: center;
-        float: right;
-      }
+      height: 100px;
+      order: 2;
+      width: 90%;
+      text-align: center;
+      justify-content: left;
+      align-items: center;
     }
   }
 
