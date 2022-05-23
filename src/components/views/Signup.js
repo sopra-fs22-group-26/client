@@ -70,6 +70,7 @@ const Signup = () => {
             const user = new User(response.data);
 
             // Store user info the local storage.
+            localStorage.removeItem("isRefreshing")
             localStorage.setItem('token', user.token);
             localStorage.setItem('refreshToken', user.refreshToken);
             localStorage.setItem('id', user.id);
