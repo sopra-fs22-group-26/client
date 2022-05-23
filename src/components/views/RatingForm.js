@@ -4,9 +4,8 @@ import {Button} from 'components/ui/Button';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import 'styles/ui/TaskDetails.scss';
-
 import Rating from '@mui/lab/Rating';
-
+import {AuthUtil} from "helpers/authUtil";
 
 /**
  * Define component for Task details with rating option
@@ -99,16 +98,18 @@ const RatingForm = () => {
         async function fetchData() {
             try {
                 let [r_task, r_users, r_comments] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`),
-                    api.get('/users'),
-                    api.get(`/comments/${params["task_id"]}`)
+                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`,
+                        { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                    api.get('/users',
+                        { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                    api.get(`/comments/${params["task_id"]}`,
+                        { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
                 ]);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
                 let userResponse = r_users.data;
                 let commentsResponse = r_comments.data;
-
 
                 // Get all users and replace assignee and reporter ids with user names
                 let userArray = userResponse.map(user => [user.id, (user.name ? user.name : user.username)]);
@@ -124,15 +125,20 @@ const RatingForm = () => {
                 setComments(commentsResponse);
 
                 // We also have to store the birthdate of the assignee
-                let r_assignee = await api.get(`/users/${taskResponse.assignee}`);
+                let r_assignee = await api.get(`/users/${taskResponse.assignee}`,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
                 setBirthDate(r_assignee.data.birthDate);
 
                 setTask(taskResponse);
             }
             catch (error) {
-                console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the data! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the data! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -149,17 +155,23 @@ const RatingForm = () => {
             const userRequestBody = JSON.stringify( {score, birthDate});
 
             await Promise.all([
-                api.put(`/tasks/${params["task_id"]}`, taskRequestBody),
-                api.put('/users/' + assignee, userRequestBody)
+                api.put(`/tasks/${params["task_id"]}`, taskRequestBody,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                api.put('/users/' + assignee, userRequestBody,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
             ]);
 
             // After successful rating of a  task navigate to /reports
             history.push(`/reports`);
 
         } catch (error) {
-            console.error(`Something went wrong during the rating: \n${handleError(error)}`);
-            console.error("Details:", error);
-            alert(`Something went wrong during the rating: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                console.error(`Something went wrong during the rating: \n${handleError(error)}`);
+                console.error("Details:", error);
+                alert(`Something went wrong during the rating: \n${handleError(error)}`);
+            }
         }
     };
 

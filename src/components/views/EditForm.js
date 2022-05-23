@@ -6,7 +6,8 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/CreationForm.scss';
 import Select from "react-select";
-
+import moment from "moment";
+import {AuthUtil} from "helpers/authUtil";
 
 // Define input text field component
 const FormField = props => {
@@ -128,12 +129,17 @@ const EditForm = () => {
     const saveEdit = async () => {
         try {
             const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
-            await api.put(`/tasks/${params["task_id"]}`, requestBody);
+            await api.put(`/tasks/${params["task_id"]}`, requestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
             // After succesful edit of a task, navigate back to where you came from
             history.goBack();
         } catch (error) {
-            alert(`Something went wrong during edit: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during edit: \n${handleError(error)}`);
+            }
         }
     };
 
@@ -141,8 +147,10 @@ const EditForm = () => {
         async function fetchData() {
             try {
                 let [r_task, r_users] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`),
-                    api.get('/users')
+                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`,
+                        { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                    api.get('/users',
+                        { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
                 ]);
 
                 // Get the returned tasks and update the states.
@@ -176,14 +184,14 @@ const EditForm = () => {
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
                 setUsers(tempUsers);
-
-                // See here to get more data.
-                console.log(r_task);
-                console.log(r_users);
             } catch (error) {
-                console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the data! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the data! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -217,6 +225,7 @@ const EditForm = () => {
                             type="date"
                             placeholder="Select date"
                             value={dueDate}
+                            min={moment().format("YYYY-MM-DD")}
                             onChange={dd => setDueDate(dd)}
                         />
                         <ReactSelection
@@ -268,7 +277,7 @@ const EditForm = () => {
                     </Button>
                     <Button
                         className="menu-button default"
-                        disabled={!(title && description && dueDate && estimate !== "")
+                        disabled={!(title && dueDate && estimate !== "")
                             || (reporter && !assignee) || (estimate < 0) }
                         onClick={() => saveEdit()}
                     >

@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
  * @param props
  */
 export const MainGuard = props => {
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem("refreshToken")) {
     return props.children;
   }
   return <Redirect to="/login"/>;

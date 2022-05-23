@@ -1,6 +1,5 @@
 /**
  * Show temporary Estimate-Poll-Session Monitor on right side
- * => needs to be implemented in further sprint...
  */
 
 import "styles/ui/Button.scss"
@@ -9,6 +8,7 @@ import {api, handleError} from "helpers/api";
 import {React, useState, useEffect} from "react";
 import {Button} from "./Button";
 import {useHistory} from "react-router-dom";
+import {AuthUtil} from "helpers/authUtil";
 
 /**
  * Poll-session-monitor components for invitations and running sessions
@@ -66,15 +66,20 @@ async function joinSession(meetingId, history) {
         const requestBody = JSON.stringify({
             userId: localStorage.getItem("id")
         });
-        const response = await api.put(`/poll-meetings/${meetingId}?action=join`, requestBody);
+        const response = await api.put(`/poll-meetings/${meetingId}?action=join`, requestBody,
+            { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
         if(response != null){
             // navigate to WaitingLobby
             history.push(`/waitinglobby/${meetingId}`);
         }
     } catch (error) {
-        console.error(`Something went wrong while joining the poll-session: \n${handleError(error)}`);
-        alert("Something went wrong while joining the poll-session! See the console for details.");
+        if (error.response.status === 401) {
+            await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+        } else {
+            console.error(`Something went wrong while joining the poll-session: \n${handleError(error)}`);
+            alert("Something went wrong while joining the poll-session! See the console for details.");
+        }
     }
 }
 
@@ -86,10 +91,15 @@ async function declineInvitation(meetingId) {
         const requestBody = JSON.stringify({
             userId: localStorage.getItem("id")
         });
-        await api.put(`/poll-meetings/${meetingId}?action=decline`, requestBody);
+        await api.put(`/poll-meetings/${meetingId}?action=decline`, requestBody,
+            { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}});
     } catch (error) {
-        console.error(`Something went wrong while declining the poll-session: \n${handleError(error)}`);
-        alert("Something went wrong while declining the poll-session! See the console for details.");
+        if (error.response.status === 401) {
+            await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+        } else {
+            console.error(`Something went wrong while declining the poll-session: \n${handleError(error)}`);
+            alert("Something went wrong while declining the poll-session! See the console for details.");
+        }
     }
 }
 
@@ -108,7 +118,8 @@ export const PollSessionMonitor = () => {
         // Fetch all running session
         async function getPollSessions() {
             try {
-                const response = await api.get("/poll-meetings");
+                const response = await api.get("/poll-meetings",
+                    { headers: { Authorization: 'Bearer ' + localStorage.getItem('token')}});
                 // Filter meetings: select only meetings with status OPEN or VOTING
                 let meetings = response.data.filter(m => m.status === "OPEN" || m.status === "VOTING");
 
@@ -135,8 +146,12 @@ export const PollSessionMonitor = () => {
                 setInvitations(pendingInvitations);
                 setSessions(runningSessions);
             } catch (error) {
-                console.error(`Something went wrong while fetching the poll-sessions: \n${handleError(error)}`);
-                alert("Something went wrong while fetching the poll-sessions! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the poll-sessions: \n${handleError(error)}`);
+                    alert("Something went wrong while fetching the poll-sessions! See the console for details.");
+                }
             }
         }
 
@@ -144,7 +159,7 @@ export const PollSessionMonitor = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             getPollSessions()
-        },3001);
+        },3700);
         return() => clearInterval(interval);
 
 

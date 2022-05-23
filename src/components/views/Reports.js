@@ -11,7 +11,7 @@ import {PollSessionMonitor} from "components/ui/PollSessionMonitor";
 import 'styles/views/Dashboard.scss';
 import 'styles/ui/LeftMenu.scss';
 import {Helper} from "../ui/Helper";
-
+import {AuthUtil} from "helpers/authUtil";
 
 const MenuSection = props => {
     // Generate section with corresponding menu items
@@ -55,9 +55,13 @@ const Reports = () => {
                 // We only need tasks related to the current user.
                 let [r_tasks, r_users, r_assignedTasks] =
                     await Promise.all([
-                        api.get(`/tasks/reporter/${id}`),
-                        api.get('/users'),
-                        api.get(`/tasks/assignee/${id}`)]);
+                        api.get(`/tasks/reporter/${id}`,
+                            { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                        api.get('/users',
+                            { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                        api.get(`/tasks/assignee/${id}`,
+                            { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
+                    ]);
 
                 // Replace all assignee and reporter ids with users' names or usernames
                 let usersData = r_users.data;
@@ -145,14 +149,14 @@ const Reports = () => {
                 // Get the returned tasks and update the state.
                 setTasks(tasksData);
                 setUsers(usersData);
-
-                // See here to get more data.
-                console.log(r_tasks);
-                console.log(r_users);
             } catch (error) {
-                console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the tasks! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the tasks! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -160,7 +164,7 @@ const Reports = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             fetchData()
-        },2999);
+        },3200);
         return() => clearInterval(interval);
 
     }, [show, sort]);

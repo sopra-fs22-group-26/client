@@ -6,6 +6,7 @@ import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import moment from "moment";
+import {AuthUtil} from "helpers/authUtil";
 
 const FormField = props => {
     if(props.type != "date"){
@@ -70,7 +71,8 @@ const EditProfile = () => {
         async function fetchData() {
             try {
                 const id = localStorage.getItem("id");
-                const response = await api.get(`/users/${id}`);
+                const response = await api.get(`/users/${id}`,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
                 // Get the returned user and update the state.
                 setName(response.data.name);
@@ -81,9 +83,13 @@ const EditProfile = () => {
                 // See here to get more data.
                 console.log(response);
             } catch (error) {
-                console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the profile! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the profile! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -93,7 +99,8 @@ const EditProfile = () => {
         try {
             const id = localStorage.getItem('id');
             const requestBody = JSON.stringify({id, name, username, emailAddress, birthDate, password, newPassword});
-            await api.put(`/users/${id}`, requestBody);
+            await api.put(`/users/${id}`, requestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
             localStorage.setItem('username', username);
             if (name) {
@@ -106,7 +113,11 @@ const EditProfile = () => {
             //alert("Your profile has been successfully edited!")
             history.push(`/profile`);
         } catch (error) {
-            alert(`Something went wrong during edit: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during edit: \n${handleError(error)}`);
+            }
         }
     };
 
