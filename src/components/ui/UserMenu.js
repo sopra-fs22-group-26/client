@@ -6,6 +6,7 @@ import {Logout} from "@mui/icons-material";
 import {initialsOf} from "helpers/userDisplay";
 
 import "styles/ui/UserMenu.scss";
+import {AuthUtil} from "../../helpers/authUtil";
 
 export const UserMenu = () => {
     // Pop-up menu for user profile and logout
@@ -57,16 +58,21 @@ export const UserMenu = () => {
 
                 // Clear local cache and navigate to login page
                 localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken')
                 localStorage.removeItem('id');
                 localStorage.removeItem('name');
                 localStorage.removeItem('username');
                 history.push('/login');
             }
             catch (error) {
-                console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert(`Something went wrong during logout: \n${handleError(error)}`);
-                localStorage.removeItem('token');
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while logging out user: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert(`Something went wrong during logout: \n${handleError(error)}`);
+                    localStorage.removeItem('token');
+                }
             }
         }
         logoutUser();
