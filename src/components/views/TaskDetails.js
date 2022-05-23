@@ -235,13 +235,13 @@ const TaskDetails = () => {
         history.push('/editform/' + taskToEdit.taskId);
     }
 
-    function doCommentPost(comment, taskToComment, setComment){
+    function doCommentPost(content, taskToComment, setComment){
             async function postComment() {
                 try {
                     //prepare comment to post
                     let belongingTask = taskToComment.taskId;
                     let authorId = localStorage.getItem("id");
-                    const requestBody = JSON.stringify({comment, authorId, belongingTask});
+                    const requestBody = JSON.stringify({content, authorId, belongingTask});
                     await api.post(`/comments`, requestBody);
 
                     //reset input field via the hook after comment has been posted
@@ -288,7 +288,7 @@ const TaskDetails = () => {
             try {
                 let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
                     api.get(`/tasks/${params["task_id"]}?id=${id}`),
-                    api.get(`/comments/${params["task_id"]}`),
+                    api.get(`/comments/${params["task_id"]}?id=${id}`),
                     api.get('/users'),
                     api.get(`/tasks/assignee/${id}`)
                 ]);
@@ -333,10 +333,10 @@ const TaskDetails = () => {
     }, []);
 
 
-    let content = <div className="nothing"> loading task info</div>;
+    let commentContents = <div className="nothing"> loading task info</div>;
 
     if(task) {
-        content = <Task props={task} comments={comments} key={task.id} taskFunctions={myTaskFunctions}/>;
+        commentContents = <Task props={task} comments={comments} key={task.id} taskFunctions={myTaskFunctions}/>;
     }
 
     return (
@@ -344,7 +344,7 @@ const TaskDetails = () => {
             <div className="base-container left-frame">
             </div>
             <div className="base-container main-frame">
-                {content}
+                {commentContents}
             </div>
             <div className="base-container right-frame">
                 <PollSessionMonitor />
