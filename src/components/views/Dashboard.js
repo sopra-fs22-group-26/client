@@ -67,20 +67,12 @@ const Dashboard = () => {
         // Get all tasks and users and store them temporarily
         let [r_tasks, r_users, r_assignedTasks] =
             await Promise.all([
-                api.get(url, {
-                  headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
-                      }
-                }),
-                api.get('/users', {
-                  headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                  }
-                }),
-                api.get(`/tasks/assignee/${localStorage.getItem("id")}`, {
-                  headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')}
-                })
+                api.get(url,
+                    { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                api.get('/users',
+                    { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                api.get(`/tasks/assignee/${localStorage.getItem("id")}`,
+                    { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
             ]);
 
         // Replace all assignee and reporter ids with users' names or usernames
@@ -168,10 +160,6 @@ const Dashboard = () => {
         // Get the returned tasks and update the state.
         setTasks(tasksData);
         setUsers(usersData);
-
-        // See here to get more data.
-        console.log(r_tasks);
-        console.log(r_users);
       } catch (error) {
         if (error.response.status === 401) {
           await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
@@ -179,15 +167,6 @@ const Dashboard = () => {
           console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
           console.error("Details:", error);
           alert("Something went wrong while fetching the tasks! See the console for details.");
-
-
-          // Remove this after debugging!!!
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("token");
-          // Remove this
-
-
-
         }
       }
     }
@@ -196,7 +175,7 @@ const Dashboard = () => {
     // Update data regularly
     const interval = setInterval(()=>{
       fetchData()
-    },3000);
+    },1900);
     return() => clearInterval(interval);
 
   }, [filter, show, sort]);

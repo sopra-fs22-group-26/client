@@ -9,10 +9,10 @@ import 'styles/views/Login.scss';
 import editIcon from "images/task_edit_icon.svg";
 import {EstimateTotals} from "../ui/EstimateTotals";
 import {isInCurrentWeek} from "../../helpers/dateFuncs";
+import {AuthUtil} from "helpers/authUtil";
 
 
 const Profile = () => {
-
     const history = useHistory();
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState(null);
@@ -29,8 +29,11 @@ const Profile = () => {
 
                 let [r_user, r_assignedTasks] =
                     await Promise.all([
-                        api.get(`/users/${id}`),
-                        api.get(`/tasks/assignee/${id}`)]);
+                        api.get(`/users/${id}`,
+                            { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
+                        api.get(`/tasks/assignee/${id}`,
+                            { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
+                    ]);
 
                 // Calculate Total Estimates for current user
                 let estimates = {currentWeek: 0, total: 0};
@@ -46,9 +49,13 @@ const Profile = () => {
                 setBirthDate(r_user.data.birthDate);
                 setScore(r_user.data.score);
             } catch (error) {
-                console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the profile! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the profile! See the console for details.");
+                }
             }
         }
         fetchData();

@@ -6,6 +6,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import 'styles/views/VotingLobby.scss';
 import {Button} from "../ui/Button";
+import {AuthUtil} from "helpers/authUtil";
 
 // Define input text field component
 const FormField = props => {
@@ -56,7 +57,8 @@ const VotingLobby = () => {
         async function fetchData() {
             try {
                 setMeetingId(params["meetingId"]);
-                const response = await api.get(`/poll-meetings/${params["meetingId"]}`);
+                const response = await api.get(`/poll-meetings/${params["meetingId"]}`,
+                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
                 setEstimateThreshold(response.data.estimateThreshold);
 
@@ -79,12 +81,10 @@ const VotingLobby = () => {
                         return participant;
                     }
                 });
-                console.log(participantMe);
 
                 let meName = participantMe.map(participant => {
                     return participant.user.username;
                 })
-                console.log(meName);
                 setParticipantMeName(meName);
 
                 let tempParticipantsFiltered = participantsData.filter(participant => {
@@ -93,13 +93,11 @@ const VotingLobby = () => {
                         return participant;
                     }
                 });
-                console.log("filtered",tempParticipantsFiltered);
 
                 let tempParts = tempParticipantsFiltered.map(participant => {
                     return participant.user.username;
                     });
 
-                console.log(tempParts);
                 setTempParticipants(tempParts);
 
                 if(responsePollStatus === "ENDED" && localStorage.getItem("id") != responseCreatorId){
@@ -107,9 +105,13 @@ const VotingLobby = () => {
                 }
             }
             catch (error) {
-                console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the users! See the console for details.");
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                } else {
+                    console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the users! See the console for details.");
+                }
             }
         }
         fetchData();
@@ -117,7 +119,7 @@ const VotingLobby = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             fetchData()
-        },3000);
+        },3100);
         return() => clearInterval(interval);
     }, [setTempParticipants]);
 
@@ -126,10 +128,15 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({userId, vote});
 
-            await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody);
+            await api.put(`/poll-meetings/${meetingId}?action=vote`, requestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -137,10 +144,14 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({status: "VOTING"});
 
-            await api.put(`/poll-meetings/${meetingId}`, requestBody);
-
+            await api.put(`/poll-meetings/${meetingId}`, requestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -148,20 +159,28 @@ const VotingLobby = () => {
         try {
             const requestBody = JSON.stringify({status: "ENDED"});
 
-            await api.put(`/poll-meetings/${meetingId}`, requestBody);
-
+            await api.put(`/poll-meetings/${meetingId}`, requestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
     const leave = async () => {
         try {
-            await api.delete(`/poll-meetings/${meetingId}`);
-
+            await api.delete(`/poll-meetings/${meetingId}`,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
             history.push("/dashboard");
         } catch (error) {
-            alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            if (error.response.status === 401) {
+                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            } else {
+                alert(`Something went wrong during the creation: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -174,8 +193,7 @@ const VotingLobby = () => {
     }
 
     let voter = <div>me</div>;
-    if(participantMeName!==null){
-        console.log(participantMeName);
+    if(participantMeName !== null){
         voter =
         [<ParticipantName>
             {participantMeName}
