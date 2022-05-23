@@ -67,10 +67,13 @@ async function joinSession(meetingId, history) {
             userId: localStorage.getItem("id")
         });
         const response = await api.put(`/poll-meetings/${meetingId}?action=join`, requestBody);
+        const creatorId = response.data.creatorId;
 
-        if(response != null){
+        if(response != null && localStorage.getItem("id") !== String(creatorId)){
             // navigate to WaitingLobby
             history.push(`/waitinglobby/${meetingId}`);
+        }else if(response != null && localStorage.getItem("id") === String(creatorId)){
+            history.push(`/votinglobby/${meetingId}`);
         }
     } catch (error) {
         console.error(`Something went wrong while joining the poll-session: \n${handleError(error)}`);
