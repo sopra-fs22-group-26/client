@@ -85,6 +85,7 @@ const EditProfile = () => {
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
                 } else {
                     console.error(`Something went wrong while fetching the profile: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -115,6 +116,7 @@ const EditProfile = () => {
         } catch (error) {
             if (error.response.status === 401) {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                setTimeout(doUpdate, 200);
             } else {
                 alert(`Something went wrong during edit: \n${handleError(error)}`);
             }

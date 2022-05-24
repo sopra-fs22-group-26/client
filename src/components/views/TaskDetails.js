@@ -180,6 +180,7 @@ const TaskDetails = () => {
     const [task, setTask] = useState(null);
     const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
     const [comments, setComments] = useState(null);
+    const [dataChange, setDataChange] = useState(null);
 
     const params = useParams();
 
@@ -195,13 +196,13 @@ const TaskDetails = () => {
         if (window.confirm(`Do you really want to delete the task \"${taskToDelete.title}\"?`)) {
             async function deleteTask() {
                 try {
-                    const response = await api.delete(`/tasks/${taskToDelete.taskId}`,
+                    await api.delete(`/tasks/${taskToDelete.taskId}`,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-                    console.log(response);
                     history.push('/dashboard')
                 } catch (error) {
                     if (error.response.status === 401) {
                         await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                        setTimeout(deleteTask, 200);
                     } else {
                         console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
                         console.error("Details:", error);
@@ -223,13 +224,13 @@ const TaskDetails = () => {
                         reporter: taskToComplete.reporter,
                         estimate: taskToComplete.estimate
                     });
-                    const response = await api.put(`/tasks/${taskToComplete.taskId}`, requestBody,
+                    await api.put(`/tasks/${taskToComplete.taskId}`, requestBody,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-                    console.log(response);
                     history.push('/dashboard')
                 } catch (error) {
                     if (error.response.status === 401) {
                         await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                        setTimeout(completeTask, 200);
                     } else {
                         console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
                         console.error("Details:", error);
@@ -253,8 +254,9 @@ const TaskDetails = () => {
                     let belongingTask = taskToComment.taskId;
                     let authorId = localStorage.getItem("id");
                     const requestBody = JSON.stringify({content, authorId, belongingTask});
-                    await api.post(`/comments`, requestBody,
+                    const response = await api.post(`/comments`, requestBody,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
+                    setDataChange(response);
 
                     //reset input field via the hook after comment has been posted
                     setComment("");
@@ -262,6 +264,7 @@ const TaskDetails = () => {
                 } catch (error) {
                     if (error.response.status === 401) {
                         await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                        setTimeout(postComment, 200);
                     } else {
                         console.error(`Something went wrong while posting the comment: \n${handleError(error)}`);
                         console.error("Details:", error);
@@ -277,11 +280,11 @@ const TaskDetails = () => {
             try {
                 const response = await api.delete(`/comments/${comment.commentId}`,
                     { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-                console.log(response);
-
+                setDataChange(response);
             } catch(error){
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(deleteComment, 200);
                 } else {
                     console.error(`Something went wrong while deleting the comment: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -344,6 +347,7 @@ const TaskDetails = () => {
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
                 } else {
                     console.error(`Something went wrong while fetching the task data: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -359,7 +363,7 @@ const TaskDetails = () => {
         },3000);
         return() => clearInterval(interval);
 
-    }, []);
+    }, [dataChange]);
 
 
     let commentContents = <div className="nothing"> loading task info</div>;
