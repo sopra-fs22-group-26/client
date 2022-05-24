@@ -148,7 +148,7 @@ const EditForm = () => {
         async function fetchData() {
             try {
                 let [r_task, r_users] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}?id=${localStorage.getItem("id")}`,
+                    api.get(`/tasks/${params["task_id"]}`,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
                     api.get('/users',
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})

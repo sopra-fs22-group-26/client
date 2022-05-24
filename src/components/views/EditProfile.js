@@ -7,6 +7,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import ErrorMessage from "../ui/ErrorMessage";
 
 const FormField = props => {
     if(props.type != "date"){
@@ -64,6 +65,7 @@ const EditProfile = () => {
     const [password, setPassword] = useState(null);
     const [newPassword, setNewPassword] = useState(null);
     const [passwordNew2, setPasswordNew2] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
 
 
@@ -110,6 +112,7 @@ const EditProfile = () => {
             else {
                 localStorage.removeItem('name');
             }
+            await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
 
             //alert("Your profile has been successfully edited!")
             history.push(`/profile`);
@@ -118,7 +121,7 @@ const EditProfile = () => {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
                 setTimeout(doUpdate, 200);
             } else {
-                alert(`Something went wrong during edit: \n${handleError(error)}`);
+                setErrorMessage(error.response.data.message);
             }
         }
     };
@@ -140,6 +143,7 @@ const EditProfile = () => {
                         value={username}
                         onChange={un => setUsername(un)}
                     />
+                    <ErrorMessage message={errorMessage} />
                     <FormField
                         label="E-mail address:"
                         value={emailAddress}

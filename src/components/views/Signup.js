@@ -5,6 +5,7 @@ import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
+import ErrorMessage from "components/ui/ErrorMessage";
 import PropTypes from "prop-types";
 
 
@@ -46,6 +47,7 @@ const Signup = () => {
     const [emailAddress, setEmailAddress] = useState(null);
     const [password, setPassword] = useState(null);
     const [password2, setPassword2] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     // Handle the registration process.
     // Upon succssful registration, the user is logged-in automatically.
@@ -56,7 +58,7 @@ const Signup = () => {
             // Registration successfully worked --> do auto-login
             doAutoLogin();
         } catch (error) {
-            alert(`Something went wrong during signup: \n${handleError(error)}`);
+            setErrorMessage(error.response.data.message);
         }
     };
 
@@ -104,6 +106,7 @@ const Signup = () => {
                         value={username}
                         onChange={un => setUsername(un)}
                     />
+                    <ErrorMessage message={errorMessage} />
                     <FormField
                         label="E-mail address:"
                         value={emailAddress}
