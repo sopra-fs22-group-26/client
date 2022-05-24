@@ -110,6 +110,8 @@ const EditProfile = () => {
             else {
                 localStorage.removeItem('name');
             }
+            await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            setTimeout(doUpdate, 200);
 
             //alert("Your profile has been successfully edited!")
             history.push(`/profile`);
