@@ -106,6 +106,7 @@ const Signup = () => {
                         value={username}
                         onChange={un => setUsername(un)}
                     />
+                    <ErrorMessage message={errorMessage} />
                     <FormField
                         label="E-mail address:"
                         value={emailAddress}
@@ -125,7 +126,6 @@ const Signup = () => {
                         onChange={pw => setPassword2(pw)}
                     />
                     <div className="login remark">(*optional)</div>
-                    <ErrorMessage message={errorMessage} />
                     <div className="login button-container">
                         <Button
                             disabled={!username || !emailAddress || !password || password != password2}

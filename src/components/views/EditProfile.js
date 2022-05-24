@@ -143,6 +143,7 @@ const EditProfile = () => {
                         value={username}
                         onChange={un => setUsername(un)}
                     />
+                    <ErrorMessage message={errorMessage} />
                     <FormField
                         label="E-mail address:"
                         value={emailAddress}
@@ -178,7 +179,6 @@ const EditProfile = () => {
                         onChange = {e => setPasswordNew2(e)}
 
                     />
-                    <ErrorMessage message={errorMessage} />
                     <div className="login button-container multi-button">
                         <Button
                             className="menu-button"

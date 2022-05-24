@@ -121,5 +121,14 @@
     margin: 0;
     margin-bottom: 14px;
   }
+  &.messagebox {
+    margin: -9px 0 24px auto;
+    font-weight: $fontWeightBold;
+    font-size: 16px;
+    color: red;
+    text-align: left;
+    width: 316px;
+    justify-self: right;
+  }
 
 }
