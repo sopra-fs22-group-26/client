@@ -74,6 +74,7 @@ const SessionLobby = () => {
             catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
                 } else {
                     console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -99,6 +100,7 @@ const SessionLobby = () => {
         } catch (error) {
             if (error.response.status === 401) {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                setTimeout(startSession, 200);
             } else {
                 alert(`Something went wrong during the creation: \n${handleError(error)}`);
             }

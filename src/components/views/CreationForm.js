@@ -167,6 +167,7 @@ const CreationForm = () => {
             catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
                 } else {
                     console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -179,52 +180,30 @@ const CreationForm = () => {
 
 
     /**
-     * Save task
-     * @returns {Promise<void>}
+     * Save task and go to new location
      */
-    const saveTask = async () => {
+    const saveTaskAndRedirect = async (targetLocation) => {
         try {
             const creatorId = localStorage.getItem("id");
             const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate, location,
                 estimate, assignee, reporter, privateFlag});
 
-            api.post('/tasks', requestBody,
-                { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}});
-
-            // After succesful creation of a new task navigate to /dashboard
-            history.push(`/dashboard`);
-
-        } catch (error) {
-            if (error.response.status === 401) {
-                await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
-            } else {
-                alert(`Something went wrong during the creation: \n${handleError(error)}`);
-            }
-        }
-    };
-
-    /**
-     * Save task and get task id
-     * @returns {Promise<void>}
-     */
-    const saveTaskGetTaskId = async () => {
-        try {
-            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
-
             const response = await api.post('/tasks', requestBody,
                 { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
+            // After succesful creation of a new task navigate to targetLocation
             localStorage.setItem("taskId", response.data.taskId)
-
-            history.push('/sessionlobby');
+            history.push(targetLocation);
         } catch (error) {
             if (error.response.status === 401) {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                setTimeout(saveTaskAndRedirect, 200, targetLocation);
             } else {
                 alert(`Something went wrong during the creation: \n${handleError(error)}`);
             }
         }
     };
+
 
     return (
         <BaseContainer>
@@ -304,7 +283,7 @@ const CreationForm = () => {
                             <Button
                                 disabled={!(title && dueDate && estimate !== "")
                                     || (reporter && !assignee) || (estimate < 0) || privateFlag }
-                                onClick = { () => saveTaskGetTaskId()}>
+                                onClick = { () => saveTaskAndRedirect("/sessionlobby")}>
                                 Start Estimate<br/>Poll Session
                             </Button>
                         </div>
@@ -320,7 +299,7 @@ const CreationForm = () => {
                             className="menu-button default"
                             disabled={!(title && dueDate && estimate !== "")
                                 || (reporter && !assignee) || (estimate < 0) }
-                            onClick={() => saveTask()}
+                            onClick={() => saveTaskAndRedirect("/dashboard")}
                         >
                             Save
                         </Button>

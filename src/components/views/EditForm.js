@@ -137,6 +137,7 @@ const EditForm = () => {
         } catch (error) {
             if (error.response.status === 401) {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                setTimeout(saveEdit, 200);
             } else {
                 alert(`Something went wrong during edit: \n${handleError(error)}`);
             }
@@ -187,6 +188,7 @@ const EditForm = () => {
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
                 } else {
                     console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
                     console.error("Details:", error);

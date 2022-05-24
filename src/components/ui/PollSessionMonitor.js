@@ -82,6 +82,7 @@ async function joinSession(meetingId, history) {
     } catch (error) {
         if (error.response.status === 401) {
             await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            setTimeout(joinSession, 200, meetingId, history);
         } else {
             console.error(`Something went wrong while joining the poll-session: \n${handleError(error)}`);
             alert("Something went wrong while joining the poll-session! See the console for details.");
@@ -102,6 +103,7 @@ async function declineInvitation(meetingId) {
     } catch (error) {
         if (error.response.status === 401) {
             await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+            setTimeout(declineInvitation, 200, meetingId);
         } else {
             console.error(`Something went wrong while declining the poll-session: \n${handleError(error)}`);
             alert("Something went wrong while declining the poll-session! See the console for details.");
@@ -154,6 +156,7 @@ export const PollSessionMonitor = () => {
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(getPollSessions, 200);
                 } else {
                     console.error(`Something went wrong while fetching the poll-sessions: \n${handleError(error)}`);
                     alert("Something went wrong while fetching the poll-sessions! See the console for details.");

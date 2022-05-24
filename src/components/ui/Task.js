@@ -32,6 +32,7 @@ function doTaskComplete(task) {
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(completeTask, 200);
                 } else {
                     console.error(`Something went wrong while updating the task: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -54,6 +55,7 @@ function doTaskDelete(task) {
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(deleteTask, 200);
                 } else {
                     console.error(`Something went wrong while deleting the task: \n${handleError(error)}`);
                     console.error("Details:", error);

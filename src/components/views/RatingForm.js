@@ -134,6 +134,7 @@ const RatingForm = () => {
             catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
                 } else {
                     console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
                     console.error("Details:", error);
@@ -167,6 +168,7 @@ const RatingForm = () => {
         } catch (error) {
             if (error.response.status === 401) {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                setTimeout(rateTask, 200);
             } else {
                 console.error(`Something went wrong during the rating: \n${handleError(error)}`);
                 console.error("Details:", error);

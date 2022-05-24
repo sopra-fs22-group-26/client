@@ -163,6 +163,7 @@ const Dashboard = () => {
       } catch (error) {
         if (error.response.status === 401) {
           await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+          setTimeout(fetchData, 200);
         } else {
           console.error(`Something went wrong while fetching the tasks: \n${handleError(error)}`);
           console.error("Details:", error);
@@ -179,7 +180,6 @@ const Dashboard = () => {
     return() => clearInterval(interval);
 
   }, [filter, show, sort]);
-
 
   // Create content
   let content = <div className="nothing">--- no tasks for current view ---</div>;
