@@ -53,14 +53,14 @@ const Dashboard = () => {
     async function fetchData() {
 
       // Create task request url with userId
-      let url = "/tasks?id=" + localStorage.getItem('id');
+      let url = "/tasks";
 
       // Apply show filter to fetch active or completed tasks
       if (show === LeftMenuItems.TaskShow.Active) {
-        url += '&show=active';
+        url += '?show=active';
       }
       else if (show === LeftMenuItems.TaskShow.Completed) {
-        url += '&show=completed';
+        url += '?show=completed';
       }
 
       try {

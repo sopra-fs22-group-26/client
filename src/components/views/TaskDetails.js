@@ -311,7 +311,7 @@ const TaskDetails = () => {
             const id = localStorage.getItem("id");
             try {
                 let [r_task, r_comments, r_users, r_assignedTasks] = await Promise.all([
-                    api.get(`/tasks/${params["task_id"]}?id=${id}`,
+                    api.get(`/tasks/${params["task_id"]}`,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
                     api.get(`/comments/${params["task_id"]}?id=${id}`,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
