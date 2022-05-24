@@ -7,6 +7,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import ErrorMessage from "../ui/ErrorMessage";
 
 const FormField = props => {
     if(props.type != "date"){
@@ -64,6 +65,7 @@ const EditProfile = () => {
     const [password, setPassword] = useState(null);
     const [newPassword, setNewPassword] = useState(null);
     const [passwordNew2, setPasswordNew2] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
 
 
@@ -120,7 +122,7 @@ const EditProfile = () => {
                 await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
                 setTimeout(doUpdate, 200);
             } else {
-                alert(`Something went wrong during edit: \n${handleError(error)}`);
+                setErrorMessage(error.response.data.message);
             }
         }
     };
@@ -177,6 +179,7 @@ const EditProfile = () => {
                         onChange = {e => setPasswordNew2(e)}
 
                     />
+                    <ErrorMessage message={errorMessage} />
                     <div className="login button-container multi-button">
                         <Button
                             className="menu-button"
