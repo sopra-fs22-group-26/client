@@ -122,6 +122,10 @@
         border-radius: 0;
         background: transparentize(white, 0);
         color: $textColor;
+        &.error {
+            border-color: red;
+            border-width: 1.5px;
+        }
     }
     .double-content {
         height: 34px;

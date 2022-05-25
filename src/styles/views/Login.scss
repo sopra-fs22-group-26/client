@@ -66,6 +66,10 @@
     margin-bottom: 20px;
     background: transparentize(white, 0);
     color: $textColor;
+    &.error {
+      border-color: red;
+      border-width: 1.5px;
+    }
   }
   &.label {
     color: $textColor;

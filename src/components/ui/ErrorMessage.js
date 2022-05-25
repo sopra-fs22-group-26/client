@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 
 const ErrorMessage = props => {
-    return (
-        <div className="login messagebox">{props.message}</div>
-    );
+    let errorMessage = "";
+    if (props.message){
+        errorMessage = <div className="login messagebox">{props.message}</div>;
+    }
+    return errorMessage;
 };
 
 ErrorMessage.prototype = {
