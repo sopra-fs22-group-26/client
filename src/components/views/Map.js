@@ -12,7 +12,6 @@ import {ComboboxList,
     Combobox,
     ComboboxOption,
 } from "@reach/combobox";
-import "@reach/auto-id";
 import "@reach/combobox/styles.css"
 
 
