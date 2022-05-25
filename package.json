@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.6.1",
     "@mui/lab": "^5.0.0-alpha.77",
     "@mui/material": "^5.6.1",
+    "@react-google-maps/api": "^2.11.8",
     "axios": "^0.24.0",
     "dom-helpers": "^5.2.1",
     "file-saver": "^2.0.5",
@@ -22,7 +23,8 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "^5.0.0",
     "react-select": "^5.3.0",
-    "react-spinners-css": "^2.0.1"
+    "react-spinners-css": "^2.0.1",
+    "use-places-autocomplete": "^3.0.0"
   },
   "scripts": {
     "dev": "react-scripts start",
@@ -40,5 +42,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@reach/combobox": "^0.17.0"
+  }
 }

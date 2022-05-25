@@ -10,6 +10,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import Map from "./Map";
 
 // Define input text field component
 const FormField = props => {
@@ -133,18 +134,16 @@ const CreationForm = () => {
             "creation-form container task_priority_"
             + priority.toLowerCase()
             + (newPrivacy ? " private" : "");
-        if (newPrivacy){
+        if (newPrivacy) {
             setAssigneeBackup(assignee);
             setReporterBackup(reporter);
             setAssignee(localStorage.getItem("id"));
             setReporter(null);
-        }
-        else {
+        } else {
             setAssignee(assigneeBackup);
             setReporter(reporterBackup);
         }
     }
-
 
     // Get all users to define options for assignee and reporter
     useEffect(() => {
@@ -268,6 +267,7 @@ const CreationForm = () => {
                                 value={location}
                                 onChange={l => setLocation(l)}
                             />
+                            <Map location={location} setLocation={setLocation}/>
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">
                             <FormField
