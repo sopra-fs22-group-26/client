@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {api, handleError} from 'helpers/api';
+import {api} from 'helpers/api';
 import User from 'models/User';
 import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
@@ -66,7 +66,6 @@ const Login = () => {
             // Login successfully worked --> navigate to the dashboard
             history.push(`/dashboard`);
         } catch (error) {
-            //alert(`Something went wrong during the login: \n${handleError(error)}`);
             setErrorMessage(error.response.data.message);
         }
     };
