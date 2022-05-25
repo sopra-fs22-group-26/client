@@ -7,16 +7,20 @@ import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import ErrorMessage from "components/ui/ErrorMessage";
 import PropTypes from "prop-types";
-
+import isEmail from "validator/es/lib/isEmail";
 
 const FormField = props => {
+    let inputClassName = "login input";
+    if (props.error) {
+        inputClassName += " error";
+    }
     return (
         <div className="login field">
             <label className="login label">
                 {props.label}
             </label>
             <input
-                className="login input"
+                className={inputClassName}
                 placeholder={props.placeholder ? props.placeholder : "enter here.."}
                 value={props.value}
                 type={props.type}
@@ -88,47 +92,49 @@ const Signup = () => {
         }
     };
 
-
     return (
         <BaseContainer className="single-frame centered">
             <div className="login container">
                 <div className="login header">Sign up</div>
                 <div className="login form">
                     <FormField
-                        label="Name*:"
+                        label="Name"
                         placeholder="your full name..."
                         value={name}
                         onChange={n => setName(n)}
                     />
                     <FormField
-                        label="Username:"
+                        label="Username*"
                         placeholder="choose username..."
                         value={username}
                         onChange={un => {setUsername(un); setErrorMessage(null)}}
                     />
                     <ErrorMessage message={errorMessage} />
                     <FormField
-                        label="E-mail address:"
+                        label="E-mail address*"
                         value={emailAddress}
                         type="email"
+                        error={emailAddress != null && emailAddress !== "" && !isEmail(emailAddress)}
                         onChange={e => {setEmailAddress(e); setErrorMessage(null)}}
                     />
                     <FormField
-                        label="Password:"
+                        label="Password*"
                         value={password}
                         type="password"
                         onChange={pw => setPassword(pw)}
                     />
                     <FormField
-                        label="Retype password:"
+                        label="Retype password*"
                         value={password2}
                         type="password"
+                        error={password2 != null && password2 !== "" && password != password2}
                         onChange={pw => setPassword2(pw)}
                     />
-                    <div className="login remark">(*optional)</div>
+                    <div className="login remark">(*required)</div>
                     <div className="login button-container">
                         <Button
-                            disabled={!username || !emailAddress || !password || password != password2}
+                            disabled={!username || !password || password != password2
+                                || !emailAddress || !isEmail(emailAddress)}
                             width="316px"
                             onClick={() => doRegister()}
                         >
