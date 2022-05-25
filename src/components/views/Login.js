@@ -77,12 +77,12 @@ const Login = () => {
                 <div className="login header">Login</div>
                 <div className="login form">
                     <FormField
-                        label="Username:"
+                        label="Username"
                         value={username}
                         onChange={un => {setUsername(un); setErrorMessage(null)}}
                     />
                     <FormField
-                        label="Password:"
+                        label="Password"
                         value={password}
                         type="password"
                         onChange={pw => {setPassword(pw); setErrorMessage(null)}}

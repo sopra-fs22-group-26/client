@@ -8,8 +8,13 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
 import ErrorMessage from "../ui/ErrorMessage";
+import isEmail from "validator/es/lib/isEmail";
 
 const FormField = props => {
+    let inputClassName = "creation-form input";
+    if (props.error) {
+        inputClassName += " error";
+    }
     if(props.type != "date"){
         return (
             <div className="creation-form field">
@@ -17,9 +22,9 @@ const FormField = props => {
                     {props.label}
                 </label>
                 <input
+                    className ={inputClassName}
                     type = {props.type}
                     min = {props.min}
-                    className = "creation-form input"
                     placeholder = {props.placeholder}
                     value = {props.value}
                     onChange = {e => props.onChange(e.target.value)}
@@ -143,11 +148,11 @@ const EditProfile = () => {
                         value={username}
                         onChange={un => {setUsername(un); setErrorMessage(null)}}
                     />
-                    <ErrorMessage message={errorMessage} />
                     <FormField
                         label="E-mail address:"
                         value={emailAddress}
                         type = "email"
+                        error={emailAddress != null && !isEmail(emailAddress)}
                         onChange={e => {setEmailAddress(e); setErrorMessage(null)}}
                     />
                     <FormField
@@ -176,9 +181,11 @@ const EditProfile = () => {
                         label="Retype new Password:"
                         value={passwordNew2}
                         type="password"
+                        error={passwordNew2 != null && passwordNew2 !== "" && newPassword !== passwordNew2}
                         onChange = {e => setPasswordNew2(e)}
 
                     />
+                    <ErrorMessage message={errorMessage} />
                     <div className="login button-container multi-button">
                         <Button
                             className="menu-button"
@@ -188,7 +195,8 @@ const EditProfile = () => {
                         </Button>
                         <Button
                             className="menu-button default"
-                            disabled={!(username && emailAddress) || (newPassword != passwordNew2) || (newPassword && !password)}
+                            disabled={!username || (newPassword !== passwordNew2) || (newPassword && !password)
+                                || !emailAddress || !isEmail(emailAddress)}
                             onClick={() => doUpdate()}
                         >
                             Save
