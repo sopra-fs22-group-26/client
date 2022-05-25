@@ -116,6 +116,7 @@ const CreationForm = () => {
     const [users, setUsers] = useState(null);
     const [assigneeBackup, setAssigneeBackup] = useState(null);
     const [reporterBackup, setReporterBackup] = useState(null);
+    const [holidays, setHolidays] = useState(null);
 
 
     // Define class for task container, depending on priority and privateFlag
@@ -145,13 +146,19 @@ const CreationForm = () => {
         }
     }
 
-
     // Get all users to define options for assignee and reporter
     useEffect(() => {
         async function fetchData() {
             try {
                 const response = await api.get(`/users`,
                     { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
+
+                //get calender holidays
+                const holidays = await fetch("https://www.googleapis.com/calendar/v3/calendars/en.ch%23holiday%40group.v.calendar.google.com/events?key=AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4").then((response) => {
+                    return response.json()});
+
+                setHolidays(holidays);
+
 
                 let tempUsers = response.data.map(user => {
                     let userOption = {};
@@ -204,6 +211,22 @@ const CreationForm = () => {
         }
     };
 
+    /**
+     * Notify user when dueDate is set on a national Holiday
+     */
+
+    function handleDate(date){
+        for (let i = 0; i<holidays.items.length;i++){
+            if (holidays.items[i]["start"]["date"] === date){
+                alert("Attention! This date is national holiday: " + holidays.items[i]["summary"]);
+                setDueDate(date);
+            }
+            else{
+                setDueDate(date);
+            }
+        }
+    };
+
 
     return (
         <BaseContainer>
@@ -234,7 +257,7 @@ const CreationForm = () => {
                                 placeholder = "Select date"
                                 value = {dueDate}
                                 min={moment().format("YYYY-MM-DD")}
-                                onChange = {dd => setDueDate(dd)}
+                                onChange = {dd => handleDate(dd)}
                             />
                             <ReactSelection
                                 label="Assignee"

@@ -124,6 +124,8 @@ const EditForm = () => {
     const [firstAssignee, setFirstAssignee] = useState("");
     const [firstReporter, setFirstReporter] = useState(null);
 
+    const [holidays, setHolidays] = useState(null);
+
     const params = useParams();
 
     const saveEdit = async () => {
@@ -144,6 +146,22 @@ const EditForm = () => {
         }
     };
 
+    /**
+     * Notify user when dueDate is set on a national Holiday
+     */
+
+    function handleDate(date){
+        for (let i = 0; i<holidays.items.length;i++){
+            if (holidays.items[i]["start"]["date"] === date){
+                alert("Attention! This date is national holiday: " + holidays.items[i]["summary"]);
+                setDueDate(date);
+            }
+            else{
+                setDueDate(date);
+            }
+        }
+    };
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -153,6 +171,12 @@ const EditForm = () => {
                     api.get('/users',
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
                 ]);
+
+                //get calender holidays
+                const holidays = await fetch("https://www.googleapis.com/calendar/v3/calendars/en.ch%23holiday%40group.v.calendar.google.com/events?key=AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4").then((response) => {
+                    return response.json()});
+
+                setHolidays(holidays);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
@@ -228,7 +252,7 @@ const EditForm = () => {
                             placeholder="Select date"
                             value={dueDate}
                             min={moment().format("YYYY-MM-DD")}
-                            onChange={dd => setDueDate(dd)}
+                            onChange={dd => handleDate(dd)}
                         />
                         <ReactSelection
                             label="Assignee"
