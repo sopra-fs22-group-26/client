@@ -87,7 +87,6 @@ const RatingForm = () => {
     const [assignee, setAssignee] = useState(null);
     const [reporter, setReporter] = useState(null);
     const [estimate, setEstimate] = useState(null);
-    const [birthDate, setBirthDate] = useState(null);
     const [score, setScore] = useState(0);
     const [comments, setComments] = useState(null);
 
@@ -124,11 +123,6 @@ const RatingForm = () => {
                 setEstimate(taskResponse.estimate);
                 setComments(commentsResponse);
 
-                // We also have to store the birthdate of the assignee
-                let r_assignee = await api.get(`/users/${taskResponse.assignee}`,
-                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-                setBirthDate(r_assignee.data.birthDate);
-
                 setTask(taskResponse);
             }
             catch (error) {
@@ -153,14 +147,9 @@ const RatingForm = () => {
     const rateTask = async () => {
         try {
             const taskRequestBody = JSON.stringify({score, assignee, reporter, estimate, status:"REPORTED"})
-            const userRequestBody = JSON.stringify( {score, birthDate});
 
-            await Promise.all([
-                api.put(`/tasks/${params["task_id"]}`, taskRequestBody,
-                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}}),
-                api.put('/users/' + assignee, userRequestBody,
-                    { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
-            ]);
+            await api.put(`/tasks/${params["task_id"]}`, taskRequestBody,
+                { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
             // After successful rating of a  task navigate to /reports
             history.push(`/reports`);
