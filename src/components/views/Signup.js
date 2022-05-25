@@ -104,14 +104,14 @@ const Signup = () => {
                         label="Username:"
                         placeholder="choose username..."
                         value={username}
-                        onChange={un => setUsername(un)}
+                        onChange={un => {setUsername(un); setErrorMessage(null)}}
                     />
                     <ErrorMessage message={errorMessage} />
                     <FormField
                         label="E-mail address:"
                         value={emailAddress}
                         type="email"
-                        onChange={e => setEmailAddress(e)}
+                        onChange={e => {setEmailAddress(e); setErrorMessage(null)}}
                     />
                     <FormField
                         label="Password:"
