@@ -46,7 +46,7 @@ const Task = ({props, score, comments, setScore, rateTask, history}) => {
                             name="Rating Label"
                             size="large"
                             value={score}
-                            onChange={(event, newValue) => {
+                            onChange={(_event, newValue) => {
                                 setScore(newValue);
                             }}
                         />
