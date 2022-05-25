@@ -6,6 +6,7 @@ import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import ErrorMessage from "components/ui/ErrorMessage";
 
 // Define component for login form
 const FormField = props => {
@@ -40,6 +41,7 @@ const Login = () => {
     const history = useHistory();
     const [username, setUsername] = useState(null);
     const [password, setPassword] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     localStorage.removeItem("isRefreshing")
 
@@ -64,7 +66,8 @@ const Login = () => {
             // Login successfully worked --> navigate to the dashboard
             history.push(`/dashboard`);
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            //alert(`Something went wrong during the login: \n${handleError(error)}`);
+            setErrorMessage(error.response.data.message);
         }
     };
 
@@ -77,14 +80,15 @@ const Login = () => {
                     <FormField
                         label="Username:"
                         value={username}
-                        onChange={un => setUsername(un)}
+                        onChange={un => {setUsername(un); setErrorMessage(null)}}
                     />
                     <FormField
                         label="Password:"
                         value={password}
                         type="password"
-                        onChange={pw => setPassword(pw)}
+                        onChange={pw => {setPassword(pw); setErrorMessage(null)}}
                     />
+                    <ErrorMessage message={errorMessage} />
                     <div className="login button-container">
                         <Button
                             disabled={!username || !password}

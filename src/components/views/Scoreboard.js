@@ -61,9 +61,7 @@ const Scoreboard = () => {
     }, []);
 
     let numbering = [];
-    let rank = 0;
-    for (const element of users) {
-        rank++;
+    for (let rank = 1; rank <= users.length; rank++) {
         numbering.push(rank);
     }
 

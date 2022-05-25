@@ -55,34 +55,22 @@ const WaitingLobby = () => {
         return() => clearInterval(interval);
     }, [setTempParticipants]);
 
-    let content_left = <div>participants name</div>;
-    if(tempParticipants!==null){
-        if (tempParticipants.length > 0){
-            const half = Math.ceil(tempParticipants.length / 2)
-            const participants_left = [];
-            for (let i = 0; i < half; i++) {
-                participants_left.push(tempParticipants[i]);
-            }
-            content_left = participants_left.map(participant => (
-                <ParticipantName>
-                    {participant}
-                </ParticipantName>));
-        }
-    }
-
+    let content_left = <div>Loading participants...</div>;
     let content_right = <div>participants name</div>
-    if(tempParticipants!==null) {
-        if(tempParticipants.length > 0) {
-            const half = Math.ceil(tempParticipants.length / 2)
-            const participants_right = [];
-            for (let i = half; i<tempParticipants.length; i++){
-                participants_right.push(tempParticipants[i])
-            }
-            content_right = participants_right.map(participant => (
-                <ParticipantName>
-                    {participant}
-                </ParticipantName>));
+
+    // Create left and right columns of participants
+    if(tempParticipants !== null && tempParticipants.length > 0){
+        const half = Math.ceil(tempParticipants.length / 2)
+        const participants_left = [];
+        const participants_right = [];
+        for (let i = 0; i < half; i++) {
+            participants_left.push(tempParticipants[i]);
         }
+        for (let i = half; i<tempParticipants.length; i++){
+            participants_right.push(tempParticipants[i])
+        }
+        content_left = participants_left.map(participant => (<ParticipantName>{participant}</ParticipantName>));
+        content_right = participants_right.map(participant => (<ParticipantName>{participant}</ParticipantName>));
     }
 
     return (
