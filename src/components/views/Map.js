@@ -1,21 +1,13 @@
+/* global google */
 import 'styles/ui/Map.scss';
-import {React, useEffect, useState} from "react"
-
+import {React, useEffect, useState} from "react";
 import { GoogleMap, LoadScript, useLoadScript, Autocomplete, Marker} from "@react-google-maps/api";
 import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
 } from "use-places-autocomplete";
-import {ComboboxList,
-        ComboboxInput,
-        ComboboxPopover,
-    Combobox,
-    ComboboxOption,
-} from "@reach/combobox";
-import "@reach/combobox/styles.css"
-
-
-
+import Select from "react-select";
+import useOnclickOutside from "react-cool-onclickoutside";
 
 const Map = () => {
 
@@ -30,8 +22,8 @@ const Map = () => {
     return (
        <Mapp />
     );
-
 }
+
 function Mapp(){
 
     const [selected, setSelected] = useState(null);
@@ -44,7 +36,7 @@ function Mapp(){
 
             <GoogleMap
                 zoom={8}
-                center={{lat: 44, lng:-80}}
+                center={{lat: 47.38, lng:8.54}}
                 mapContainerClassName="map-container">
                 {selected && <Marker position={selected} /> }
             </GoogleMap>
@@ -61,24 +53,66 @@ const PlacesAutocomplete = ({setSelected}) => {
         clearSuggestions,
     } = usePlacesAutocomplete();
 
-    const handleSelect = async (address) => {
-        setValue(address, false);
+    const ref = useOnclickOutside(() => {
+        // When user clicks outside of the component, we can dismiss
+        // the searched suggestions by calling this method
         clearSuggestions();
+    });
 
-        const results = await getGeocode({address});
-        const {lat, lng} = await getLatLng(results[0]);
-        setSelected({ lat, lng });
+    const handleInput = (e) => {
+        // Update the keyword of the input element
+        setValue(String(e.target.value));
+    };
 
-    }
-    return <Combobox onSelect={handleSelect}>
-        <ComboboxInput value={value} onChange={e => setValue(e.target.value)} disabled={!ready}
-        className="combobox-input" placeholer="search for an address.."/>
-        <ComboboxPopover>
-            <ComboboxList>
-                {status === "OK" && data.map(({place_id, description}) => <ComboboxOption key={place_id} value={description}/>)}
-            </ComboboxList>
-        </ComboboxPopover>
-    </Combobox>
+    const handleSelect =
+        ({ description }) =>
+            () => {
+                // When user selects a place, we can replace the keyword without request data from API
+                // by setting the second parameter to "false"
+                setValue(description, false);
+                clearSuggestions();
+
+                // Get latitude and longitude via utility functions
+                getGeocode({ address: description }).then((results) => {
+                    try {
+                        const { lat, lng } = getLatLng(results[0]);
+                        console.log("📍 Coordinates: ", { lat, lng });
+                        setSelected({ lat, lng});
+                    } catch (error) {
+                        console.log("😱 Error: ", error);
+                    }
+                });
+            };
+
+    const renderSuggestions = () =>
+        data.map((suggestion) => {
+            const {
+                place_id,
+                structured_formatting: { main_text, secondary_text },
+            } = suggestion;
+
+            return (
+                <li key={place_id} onClick={handleSelect(suggestion)}>
+                    <strong>{main_text}</strong> <small>{secondary_text}</small>
+                </li>
+            );
+        });
+
+    return (
+        <div ref={ref}>
+            <input
+                value={value}
+                type="text"
+                onChange={handleInput}
+                disabled={!ready}
+                placeholder="Where are you going?"
+            />
+
+            {/* We can use the "status" to decide whether we should display the dropdown or not */}
+            {status === "OK" && <ul>{renderSuggestions()}</ul>}
+        </div>
+    );
+
 }
 export default Map;
 
