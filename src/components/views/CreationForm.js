@@ -162,6 +162,11 @@ const CreationForm = () => {
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
                 setUsers(tempUsers);
+                const lat = String(localStorage.getItem("lat"));
+                const lng = String(localStorage.getItem("lng"));
+                const location = lat+","+lng;
+                setLocation(location);
+                console.log(location);
             }
             catch (error) {
                 if (error.response.status === 401) {
@@ -175,6 +180,12 @@ const CreationForm = () => {
             }
         }
         fetchData();
+
+        // Update data regularly
+        const interval = setInterval(()=>{
+            fetchData()
+        },3100);
+        return() => clearInterval(interval);
     }, []);
 
 
@@ -184,10 +195,6 @@ const CreationForm = () => {
     const saveTaskAndRedirect = async (targetLocation) => {
         try {
             const creatorId = localStorage.getItem("id");
-
-            const lat = localStorage.getItem("lat");
-            const lng = localStorage.getItem("lng");
-            setLocation({lat,lng});
             
             const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate, location,
                 estimate, assignee, reporter, privateFlag});
