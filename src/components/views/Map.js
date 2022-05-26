@@ -6,7 +6,6 @@ import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
 } from "use-places-autocomplete";
-import Select from "react-select";
 import useOnclickOutside from "react-cool-onclickoutside";
 
 const Map = () => {
@@ -15,8 +14,6 @@ const Map = () => {
         googleMapsApiKey: "AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4",
         libraries: ["places"],
     });
-
-
 
     if(!isLoaded) return <div>Loading...</div>;
     return (
@@ -36,7 +33,7 @@ function Mapp(){
 
             <GoogleMap
                 zoom={8}
-                center={{lat: 47.38, lng:8.54}}
+                center={selected ? selected : {lat: 47.38, lng:8.54}}
                 mapContainerClassName="map-container">
                 {selected && <Marker position={selected} /> }
             </GoogleMap>
@@ -78,6 +75,8 @@ const PlacesAutocomplete = ({setSelected}) => {
                         const { lat, lng } = getLatLng(results[0]);
                         console.log("📍 Coordinates: ", { lat, lng });
                         setSelected({ lat, lng});
+                        localStorage.setItem("lat",String(lat));
+                        localStorage.setItem("lng",String(lng));
                     } catch (error) {
                         console.log("😱 Error: ", error);
                     }

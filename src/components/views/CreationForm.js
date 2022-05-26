@@ -184,6 +184,11 @@ const CreationForm = () => {
     const saveTaskAndRedirect = async (targetLocation) => {
         try {
             const creatorId = localStorage.getItem("id");
+
+            const lat = localStorage.getItem("lat");
+            const lng = localStorage.getItem("lng");
+            setLocation({lat,lng});
+            
             const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate, location,
                 estimate, assignee, reporter, privateFlag});
 
@@ -261,13 +266,7 @@ const CreationForm = () => {
                                 </div>
 
                             </div>
-                            <FormField
-                                label = "Location:"
-                                placeholder = "Set location..."
-                                value={location}
-                                onChange={l => setLocation(l)}
-                            />
-                            <Map location={location} setLocation={setLocation}/>
+                            <Map />
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">
                             <FormField
