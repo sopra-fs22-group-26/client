@@ -8,6 +8,8 @@ import 'styles/views/CreationForm.scss';
 import Select from "react-select";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import ErrorMessage from "components/ui/ErrorMessage";
+import {checkHoliday} from 'helpers/dateFuncs';
 
 // Define input text field component
 const FormField = props => {
@@ -119,10 +121,10 @@ const EditForm = () => {
     const [location, setLocation] = useState(null);
     const [estimate, setEstimate] = useState(null);
     const [task, setTask] = useState(null);
-
     const [users, setUsers] = useState(null);
     const [firstAssignee, setFirstAssignee] = useState("");
     const [firstReporter, setFirstReporter] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const params = useParams();
 
@@ -143,6 +145,14 @@ const EditForm = () => {
             }
         }
     };
+
+    /**
+     * Notify user when dueDate is set on a national Holiday
+     */
+    function handleDate(date){
+        setDueDate(date);
+        setErrorMessage(checkHoliday(date));
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -228,8 +238,9 @@ const EditForm = () => {
                             placeholder="Select date"
                             value={dueDate}
                             min={moment().format("YYYY-MM-DD")}
-                            onChange={dd => setDueDate(dd)}
+                            onChange={dd => handleDate(dd)}
                         />
+                        <ErrorMessage message={errorMessage} />
                         <ReactSelection
                             label="Assignee"
                             defaultValue={firstAssignee}
