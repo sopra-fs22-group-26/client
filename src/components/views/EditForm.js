@@ -8,6 +8,7 @@ import 'styles/views/CreationForm.scss';
 import Select from "react-select";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import Map from "./Map";
 
 // Define input text field component
 const FormField = props => {
@@ -250,12 +251,7 @@ const EditForm = () => {
                             onChange={p => {setPriority(p);
                                 changePriorityClass(task, p)}}
                         />
-                        <FormField
-                            label="Location"
-                            placeholder="Set location..."
-                            value={location}
-                            onChange={l => setLocation(l)}
-                        />
+                        <Map />
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">
                         <FormField

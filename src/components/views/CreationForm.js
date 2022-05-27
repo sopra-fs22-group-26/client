@@ -271,7 +271,6 @@ const CreationForm = () => {
                                         onChange={pf => {setPrivateFlag(pf); changePrivacy(pf)}}
                                     />
                                 </div>
-
                             </div>
                             <Map />
                         </div>

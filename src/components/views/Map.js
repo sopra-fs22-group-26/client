@@ -99,6 +99,9 @@ const PlacesAutocomplete = ({setSelected}) => {
 
     return (
         <div ref={ref}>
+            <label className= 'creation-form label'>
+                Location:
+            </label>
             <input
                 value={value}
                 type="text"
