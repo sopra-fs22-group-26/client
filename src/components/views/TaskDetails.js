@@ -19,7 +19,7 @@ import {icsExport} from "helpers/icsExport";
 import {AuthUtil} from "helpers/authUtil";
 import 'styles/ui/TaskDetails.scss';
 import editIcon from "../../images/task_edit_icon.svg";
-
+import MapMarked from "./MapMarked";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -161,6 +161,7 @@ const Task = ({props,comments, taskFunctions}) => {
                         <div><span className="label">Reporter:</span> {props.reporter_name ? props.reporter_name : notDefined}</div>
                         <div><span className="label">Due date:</span> {new Date(props.dueDate).toLocaleString('ch-DE', {dateStyle: 'medium'})}</div>
                         <div><span className="label">Location:</span> {props.location ? props.location : notDefined}</div>
+                        <div>{props.location ? <MapMarked /> : notDefined}</div>
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
@@ -198,6 +199,8 @@ const TaskDetails = () => {
                 try {
                     await api.delete(`/tasks/${taskToDelete.taskId}`,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
+                    localStorage.removeItem("lat");
+                    localStorage.removeItem("lng");
                     history.push('/dashboard')
                 } catch (error) {
                     if (error.response.status === 401) {
@@ -226,6 +229,8 @@ const TaskDetails = () => {
                     });
                     await api.put(`/tasks/${taskToComplete.taskId}`, requestBody,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
+                    localStorage.removeItem("lat");
+                    localStorage.removeItem("lng");
                     history.push('/dashboard')
                 } catch (error) {
                     if (error.response.status === 401) {
@@ -343,6 +348,11 @@ const TaskDetails = () => {
                 setComments(commentsResponse);
                 setTask(taskResponse);
                 setEstimate(estimates);
+                const locationArray = String(taskResponse.location).split(",");
+                const lat = locationArray[0];
+                const lng = locationArray[1];
+                localStorage.setItem("lat",lat);
+                localStorage.setItem("lng",lng);
 
             } catch (error) {
                 if (error.response.status === 401) {

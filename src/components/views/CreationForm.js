@@ -204,6 +204,8 @@ const CreationForm = () => {
 
             // After succesful creation of a new task navigate to targetLocation
             localStorage.setItem("taskId", response.data.taskId)
+            localStorage.removeItem("lat");
+            localStorage.removeItem("lng");
             history.push(targetLocation);
         } catch (error) {
             if (error.response.status === 401) {

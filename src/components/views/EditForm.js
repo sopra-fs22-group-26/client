@@ -132,7 +132,8 @@ const EditForm = () => {
             const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
             await api.put(`/tasks/${params["task_id"]}`, requestBody,
                 { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-
+            localStorage.removeItem("lat");
+            localStorage.removeItem("lng");
             // After succesful edit of a task, navigate back to where you came from
             history.goBack();
         } catch (error) {
