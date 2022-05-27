@@ -10,6 +10,8 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import ErrorMessage from "components/ui/ErrorMessage";
+import {checkHoliday} from 'helpers/dateFuncs';
 
 // Define input text field component
 const FormField = props => {
@@ -116,6 +118,7 @@ const CreationForm = () => {
     const [users, setUsers] = useState(null);
     const [assigneeBackup, setAssigneeBackup] = useState(null);
     const [reporterBackup, setReporterBackup] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
 
     // Define class for task container, depending on priority and privateFlag
@@ -144,7 +147,6 @@ const CreationForm = () => {
             setReporter(reporterBackup);
         }
     }
-
 
     // Get all users to define options for assignee and reporter
     useEffect(() => {
@@ -204,7 +206,16 @@ const CreationForm = () => {
         }
     };
 
+    /**
+     * Notify user when dueDate is set on a national Holiday
+     */
+    function handleDate(date){
+        setDueDate(date);
+        setErrorMessage(checkHoliday(date));
+    }
 
+
+    // Display content
     return (
         <BaseContainer>
             <div className="base-container left-frame">
@@ -234,8 +245,9 @@ const CreationForm = () => {
                                 placeholder = "Select date"
                                 value = {dueDate}
                                 min={moment().format("YYYY-MM-DD")}
-                                onChange = {dd => setDueDate(dd)}
+                                onChange = {dd => handleDate(dd)}
                             />
+                            <ErrorMessage message={errorMessage} />
                             <ReactSelection
                                 label="Assignee"
                                 options={users}
