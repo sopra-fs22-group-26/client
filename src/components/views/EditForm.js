@@ -186,6 +186,13 @@ const EditForm = () => {
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
                 setUsers(tempUsers);
+
+                const lat = String(localStorage.getItem("lat"));
+                const lng = String(localStorage.getItem("lng"));
+                const location = lat+","+lng;
+                setLocation(location);
+                console.log(location);
+
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
@@ -198,6 +205,12 @@ const EditForm = () => {
             }
         }
         fetchData();
+
+        // Update data regularly
+        const interval = setInterval(()=>{
+            fetchData()
+        },3100);
+        return() => clearInterval(interval);
     }, []);
 
     let content = <div className="nothing"> loading task info</div>;
