@@ -8,6 +8,8 @@ import 'styles/views/CreationForm.scss';
 import Select from "react-select";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import ErrorMessage from "components/ui/ErrorMessage";
+import {checkHoliday} from 'helpers/dateFuncs';
 
 // Define input text field component
 const FormField = props => {
@@ -119,12 +121,10 @@ const EditForm = () => {
     const [location, setLocation] = useState(null);
     const [estimate, setEstimate] = useState(null);
     const [task, setTask] = useState(null);
-
     const [users, setUsers] = useState(null);
     const [firstAssignee, setFirstAssignee] = useState("");
     const [firstReporter, setFirstReporter] = useState(null);
-
-    const [holidays, setHolidays] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const params = useParams();
 
@@ -149,18 +149,10 @@ const EditForm = () => {
     /**
      * Notify user when dueDate is set on a national Holiday
      */
-
     function handleDate(date){
-        for (let i = 0; i<holidays.items.length;i++){
-            if (holidays.items[i]["start"]["date"] === date){
-                alert("Attention! This date is national holiday: " + holidays.items[i]["summary"]);
-                setDueDate(date);
-            }
-            else{
-                setDueDate(date);
-            }
-        }
-    };
+        setDueDate(date);
+        setErrorMessage(checkHoliday(date));
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -171,12 +163,6 @@ const EditForm = () => {
                     api.get('/users',
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}})
                 ]);
-
-                //get calender holidays
-                const holidays = await fetch("https://www.googleapis.com/calendar/v3/calendars/en.ch%23holiday%40group.v.calendar.google.com/events?key=AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4").then((response) => {
-                    return response.json()});
-
-                setHolidays(holidays);
 
                 // Get the returned tasks and update the states.
                 let taskResponse = r_task.data;
@@ -254,6 +240,7 @@ const EditForm = () => {
                             min={moment().format("YYYY-MM-DD")}
                             onChange={dd => handleDate(dd)}
                         />
+                        <ErrorMessage message={errorMessage} />
                         <ReactSelection
                             label="Assignee"
                             defaultValue={firstAssignee}

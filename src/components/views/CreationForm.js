@@ -10,6 +10,8 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import ErrorMessage from "components/ui/ErrorMessage";
+import {checkHoliday} from 'helpers/dateFuncs';
 
 // Define input text field component
 const FormField = props => {
@@ -116,7 +118,7 @@ const CreationForm = () => {
     const [users, setUsers] = useState(null);
     const [assigneeBackup, setAssigneeBackup] = useState(null);
     const [reporterBackup, setReporterBackup] = useState(null);
-    const [holidays, setHolidays] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
 
     // Define class for task container, depending on priority and privateFlag
@@ -152,13 +154,6 @@ const CreationForm = () => {
             try {
                 const response = await api.get(`/users`,
                     { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-
-                //get calender holidays
-                const holidays = await fetch("https://www.googleapis.com/calendar/v3/calendars/en.ch%23holiday%40group.v.calendar.google.com/events?key=AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4").then((response) => {
-                    return response.json()});
-
-                setHolidays(holidays);
-
 
                 let tempUsers = response.data.map(user => {
                     let userOption = {};
@@ -214,20 +209,13 @@ const CreationForm = () => {
     /**
      * Notify user when dueDate is set on a national Holiday
      */
-
     function handleDate(date){
-        for (let i = 0; i<holidays.items.length;i++){
-            if (holidays.items[i]["start"]["date"] === date){
-                alert("Attention! This date is national holiday: " + holidays.items[i]["summary"]);
-                setDueDate(date);
-            }
-            else{
-                setDueDate(date);
-            }
-        }
-    };
+        setDueDate(date);
+        setErrorMessage(checkHoliday(date));
+    }
 
 
+    // Display content
     return (
         <BaseContainer>
             <div className="base-container left-frame">
@@ -259,6 +247,7 @@ const CreationForm = () => {
                                 min={moment().format("YYYY-MM-DD")}
                                 onChange = {dd => handleDate(dd)}
                             />
+                            <ErrorMessage message={errorMessage} />
                             <ReactSelection
                                 label="Assignee"
                                 options={users}
