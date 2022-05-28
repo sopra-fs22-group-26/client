@@ -161,7 +161,7 @@ const Task = ({props,comments, taskFunctions}) => {
                         <div><span className="label">Reporter:</span> {props.reporter_name ? props.reporter_name : notDefined}</div>
                         <div><span className="label">Due date:</span> {new Date(props.dueDate).toLocaleString('ch-DE', {dateStyle: 'medium'})}</div>
                         <div><span className="label">Location:</span> {props.location ? props.location : notDefined}</div>
-                        <div>{props.geoLocation ? <MapMarked location={props.geoLocation}/> : notDefined}</div>
+                        <div>{props.geoLocation ? <MapMarked location={props.geoLocation}/> : null}</div>
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
