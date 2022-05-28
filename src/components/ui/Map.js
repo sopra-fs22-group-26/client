@@ -38,10 +38,10 @@ function MapCombined({geoLocationStr, setGeoLocation, locationStr, setLocationNa
     useEffect( () => {
         async function fetchData() {
             try {
-                if(geoLocationStr !== null && geoLocationStr !== undefined){
+                if (geoLocationStr !== null && geoLocationStr !== undefined) {
                     const locationArray = String(geoLocationStr).split(",");
-                    const stoned = {lat: Number(locationArray[0]), lng: Number(locationArray[1])};
-                    setStoned(stoned);
+                    const l_stoned = {lat: Number(locationArray[0]), lng: Number(locationArray[1])};
+                    setStoned(l_stoned);
                 }
             } catch (error) {
                 if (error.response.status === 401) {

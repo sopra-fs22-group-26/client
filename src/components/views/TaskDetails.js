@@ -182,8 +182,6 @@ const TaskDetails = () => {
     const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
     const [comments, setComments] = useState(null);
     const [dataChange, setDataChange] = useState(null);
-    const [location, setLocation] = useState(null);
-    const [geoLocation, setGeoLocation] = useState(null);
 
     const params = useParams();
 
@@ -346,11 +344,6 @@ const TaskDetails = () => {
                 setComments(commentsResponse);
                 setTask(taskResponse);
                 setEstimate(estimates);
-
-                //console.log(taskResponse.location);
-                setLocation(taskResponse.location);
-                setGeoLocation((taskResponse.geoLocation));
-
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
