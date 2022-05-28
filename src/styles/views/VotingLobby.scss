@@ -70,13 +70,14 @@
   }
   &.participant-container {
     width: 100%;
+    padding-bottom: 14px;
     display: flex;
     column-count: 3;
     background-color: $yellow_light;
 
     &.averageEstimate-container {
+      padding: unset;
       order: 1;
-      background-color: white;
       border: 2px solid black;
       display: flex;
       justify-content: center;
@@ -86,6 +87,7 @@
       font-family: $fontMenu;
       font-weight: $fontWeightRegular;
       font-size: 24px;
+      transition: background 1s ease;
     }
     .averageEstimate-container p {
       margin: 0;
@@ -95,15 +97,14 @@
       transform: translate(-50%, -50%);
     }
 
-    &.participant-left {
+    &.participant-left, &.participant-right {
+      padding: unset;
       padding-left: 10px;
       display: flex;
-      order: 0;
       flex-direction: column;
       height: 100px;
       width: 90%;
       text-align: center;
-
 
       &.name-vote {
         display: flex;
@@ -112,7 +113,6 @@
       }
 
       &.vote-container {
-        order: 1;
         background-color: white;
         display: flex;
         justify-content: center;
@@ -121,35 +121,34 @@
         height: 35px;
         border: 1px solid $brown_dark;
         padding: 0.5px;
+        &.invited {
+          border-color: $gray_dark;
+          color: $gray_dark;
+        }
+        &.joined {
+          color: $brown_darker;
+        }
+        &.declined {
+          border-color: $gray_dark;
+          color: $gray_dark;
+          background-color: $gray_medium;
+          visibility: hidden;
+        }
+      }
+    }
+
+    // Special additional styles for left/right
+    &.participant-left {
+      order: 0;
+      &.vote-container {
+        order: 1;
       }
     }
     &.participant-right {
-      padding-left: 10px;
-      display: flex;
       order: 2;
-      flex-direction: column;
-      height: 100px;
-      width: 90%;
-      text-align: center;
-
-      &.name-vote {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-      }
-
       &.vote-container {
         order: 0;
-        background-color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 20%;
-        height: 35px;
-        border: 1px solid $brown_dark;
-        padding: 0.5px;
       }
-
       &.input-container {
         order: 0;
         display: flex;

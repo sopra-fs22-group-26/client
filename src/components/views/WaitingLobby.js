@@ -12,7 +12,7 @@ const WaitingLobby = () => {
     const history = useHistory();
     const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
-    const [tempParticipants,setTempParticipants] = useState(null);
+    const [participants, setParticipants] = useState(null);
 
     // Get all users to define options for invitees
     useEffect(() => {
@@ -24,11 +24,8 @@ const WaitingLobby = () => {
 
                 setEstimateThreshold(response.data.estimateThreshold);
 
-                const participants = response.data.participants;
-                let tempParts = participants.map(participant => {
-                    return participant.user.username;
-                });
-                setTempParticipants(tempParts);
+                const participantsData = response.data.participants;
+                setParticipants(participantsData);
 
                 const pollStatus = response.data.status;
                 if(pollStatus==="VOTING"){
@@ -53,24 +50,32 @@ const WaitingLobby = () => {
             fetchData()
         },1700);
         return() => clearInterval(interval);
-    }, [setTempParticipants]);
+    }, []);
 
     let content_left = <div>Loading participants...</div>;
     let content_right = <div>participants name</div>
 
     // Create left and right columns of participants
-    if(tempParticipants !== null && tempParticipants.length > 0){
-        const half = Math.ceil(tempParticipants.length / 2)
+    if(participants !== null && participants.length > 0){
+        const half = Math.ceil(participants.length / 2)
         const participants_left = [];
         const participants_right = [];
         for (let i = 0; i < half; i++) {
-            participants_left.push(tempParticipants[i]);
+            participants_left.push(
+                <ParticipantName className={participants[i].status.toLowerCase()}>
+                    {participants[i].user.username}
+                </ParticipantName>
+            );
         }
-        for (let i = half; i<tempParticipants.length; i++){
-            participants_right.push(tempParticipants[i])
+        for (let i = half; i < participants.length; i++){
+            participants_right.push(
+                <ParticipantName className={participants[i].status.toLowerCase()}>
+                    {participants[i].user.username}
+                </ParticipantName>
+            )
         }
-        content_left = participants_left.map(participant => (<ParticipantName>{participant}</ParticipantName>));
-        content_right = participants_right.map(participant => (<ParticipantName>{participant}</ParticipantName>));
+        content_left = participants_left;
+        content_right = participants_right;
     }
 
     return (
@@ -101,7 +106,6 @@ const WaitingLobby = () => {
                         </div>
                     </div>
                     <div className="waiting-lobby footer"/>
-
                 </div>
             </div>
         </BaseContainer>

@@ -19,7 +19,6 @@ const FormField = props => {
                 className = "voting-lobby input"
                 placeholder = {props.placeholder}
                 value = {props.value}
-                padding = {props.padding}
                 onChange = {e => props.onChange(e.target.value)}
                 style={{width: props.width, textAlign: props.align}}
             />
@@ -34,21 +33,35 @@ FormField.propTypes = {
     width: PropTypes.string,
     align: PropTypes.string,
     onChange: PropTypes.func,
-    padding: PropTypes.string
 };
+
+
+const ParticipantColumn = props => {
+    return (
+        <div className={`voting-lobby participant-container ${props.className} name-vote`}>
+            <ParticipantName className={props.status.toLowerCase()}>
+                {props.username}
+            </ParticipantName>
+            <div className={`voting-lobby participant-container ${props.className} vote-container ${props.status.toLowerCase()}`}>
+                {props.vote}
+            </div>
+        </div>
+    );
+}
+
 
 const VotingLobby = () => {
     const history = useHistory();
     const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
-    const [participants, setParticipants] = useState(null);
-    const [tempParticipants,setTempParticipants] = useState(null);
     const [meetingId, setMeetingId] = useState(null);
     const [userId, setUserId] = useState(null);
     const [creatorId, setCreatorId] = useState(null);
     const [pollStatus, setPollStatus] = useState(null);
     const [voteInput, setVoteInput] = useState(null);
     const [averageEstimate, setAverageEstimate] = useState(null);
+    const [participants, setParticipants] = useState(null);
+    const [otherParticipants,setOtherParticipants] = useState(null);
     const [participantMeName, setParticipantMeName] = useState(null);
 
     // Get all users to define options for invitees
@@ -72,34 +85,26 @@ const VotingLobby = () => {
                 const responsePollStatus = response.data.status;
                 setPollStatus(responsePollStatus);
 
-                setAverageEstimate(response.data.averageEstimate);
+                let avgEstimate = response.data.averageEstimate;
+                setAverageEstimate(avgEstimate);
 
-                let participantMe = participantsData.filter(participant => {
-                    let id = participant.user.id;
-                    if(String(id) === localStorage.getItem("id")){
-                        return participant;
-                    }
-                });
-
+                // Extract information of current user
+                let participantMe = participantsData.filter(
+                    participant => String(participant.user.id) === localStorage.getItem("id"));
                 let meName = participantMe.map(participant => {
                     return participant.user.username;
                 })
                 setParticipantMeName(meName);
 
-                let tempParticipantsFiltered = participantsData.filter(participant => {
-                    let id = participant.user.id;
-                    if(String(id) !== localStorage.getItem("id")){
-                        return participant;
-                    }
-                });
-
-                let tempParts = tempParticipantsFiltered.map(participant => {
-                    return participant.user.username;
-                    });
-
-                setTempParticipants(tempParts);
+                // Filter other participants
+                let participantsFiltered = participantsData.filter(
+                    participant => String(participant.user.id) !== localStorage.getItem("id"));
+                setOtherParticipants(participantsFiltered);
 
                 if(responsePollStatus === "ENDED" && localStorage.getItem("id") != responseCreatorId){
+                    alert(`The voting has ended with an estimate of ${avgEstimate}.\n` +
+                        `You can leave the session now.\n` +
+                        `Thanks for joining!`);
                     history.push("/dashboard");
                 }
             }
@@ -119,9 +124,9 @@ const VotingLobby = () => {
         // Update data regularly
         const interval = setInterval(()=>{
             fetchData()
-        },3100);
+        },1500);
         return() => clearInterval(interval);
-    }, [setTempParticipants]);
+    }, []);
 
 
     const sendVote = async (vote) => {
@@ -190,7 +195,7 @@ const VotingLobby = () => {
 
     function getVote(participant){
         for(const p of participants) {
-            if (p["user"].name === participant || p["user"].username === participant) {
+            if (p["user"].username === participant) {
                 return p["vote"];
             }
         }
@@ -223,49 +228,40 @@ const VotingLobby = () => {
             ];
     }
 
-    let content_left = <div>participants name</div>;
-    if(tempParticipants!==null){
-        if (tempParticipants.length > 0){
-            const half = Math.ceil(tempParticipants.length / 2)
-            const participants_left = [];
+    // Create voter columns
+    let content_left = [];
+    let content_right = [];
+
+    if(otherParticipants !== null){
+        if (otherParticipants.length > 0){
+            const half = Math.ceil(otherParticipants.length / 2)
+
             for (let i = 0; i < half; i++) {
-                participants_left.push(tempParticipants[i]);
+                content_left.push(
+                    <ParticipantColumn
+                        className="participant-left"
+                        status={otherParticipants[i].status}
+                        username={otherParticipants[i].user.username}
+                        vote={getVote(otherParticipants[i].user.username)}
+                    />
+                );
             }
-            content_left =
-                    participants_left.map(participant => (
-                        [   <div className="voting-lobby participant-container participant-left name-vote">
-                                <ParticipantName>
-                                    {participant}
-                                </ParticipantName>
-                                <div className="voting-lobby participant-container participant-left vote-container">
-                                    {getVote(participant)}
-                                </div>
-                            </div>
-                        ]));
+            for (let i = half; i < otherParticipants.length; i++) {
+                content_right.push(
+                    <ParticipantColumn
+                        className="participant-right"
+                        status={otherParticipants[i].status}
+                        username={otherParticipants[i].user.username}
+                        vote={getVote(otherParticipants[i].user.username)}
+                    />
+                );
+            }
         }
     }
 
-    let content_right = <div>participants name</div>
-    if(tempParticipants!==null) {
-        if(tempParticipants.length > 0) {
-            const half = Math.ceil(tempParticipants.length / 2)
-            const participants_right = [];
-            for (let i = half; i<tempParticipants.length; i++) {
-                participants_right.push(tempParticipants[i])
-            }
-            content_right =
-                participants_right.map(participant => (
-                    [   <div className="voting-lobby participant-container participant-right name-vote">
-                        <ParticipantName>
-                            {participant}
-                        </ParticipantName>
-                        <div className="voting-lobby participant-container participant-right vote-container">
-                            {getVote(participant)}
-                        </div>
-                    </div>
-                    ]));
-        }
-    }
+    // Define estimate slider
+    const slider_color = "#FFB30E";
+    let slider_height = 100 * Math.min(1, averageEstimate / estimateThreshold);
 
     return (
         <BaseContainer>
@@ -287,7 +283,10 @@ const VotingLobby = () => {
                         <div className="voting-lobby participant-container participant-left">
                             {content_left}
                         </div>
-                        <div className="voting-lobby participant-container averageEstimate-container">
+                        <div
+                            className="voting-lobby participant-container averageEstimate-container"
+                            style={{background: `linear-gradient(to top, ${slider_color} ${slider_height}%, white ${slider_height}% )`}}
+                        >
                             {averageEstimate}
                         </div>
                         <div className="voting-lobby participant-container participant-right">

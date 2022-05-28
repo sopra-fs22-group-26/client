@@ -15,4 +15,16 @@
   border-radius: $formButtonRadius;
   opacity: 1;
   background-color: $yellow_dark;
+
+  // different styling for different status
+  &.invited {
+    color: $gray_dark;
+    background-color: $gray_light;
+  }
+  &.joined {}
+  &.declined {
+    color: $gray_medium;
+    background-color: $task_priority_high;
+    border-color: $gray_medium;
+  }
 }
