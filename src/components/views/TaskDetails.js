@@ -19,7 +19,7 @@ import {icsExport} from "helpers/icsExport";
 import {AuthUtil} from "helpers/authUtil";
 import 'styles/ui/TaskDetails.scss';
 import editIcon from "../../images/task_edit_icon.svg";
-
+import MapMarked from "../ui/MapMarked";
 
 const notDefined = (<span className="not-specified">not specified</span>);
 
@@ -161,6 +161,7 @@ const Task = ({props,comments, taskFunctions}) => {
                         <div><span className="label">Reporter:</span> {props.reporter_name ? props.reporter_name : notDefined}</div>
                         <div><span className="label">Due date:</span> {new Date(props.dueDate).toLocaleString('ch-DE', {dateStyle: 'medium'})}</div>
                         <div><span className="label">Location:</span> {props.location ? props.location : notDefined}</div>
+                        <div>{props.geoLocation ? <MapMarked location={props.geoLocation}/> : notDefined}</div>
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
@@ -181,6 +182,8 @@ const TaskDetails = () => {
     const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
     const [comments, setComments] = useState(null);
     const [dataChange, setDataChange] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [geoLocation, setGeoLocation] = useState(null);
 
     const params = useParams();
 
@@ -343,6 +346,10 @@ const TaskDetails = () => {
                 setComments(commentsResponse);
                 setTask(taskResponse);
                 setEstimate(estimates);
+
+                //console.log(taskResponse.location);
+                setLocation(taskResponse.location);
+                setGeoLocation((taskResponse.geoLocation));
 
             } catch (error) {
                 if (error.response.status === 401) {

@@ -10,6 +10,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
+import Map from "../ui/Map";
 import ErrorMessage from "components/ui/ErrorMessage";
 import {checkHoliday} from 'helpers/dateFuncs';
 
@@ -114,6 +115,7 @@ const CreationForm = () => {
     const [dueDate, setDueDate] = useState(null);
     const [privateFlag, setPrivateFlag] = useState(false);
     const [location, setLocation] = useState(null);
+    const [geoLocation, setGeoLocation] = useState(null);
     const [estimate, setEstimate] = useState(0);
     const [users, setUsers] = useState(null);
     const [assigneeBackup, setAssigneeBackup] = useState(null);
@@ -136,7 +138,7 @@ const CreationForm = () => {
             "creation-form container task_priority_"
             + priority.toLowerCase()
             + (newPrivacy ? " private" : "");
-        if (newPrivacy){
+        if (newPrivacy) {
             setAssigneeBackup(assignee);
             setReporterBackup(reporter);
             setAssignee(localStorage.getItem("id"));
@@ -187,14 +189,15 @@ const CreationForm = () => {
     const saveTaskAndRedirect = async (targetLocation) => {
         try {
             const creatorId = localStorage.getItem("id");
-            const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate, location,
-                estimate, assignee, reporter, privateFlag});
+
+            const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate,
+                location, geoLocation, estimate, assignee, reporter, privateFlag});
 
             const response = await api.post('/tasks', requestBody,
                 { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
             // After succesful creation of a new task navigate to targetLocation
-            localStorage.setItem("taskId", response.data.taskId)
+            localStorage.setItem("taskId", response.data.taskId);
             history.push(targetLocation);
         } catch (error) {
             if (error.response.status === 401) {
@@ -272,13 +275,10 @@ const CreationForm = () => {
                                         onChange={pf => {setPrivateFlag(pf); changePrivacy(pf)}}
                                     />
                                 </div>
-
                             </div>
-                            <FormField
-                                label = "Location:"
-                                placeholder = "Set location..."
-                                value={location}
-                                onChange={l => setLocation(l)}
+                            <Map
+                                setGeoLocation={setGeoLocation}
+                                setLocationName={setLocation}
                             />
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">

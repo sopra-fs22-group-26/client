@@ -10,6 +10,7 @@ import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
 import ErrorMessage from "components/ui/ErrorMessage";
 import {checkHoliday} from 'helpers/dateFuncs';
+import Map from "../ui/Map";
 
 // Define input text field component
 const FormField = props => {
@@ -119,6 +120,7 @@ const EditForm = () => {
     const [reporter, setReporter] = useState(null);
     const [dueDate, setDueDate] = useState(null);
     const [location, setLocation] = useState(null);
+    const [geoLocation, setGeoLocation] = useState(null);
     const [estimate, setEstimate] = useState(null);
     const [task, setTask] = useState(null);
     const [users, setUsers] = useState(null);
@@ -130,10 +132,10 @@ const EditForm = () => {
 
     const saveEdit = async () => {
         try {
-            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
+            const requestBody = JSON.stringify({title, description, priority, dueDate,
+                location, geoLocation, estimate, assignee, reporter});
             await api.put(`/tasks/${params["task_id"]}`, requestBody,
                 { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-
             // After succesful edit of a task, navigate back to where you came from
             history.goBack();
         } catch (error) {
@@ -172,6 +174,7 @@ const EditForm = () => {
                 setPriority(taskResponse.priority ? taskResponse.priority : "NONE");
                 setDueDate(new Date(taskResponse.dueDate).toISOString().split('T')[0]);
                 setLocation(taskResponse.location);
+                setGeoLocation(taskResponse.geoLocation);
                 setEstimate(taskResponse.estimate);
 
                 // Get all users to define options for assignee and reporter
@@ -195,6 +198,7 @@ const EditForm = () => {
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
                 setUsers(tempUsers);
+
             } catch (error) {
                 if (error.response.status === 401) {
                     await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
@@ -261,11 +265,11 @@ const EditForm = () => {
                             onChange={p => {setPriority(p);
                                 changePriorityClass(task, p)}}
                         />
-                        <FormField
-                            label="Location"
-                            placeholder="Set location..."
-                            value={location}
-                            onChange={l => setLocation(l)}
+                        <Map
+                            locationStr={location}
+                            setLocationName={setLocation}
+                            geoLocationStr={geoLocation}
+                            setGeoLocation={setGeoLocation}
                         />
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">

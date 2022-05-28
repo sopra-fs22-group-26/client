@@ -10,6 +10,7 @@
       this.estimate = null;
       this.priority = null;
       this.location = null;
+      this.geoLocation = null;
       this.status = null;
       this.assignee = null;
       this.reporter = null;
