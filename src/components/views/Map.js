@@ -10,7 +10,7 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import {AuthUtil} from "../../helpers/authUtil";
 import {handleError} from "../../helpers/api";
 
-const Map = ({location,setLocation}) => {
+const Map = ({locationStr,setLocation}) => {
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4",
         libraries: ["places"],
@@ -18,25 +18,26 @@ const Map = ({location,setLocation}) => {
 
     if(!isLoaded) return <div>Loading...</div>;
     return (
-       <MapCombined location={location} setLocation={setLocation}/>
+       <MapCombined locationStr={locationStr} setLocation={setLocation}/>
     );
 }
 
-function MapCombined({location, setLocation}){
+function MapCombined({locationStr, setLocation}){
 
     const [selected, setSelected] = useState(null);
-    const [locationObj, setLocationObj] = useState(null);
+    const [stoned, setStoned] = useState(null);
 
     useEffect( () => {
         async function fetchData() {
             try {
-                if(location!==null & location!==undefined){
-                    // console.log(location);
-                    const locationArray = String(location).split(",");
+                console.log(locationStr);
+                if(locationStr!==null & locationStr!==undefined){
+                    // console.log(locationStr);
+                    const locationArray = String(locationStr).split(",");
                     // console.log(locationArray);
-                    const locationObj = {lat: Number(locationArray[0]), lng: Number(locationArray[1])};
-                    setLocationObj(locationObj);
-                    // console.log(locationObj);
+                    const stoned = {lat: Number(locationArray[0]), lng: Number(locationArray[1])};
+                    setStoned(stoned);
+                    // console.log(stoned);
                 }
             } catch (error) {
                 if (error.response.status === 401) {
@@ -50,34 +51,25 @@ function MapCombined({location, setLocation}){
             }
         }
         fetchData();
-
-        // // Update data regularly
-        // const interval = setInterval(()=>{
-        //     fetchData()
-        // },3100);
-        // return() => clearInterval(interval);
     }, []);
 
     return (
         <>
             <div className="places-container">
-                <PlacesAutocomplete setSelected={setSelected} setLocation={setLocation} />
+                <PlacesAutocomplete setSelected={setSelected} locationStr={locationStr} setLocation={setLocation} />
             </div>
 
             <GoogleMap
                 zoom={8}
-                center={ selected ? selected : {lat: 47.38, lng:8.54}}
-                // center={ selected ? selected : locationObj}
-                // center={ selected ? selected : (locationObj ? locationObj : {lat: 47.38, lng:8.54})}
+                center={ selected ? selected : (stoned ? stoned : {lat: 47.38, lng:8.54})}
                 mapContainerClassName="map-container">
-                {selected && <Marker position={selected} /> }
-                {/*{(selected ? selected : locationObj) && <Marker position={selected ? selected : locationObj} /> }*/}
+                {(selected ? selected : stoned) && <Marker position={selected ? selected : stoned} /> }
             </GoogleMap>
         </>
     );
 }
 
-const PlacesAutocomplete = ({setSelected,setLocation}) => {
+const PlacesAutocomplete = ({setSelected,locationStr,setLocation}) => {
     const {
         ready,
         value,
@@ -142,7 +134,7 @@ const PlacesAutocomplete = ({setSelected,setLocation}) => {
                 type="text"
                 onChange={handleInput}
                 disabled={!ready}
-                placeholder="Where are you going?"
+                placeholder={locationStr ? locationStr : "Where are you going?"}
             />
 
             {/* We can use the "status" to decide whether we should display the dropdown or not */}

@@ -257,7 +257,7 @@ const EditForm = () => {
                             onChange={p => {setPriority(p);
                                 changePriorityClass(task, p)}}
                         />
-                        <Map location={location} setLocation={setLocation}/>
+                        <Map locationStr={location} setLocation={setLocation}/>
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">
                         <FormField
