@@ -25,8 +25,7 @@
     "react-scripts": "^5.0.0",
     "react-select": "^5.3.0",
     "react-spinners-css": "^2.0.1",
-    "validator": "^13.7.0"
-    "react-spinners-css": "^2.0.1",
+    "validator": "^13.7.0",
     "use-places-autocomplete": "^3.0.0"
   },
   "scripts": {
