@@ -1,7 +1,28 @@
+@import 'styles/theme';
 
+.places-container {
+  div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 398px;
+  }
+  input {
+    margin: 0;
+    padding: 0 8px;
+    width:316px;
+    height: 34px;
+    border: 1px solid $borderColor;
+  }
+  ul {
+    display: block;
+  }
+}
 .map-container{
-  widht: 90px;
-  height: 150px;
+  margin: 14px 0;
+  width: 398px;
+  height: 195px;
 }
 
 .combobox-input{
