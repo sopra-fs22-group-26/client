@@ -1,18 +1,14 @@
 /* global google */
 import 'styles/ui/Map.scss';
-import {React, useEffect, useState} from "react";
-import { GoogleMap, LoadScript, useLoadScript, Autocomplete, Marker} from "@react-google-maps/api";
-import usePlacesAutocomplete, {
-    getGeocode,
-    getLatLng,
-} from "use-places-autocomplete";
-import useOnclickOutside from "react-cool-onclickoutside";
+import {React} from "react";
+import { GoogleMap, useLoadScript, Marker} from "@react-google-maps/api";
+
+const googleLibraries = ["places"];
 
 const MapMarked = (location) => {
-    console.log(location);
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4",
-        libraries: ["places"],
+        libraries: googleLibraries,
     });
 
     if(!isLoaded) return <div>Loading...</div>;

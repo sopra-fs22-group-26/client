@@ -8,7 +8,7 @@ import 'styles/views/CreationForm.scss';
 import Select from "react-select";
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
-import Map from "./Map";
+import Map from "../ui/Map";
 
 // Define input text field component
 const FormField = props => {
@@ -118,6 +118,7 @@ const EditForm = () => {
     const [reporter, setReporter] = useState(null);
     const [dueDate, setDueDate] = useState(null);
     const [location, setLocation] = useState(null);
+    const [geoLocation, setGeoLocation] = useState(null);
     const [estimate, setEstimate] = useState(null);
     const [task, setTask] = useState(null);
 
@@ -129,7 +130,8 @@ const EditForm = () => {
 
     const saveEdit = async () => {
         try {
-            const requestBody = JSON.stringify({title, description, priority, dueDate, location, estimate, assignee, reporter});
+            const requestBody = JSON.stringify({title, description, priority, dueDate,
+                location, geoLocation, estimate, assignee, reporter});
             await api.put(`/tasks/${params["task_id"]}`, requestBody,
                 { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
             // After succesful edit of a task, navigate back to where you came from
@@ -162,6 +164,7 @@ const EditForm = () => {
                 setPriority(taskResponse.priority ? taskResponse.priority : "NONE");
                 setDueDate(new Date(taskResponse.dueDate).toISOString().split('T')[0]);
                 setLocation(taskResponse.location);
+                setGeoLocation(taskResponse.geoLocation);
                 setEstimate(taskResponse.estimate);
 
                 // Get all users to define options for assignee and reporter
@@ -198,12 +201,6 @@ const EditForm = () => {
             }
         }
         fetchData();
-
-        // Update data regularly
-        const interval = setInterval(()=>{
-            fetchData()
-        },3100);
-        return() => clearInterval(interval);
     }, []);
 
     let content = <div className="nothing"> loading task info</div>;
@@ -257,7 +254,12 @@ const EditForm = () => {
                             onChange={p => {setPriority(p);
                                 changePriorityClass(task, p)}}
                         />
-                        <Map locationStr={location} setLocation={setLocation}/>
+                        <Map
+                            locationStr={location}
+                            setLocationName={setLocation}
+                            geoLocationStr={geoLocation}
+                            setGeoLocation={setGeoLocation}
+                        />
                     </div>
                     <div className="creation-form attributes-container attributes-column rightalign">
                         <FormField

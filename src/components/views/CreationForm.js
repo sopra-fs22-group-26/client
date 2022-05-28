@@ -10,7 +10,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import moment from "moment";
 import {AuthUtil} from "helpers/authUtil";
-import Map from "./Map";
+import Map from "../ui/Map";
 
 // Define input text field component
 const FormField = props => {
@@ -113,6 +113,7 @@ const CreationForm = () => {
     const [dueDate, setDueDate] = useState(null);
     const [privateFlag, setPrivateFlag] = useState(false);
     const [location, setLocation] = useState(null);
+    const [geoLocation, setGeoLocation] = useState(null);
     const [estimate, setEstimate] = useState(0);
     const [users, setUsers] = useState(null);
     const [assigneeBackup, setAssigneeBackup] = useState(null);
@@ -191,8 +192,8 @@ const CreationForm = () => {
         try {
             const creatorId = localStorage.getItem("id");
             
-            const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate, location,
-                estimate, assignee, reporter, privateFlag});
+            const requestBody = JSON.stringify({creatorId, title, description, priority, dueDate,
+                location, geoLocation, estimate, assignee, reporter, privateFlag});
 
             const response = await api.post('/tasks', requestBody,
                 { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}});
@@ -267,7 +268,10 @@ const CreationForm = () => {
                                     />
                                 </div>
                             </div>
-                            <Map setLocation={setLocation}/>
+                            <Map
+                                setGeoLocation={setGeoLocation}
+                                setLocationName={setLocation}
+                            />
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">
                             <FormField
