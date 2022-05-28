@@ -7,9 +7,10 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
+import {AuthUtil} from "../../helpers/authUtil";
+import {handleError} from "../../helpers/api";
 
-const Map = () => {
-
+const Map = ({location,setLocation}) => {
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4",
         libraries: ["places"],
@@ -17,31 +18,66 @@ const Map = () => {
 
     if(!isLoaded) return <div>Loading...</div>;
     return (
-       <Mapp />
+       <MapCombined location={location} setLocation={setLocation}/>
     );
 }
 
-function Mapp(){
+function MapCombined({location, setLocation}){
 
     const [selected, setSelected] = useState(null);
+    const [locationObj, setLocationObj] = useState(null);
+
+    useEffect( () => {
+        async function fetchData() {
+            try {
+                if(location!==null & location!==undefined){
+                    // console.log(location);
+                    const locationArray = String(location).split(",");
+                    // console.log(locationArray);
+                    const locationObj = {lat: Number(locationArray[0]), lng: Number(locationArray[1])};
+                    setLocationObj(locationObj);
+                    // console.log(locationObj);
+                }
+            } catch (error) {
+                if (error.response.status === 401) {
+                    await AuthUtil.refreshToken(localStorage.getItem('refreshToken'));
+                    setTimeout(fetchData, 200);
+                } else {
+                    console.error(`Something went wrong while fetching the data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while fetching the data! See the console for details.");
+                }
+            }
+        }
+        fetchData();
+
+        // // Update data regularly
+        // const interval = setInterval(()=>{
+        //     fetchData()
+        // },3100);
+        // return() => clearInterval(interval);
+    }, []);
 
     return (
         <>
             <div className="places-container">
-                <PlacesAutocomplete setSelected={setSelected} />
+                <PlacesAutocomplete setSelected={setSelected} setLocation={setLocation} />
             </div>
 
             <GoogleMap
                 zoom={8}
-                center={selected ? selected : {lat: 47.38, lng:8.54}}
+                center={ selected ? selected : {lat: 47.38, lng:8.54}}
+                // center={ selected ? selected : locationObj}
+                // center={ selected ? selected : (locationObj ? locationObj : {lat: 47.38, lng:8.54})}
                 mapContainerClassName="map-container">
                 {selected && <Marker position={selected} /> }
+                {/*{(selected ? selected : locationObj) && <Marker position={selected ? selected : locationObj} /> }*/}
             </GoogleMap>
         </>
     );
 }
 
-const PlacesAutocomplete = ({setSelected}) => {
+const PlacesAutocomplete = ({setSelected,setLocation}) => {
     const {
         ready,
         value,
@@ -75,8 +111,7 @@ const PlacesAutocomplete = ({setSelected}) => {
                         const { lat, lng } = getLatLng(results[0]);
                         console.log("📍 Coordinates: ", { lat, lng });
                         setSelected({ lat, lng});
-                        localStorage.setItem("lat",String(lat));
-                        localStorage.setItem("lng",String(lng));
+                        setLocation(String(lat)+","+String(lng));
                     } catch (error) {
                         console.log("😱 Error: ", error);
                     }

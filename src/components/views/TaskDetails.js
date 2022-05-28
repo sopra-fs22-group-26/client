@@ -161,7 +161,7 @@ const Task = ({props,comments, taskFunctions}) => {
                         <div><span className="label">Reporter:</span> {props.reporter_name ? props.reporter_name : notDefined}</div>
                         <div><span className="label">Due date:</span> {new Date(props.dueDate).toLocaleString('ch-DE', {dateStyle: 'medium'})}</div>
                         <div><span className="label">Location:</span> {props.location ? props.location : notDefined}</div>
-                        <div>{props.location ? <MapMarked /> : notDefined}</div>
+                        <div>{props.location ? <MapMarked location={props.location}/> : notDefined}</div>
                     </div>
                     <div className="task-content bottom-container elements-right">
                         <div><span className="label">Estimate:</span> {props.estimate}h</div>
@@ -182,6 +182,7 @@ const TaskDetails = () => {
     const [estimate, setEstimate] = useState({currentWeek: 0, total: 0});
     const [comments, setComments] = useState(null);
     const [dataChange, setDataChange] = useState(null);
+    const [location, setLocation] = useState(null);
 
     const params = useParams();
 
@@ -199,8 +200,6 @@ const TaskDetails = () => {
                 try {
                     await api.delete(`/tasks/${taskToDelete.taskId}`,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-                    localStorage.removeItem("lat");
-                    localStorage.removeItem("lng");
                     history.push('/dashboard')
                 } catch (error) {
                     if (error.response.status === 401) {
@@ -229,8 +228,6 @@ const TaskDetails = () => {
                     });
                     await api.put(`/tasks/${taskToComplete.taskId}`, requestBody,
                         { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
-                    localStorage.removeItem("lat");
-                    localStorage.removeItem("lng");
                     history.push('/dashboard')
                 } catch (error) {
                     if (error.response.status === 401) {
@@ -348,11 +345,10 @@ const TaskDetails = () => {
                 setComments(commentsResponse);
                 setTask(taskResponse);
                 setEstimate(estimates);
-                const locationArray = String(taskResponse.location).split(",");
-                const lat = locationArray[0];
-                const lng = locationArray[1];
-                localStorage.setItem("lat",lat);
-                localStorage.setItem("lng",lng);
+
+                console.log(taskResponse.location);
+                let location = taskResponse.location;
+                setLocation(location);
 
             } catch (error) {
                 if (error.response.status === 401) {

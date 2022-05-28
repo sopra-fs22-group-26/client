@@ -162,11 +162,6 @@ const CreationForm = () => {
                 // sort options alphabetically
                 tempUsers = tempUsers.sort((a, b) => a.label.toLowerCase() > b.label.toLowerCase());
                 setUsers(tempUsers);
-                const lat = String(localStorage.getItem("lat"));
-                const lng = String(localStorage.getItem("lng"));
-                const location = lat+","+lng;
-                setLocation(location);
-                console.log(location);
             }
             catch (error) {
                 if (error.response.status === 401) {
@@ -203,9 +198,7 @@ const CreationForm = () => {
                 { headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
             // After succesful creation of a new task navigate to targetLocation
-            localStorage.setItem("taskId", response.data.taskId)
-            localStorage.removeItem("lat");
-            localStorage.removeItem("lng");
+            localStorage.setItem("taskId", response.data.taskId);
             history.push(targetLocation);
         } catch (error) {
             if (error.response.status === 401) {
@@ -274,7 +267,7 @@ const CreationForm = () => {
                                     />
                                 </div>
                             </div>
-                            <Map />
+                            <Map setLocation={setLocation}/>
                         </div>
                         <div className="creation-form attributes-container attributes-column rightalign">
                             <FormField

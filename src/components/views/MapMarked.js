@@ -8,8 +8,8 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-const MapMarked = () => {
-
+const MapMarked = (location) => {
+    console.log(location);
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyDr53V_g_IctWuuNYyq10yiAqyJXWsIOU4",
         libraries: ["places"],
@@ -17,13 +17,14 @@ const MapMarked = () => {
 
     if(!isLoaded) return <div>Loading...</div>;
     return (
-       <Mapp />
+       <MapCombined location={location}/>
     );
 }
 
-function Mapp(){
-    const latS = localStorage.getItem("lat");
-    const lngS = localStorage.getItem("lng");
+function MapCombined(location){
+    const locationArray = String(location["location"]["location"]).split(",");
+    const latS = locationArray[0];
+    const lngS = locationArray[1];
     return (
         <>
             <GoogleMap
