@@ -60,6 +60,7 @@ const VotingLobby = () => {
     const [pollStatus, setPollStatus] = useState(null);
     const [voteInput, setVoteInput] = useState(null);
     const [averageEstimate, setAverageEstimate] = useState(null);
+    const [taskTitle, setTaskTitle] = useState(null);
     const [participants, setParticipants] = useState(null);
     const [otherParticipants,setOtherParticipants] = useState(null);
     const [participantMeName, setParticipantMeName] = useState(null);
@@ -73,6 +74,7 @@ const VotingLobby = () => {
                     { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
                 setEstimateThreshold(response.data.estimateThreshold);
+                setTaskTitle(response.data.task.title);
 
                 const participantsData = response.data.participants;
                 setParticipants(participantsData);
@@ -270,7 +272,7 @@ const VotingLobby = () => {
             <div className="base-container main-frame">
                 <div className="voting-lobby container">
                     <div className="voting-lobby header1">
-                        Estimate Poll Session
+                        Estimate Poll Session for Task "{taskTitle}"
                     </div>
                     <div className="voting-lobby header2">
                         Give your estimate. You have 60 seconds to enter a number between 0 to {estimateThreshold} hours.<br/>

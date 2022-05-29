@@ -13,6 +13,7 @@ const WaitingLobby = () => {
     const params = useParams();
     const [estimateThreshold, setEstimateThreshold] = useState(null);
     const [participants, setParticipants] = useState(null);
+    const [taskTitle, setTaskTitle] = useState(null);
 
     // Get all users to define options for invitees
     useEffect(() => {
@@ -23,6 +24,7 @@ const WaitingLobby = () => {
                     { headers:{ Authorization: 'Bearer ' + localStorage.getItem('token')}});
 
                 setEstimateThreshold(response.data.estimateThreshold);
+                setTaskTitle(response.data.task.title);
 
                 const participantsData = response.data.participants;
                 setParticipants(participantsData);
@@ -85,7 +87,7 @@ const WaitingLobby = () => {
             <div className="base-container main-frame">
                 <div className="waiting-lobby container">
                     <div className="waiting-lobby header1">
-                        Estimate Poll Session - Waiting Lobby
+                        Estimate Poll Waiting Lobby for "{taskTitle}"
                     </div>
                     <div className="waiting-lobby header2">
                         Give your estimate. After the host started the poll, you have 60 seconds to
