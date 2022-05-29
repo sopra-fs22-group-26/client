@@ -65,17 +65,18 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### Dashboard
 When a user is logged in they start on the following dashboard:
-Bild
+![Dashboard](https://github.com/sopra-fs22-group-26/client/tree/readMe-final/src/images/readme/Dashboard.PNG)
 So far there is only one task created.
 
 ### Create a task
 The user can create a new task: 
-Bild
+![create a task](https://github.com/sopra-fs22-group-26/client/tree/readMe-final/src/images/readme/New-task.PNG)
 The assignee has to complete the task, while the reporter can rate the completed task in the end with 1-5 stars. Those ratings are reflected on the scoreboard.
 
 ### Detailed task view
 
-After creation all users (if it is not private) can look at the task and even post a comment on it.
+After creation all users (if it is not private) can look at the task and even post a comment on it:
+![Details](https://github.com/sopra-fs22-group-26/client/tree/readMe-final/src/images/readme/TaskComment.PNG)
 
 
 
