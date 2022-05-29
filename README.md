@@ -84,7 +84,7 @@ After creation all users (if it is not private) can look at the task and even po
 Potential improvements or extensions in the future may include:
 
 - Implement a group feature, such that users are able to create and join subgroups. E.g. a user is part of a work group and part of a family group.
-- Since SCrumbleBee is not a round-based game it is critical than you can log in with the same credentials everytime. A user doesn't want to lose all his scoreboard points just because they forgot the password. So a "Forgot Password" feature could be a next improvement.
+- Since ScrumbleBee is not a round-based game it is critical that you can log in with the same credentials everytime. A user doesn't want to lose all his scoreboard points just because they forgot the password. So a "Forgot Password" feature could be a next improvement.
 - To further develope the calender integration, one could also connect a company or private calender to not only prevent national holiday conflicts but also personal or company ones.
 
 ## Learn More
