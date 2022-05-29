@@ -76,7 +76,7 @@ The assignee has to complete the task, while the reporter can rate the completed
 ### Detailed task view
 
 After creation all users (if it is not private) can look at the task and even post a comment on it:
-![Details](https://github.com/sopra-fs22-group-26/client/blob/readMe-final/src/images/readme/TaskComment.PNG?raw=true)
+![Details](src/images/readme/TaskComment.PNG?raw=true)
 
 
 
