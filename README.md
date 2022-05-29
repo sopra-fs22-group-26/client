@@ -11,7 +11,7 @@
 # Scrumble(:bee:)
 ## Introduction
 The idea of our project ScrumbleBee is to create an online task management system which encourages its users to complete their tasks by including gamification elements. In addition to the basic capabilities, like assigning users, due dates and comments to tasks, the members of ScrumbleBee can award points to each other for having successfully completed tasks - which peaks in a fiercely battle for the number one spot on the scoreboard!
-. As this platform could also be used in a Scrum environment, we include an	 “Estimate Poll” widget, where the members can estimate the time needed to complete a task in real-time. By considering information from external sources like google maps for location or dates of public holidays, time collisions should belong to the past, and a calendar export function allows the product to be integrated in your daily workflow.
+As this platform could also be used in a Scrum environment, we include an	 “Estimate Poll” widget, where the members can estimate the time needed to complete a task in real-time. By considering information from external sources like google maps for location or dates of public holidays, time collisions should belong to the past, and a calendar export function allows the product to be integrated in your daily workflow.
 
 ## Technologies
 
@@ -85,7 +85,7 @@ After creation all users (if it is not private) can look at the task and even po
 Potential improvements or extensions in the future may include:
 
 - Implement a group feature, such that users are able to create and join subgroups. E.g. a user is part of a work group and part of a family group.
-- To further develop the calender integration, one could also connect a company or private calender to not only prevent national holiday conflicts but also personal or company ones.
+- To further develop the calendar integration, one could also connect a company or private calendar to not only prevent national holiday conflicts but also personal or company ones.
 - Make ScrumbleBee responsive! So far the application is nice to use as desktop application. With a responsive design, it could also be used efficiently on a mobile phone. 
 
 ## Learn More
